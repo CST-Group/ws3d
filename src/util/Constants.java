@@ -1,21 +1,7 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package util;
 
 import com.jme.renderer.ColorRGBA;
@@ -116,6 +102,8 @@ public class Constants {
     //food energy/calories:
     public static final double PFOOD_ENERGY = Constants.CREATURE_MAX_FUEL * 0.30;
     public static final double NPFOOD_ENERGY = Constants.CREATURE_MAX_FUEL * 0.15;
+    
+    
 
     public final static int MAX_NUMBER_OF_LEAFLETS = 3;
     public final static int LEAFLET_ITEMS_NUMBER = 3;
@@ -242,7 +230,7 @@ public class Constants {
     }
 
     /**
-     * Color name: integer
+     * Color name --> integer
      *
      * @param color
      * @return
@@ -292,7 +280,7 @@ public class Constants {
     }
 
     /**
-     * Integer color index : color name (opposite of getColorIndex() )
+     * Integer color index --> color name (opposite of getColorIndex() )
      *
      * @param index
      * @return

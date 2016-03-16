@@ -1,21 +1,7 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package worldserver3d.view;
 
 import java.awt.*;
@@ -47,6 +33,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     JPanel panel1;
     JPanel panel1_1;
     JPanel panel1_2;
+    
     JPanel panel2;
     JPanel panel3;
     JPanel panel_2_3;
@@ -82,6 +69,8 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     JProgressBar energyBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_FUEL);
     JProgressBar serotoninBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_SEROTONIN);
     JProgressBar endorphineBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_ENDORPHINE);
+    
+    
 
     public KnapsackAndScoreFrame() throws InvocationTargetException {
         this.creature = null;
@@ -109,6 +98,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     public void update() {
         if (this.creature != null) {
             refreshKnapsackScoreData();
+            if(this.creature.ifHasAnyLeaflet()) refreshLeafletSituation();
             reBuildLeafletPanel();
         }
     }
@@ -178,7 +168,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         }
         resetLeaflet();
         for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
-            for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
+           for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
                 Object[] array = tree.toArray();
                 Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
 
@@ -188,6 +178,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
             }
         }
         repaint();
+        
     }
 
     private void addLeafletTextFields(Long leafletID) {
@@ -198,6 +189,8 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         JTextField yellowTxtLeaflet = new JTextField("0", 3);
         JTextField whiteTxtLeaflet = new JTextField("0", 3);
         JTextField magentaTxtLeaflet = new JTextField("0", 3);
+        
+        JTextField situationTxtLeaflet = new JTextField("NO", 3);
 
         greenTxtLeaflet.setEditable(false);
         redTxtLeaflet.setEditable(false);
@@ -205,6 +198,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         yellowTxtLeaflet.setEditable(false);
         whiteTxtLeaflet.setEditable(false);
         magentaTxtLeaflet.setEditable(false);
+        situationTxtLeaflet.setEditable(false);
 
         leafletTextFieldList.add(redTxtLeaflet);
         leafletTextFieldList.add(greenTxtLeaflet);
@@ -212,21 +206,32 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         leafletTextFieldList.add(yellowTxtLeaflet);
         leafletTextFieldList.add(whiteTxtLeaflet);
         leafletTextFieldList.add(magentaTxtLeaflet);
+        leafletTextFieldList.add(situationTxtLeaflet);
 
         leafletsTextFields.put(leafletID, leafletTextFieldList);
     }
+    
+     
+    
+    
 
     private void initBuildLeafletsTextFields(JPanel panel) {
 
-        for (int i = 0; i <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; i++) {
+        
+        for (int i = 0; i <= Constants.MAX_NUMBER_OF_LEAFLETS-1; i++) {
+
             addLeafletTextFields(new Long(i));
+
         }
 
     }
+    
+     
 
     private void loadLeafletsTextFields(JPanel typesPanel) {
         typesPanel.removeAll();
-        for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
+        //for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
+        for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS; i++) {    
             for (Iterator<Long> iter = leafletsTextFields.keySet().iterator(); iter.hasNext();) {
                 Long ID = iter.next();
                 typesPanel.add(leafletsTextFields.get(ID).get(i));
@@ -234,17 +239,21 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         }
 
     }
+        
+    
 
     private JPanel createLeafletJewels() {
 
-        leafletTypesPanel.setLayout(new GridLayout(6, Constants.MAX_NUMBER_OF_LEAFLETS));
-
+        leafletTypesPanel.setLayout(new GridLayout(7, Constants.MAX_NUMBER_OF_LEAFLETS));
+        
         initBuildLeafletsTextFields(leafletTypesPanel);
         loadLeafletsTextFields(leafletTypesPanel);
 
         return leafletTypesPanel;
 
     }
+    
+    
 
     public void setCreature(Creature c) {
         if (this.creature != null) {
@@ -260,6 +269,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         refreshEnergyData();
         refreshSerotoninData();
         refreshEndorphineData();
+        
 
     }
 
@@ -283,6 +293,43 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
 
         System.out.println("__________refreshKnapsackScoreData___end_____");
     }
+    
+    
+    public void refreshLeafletSituation() {
+        
+        System.out.println("---------------refreshLeafletSituation---------------");
+        
+        TreeSet tree = new TreeSet();
+        for (Leaflet l : e.getLeafletsOfOwner(creature.getID())) {
+            tree.add(l.getID());
+        }
+       
+            String str = "";
+            for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
+                Object[] array = tree.toArray();
+                Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
+                
+                if (l.isIfCompleted()) {
+                    str = " YES ";
+
+                } else {
+                     str = "  NO ";
+                }
+                                            
+                ((JTextField) leafletTypesPanel.getComponent(6 * 3 + j)).setText(str);
+
+            }
+       
+        repaint();
+    }
+    
+     public void refreshScore() {
+
+        scoreTF.setText(new Integer(this.creature.sack.score).toString());
+        System.out.println("__________refreshScore_____");
+    }
+    
+    
 
     public void refreshEnergyData() {
         System.out.println("---------------refreshEnergyData---------------");
@@ -337,8 +384,9 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         for (Leaflet l : e.getLeafletsOfOwner(creature.getID())) {
             tree.add(l.getID());
         }
-        resetLeaflet();
-        for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
+       // resetLeaflet(); não esta funcionando. Está atualizando os campos errados  
+        //for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
+        for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS; i++) {
             for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
                 Object[] array = tree.toArray();
                 Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
@@ -435,9 +483,11 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         panel1_2.setBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createCompoundBorder(
-                                BorderFactory.createTitledBorder("Leaflets:"),
-                                BorderFactory.createEmptyBorder(3, 3, 3, 6)),
+                                BorderFactory.createTitledBorder("Leflets:"),
+                                    BorderFactory.createEmptyBorder(3, 3, 3, 7)),
                         panel1.getBorder()));
+        
+       
 
         panel1.setLayout(new GridBagLayout());
         GridBagConstraints gm1 = new GridBagConstraints();
@@ -447,12 +497,16 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
 
         panel1_1.add(createJewelsKnapsack(Constants.arrayOfColors));
         panel1_2.add(createLeafletJewels());
+        
+        
 
         panel1.add(panel1_1);
 
         gm1.gridx = 0;
         gm1.gridy = 1;
         panel1.add(panel1_2);
+        
+     
 
         mainmainPanel.setLayout(new BorderLayout());
 
@@ -603,16 +657,22 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         if (obj != null) {
             if ((Long) obj == 0) {
                 refreshKnapsackScoreData();
+                refreshLeafletSituation();
+                
             } else if ((Long) obj == 1) {
                 reBuildLeafletPanel();
             } else {
                 updateLeafletActivity((Long) obj);
+                refreshKnapsackScoreData();
             }
 
         } else {
             refreshEnergyData();
             refreshSerotoninData();
             refreshEndorphineData();
+            refreshLeafletSituation();
+           
+                     
         }
 
     }

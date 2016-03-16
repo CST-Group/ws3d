@@ -1,21 +1,3 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
 package model;
 
 /**
@@ -49,6 +31,7 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import javax.swing.JTextField;
 import util.Constants;
 
 public abstract class Creature extends Thing {
@@ -56,8 +39,7 @@ public abstract class Creature extends Thing {
     private int period = 10;  //in seconds
     private int delayPeriod = 60;
 
-    protected double vr, vl, w;
-
+    protected double vr, vl, w, xd, yd;
     /**
      * Instantiate according to the type of creature. For instance a car-like
      * creature (with two front driven wheels), a robot (two-wheeled creature
@@ -127,6 +109,7 @@ public abstract class Creature extends Thing {
         fuel = Constants.CREATURE_MAX_FUEL;
         serotonin = Constants.CREATURE_MAX_SEROTONIN;
         endorphine = Constants.CREATURE_MAX_ENDORPHINE;
+        
         fuelNotifier = new CreatureEnergyNotifier();
         serotoninNotifier = new CreatureSerotoninNotifier();
         endorphineNotifier = new CreatureEndorphineNotifier();
@@ -145,7 +128,7 @@ public abstract class Creature extends Thing {
         startEnergyCycle();
         startSerotoninCycle();
         startEndorphineCycle();
-
+        
         affordances = new ArrayList<Integer>();
         affordances.add(Constants.Affordance__VIEWABLE);
         
@@ -242,6 +225,21 @@ public abstract class Creature extends Thing {
         return this.w;
     }
 
+//    public void setXd(double xd) {
+//        this.xd = xd;
+//    }
+//
+//    public double getXd() {
+//        return this.xd;
+//    }
+//
+//    public void setYd(double yd) {
+//        this.yd = yd;
+//    }
+//
+//    public double getYd() {
+//        return this.yd;
+//    }
 
     public synchronized void setFuel(double fuel) {
         if (fuel <= 0) {
@@ -274,6 +272,11 @@ public abstract class Creature extends Thing {
 
     }
 
+    public boolean ifHasAnyLeaflet() {
+        if (this.hasLeaflet == 0) return false;
+        else return true;
+    }
+        
     public int ifHasActiveLeaflet() {
         if (this.myActiveLeaflets.isEmpty()) {
             return 0;
@@ -282,8 +285,15 @@ public abstract class Creature extends Thing {
         }
     }
 
-    private void deleteFromActiveLeaflets(Long ID) {
+   /* private void deleteFromActiveLeaflets(Long ID) {
         myActiveLeaflets.remove(ID);
+    }*/
+    
+    private void deleteFromActiveLeaflets(Leaflet l) {
+        myActiveLeaflets.remove(l);
+        if (myActiveLeaflets.isEmpty()) {
+            this.hasLeaflet = 0;
+        }
     }
 
     public synchronized void setFriction(double friction) {
@@ -465,7 +475,7 @@ public abstract class Creature extends Thing {
     }
 
     /**
-     * Did not remove from code completely : it is current in use! But
+     * Did not remove from code completely --> it is current in use! But
      * consider improve it to fully port to 3D.
      *
      * @param e
@@ -734,13 +744,42 @@ public abstract class Creature extends Thing {
         setFriction(0.0);
         //TODO: check if crystal is part of leaflet
         if (aThing.category == Constants.categoryJEWEL) {
-            increaseSerotonin();
+             updateActiveLeaflets(aThing, true);
+            //increaseSerotonin();          
+             decresedEnergy();
+           
         }
         handsActionSensor.setAction(Constants.ACTION_NAME_PUTINTOBAG);
         handsActionSensor.setThing(aThing);
         setChanged();
         notifyObservers();
     }
+    
+    
+    public void updateActiveLeaflets(Thing aThing, boolean inc) {
+        String type = aThing.getMaterial().getColorName();
+        for (Leaflet l : this.getActiveLeaflets()) {
+            if (l.ifInLeaflet(type)) {
+                if (!l.ifCompleted() && !l.ifAllCollected(type)) {
+                    l.updateCollected(type, inc);
+
+                    if (l.ifCompleted()) {
+                        l.setIfCompleted(true);
+                        System.out.println("_______Consegui completar um Leaflet!_______");
+                        l.printLeafletSituation();
+                    }
+
+                    
+                    break;
+                }
+            }
+            
+        }
+    }
+    
+    
+    
+    
     
     public StringBuffer getSackContent(){
         return this.sack.getSackContent();
@@ -750,14 +789,18 @@ public abstract class Creature extends Thing {
         //add in Factory list
         int[] aux = leaflet.getItems();
 
-        String[] array = {Constants.getColorItem(aux[0]), Constants.getColorItem(aux[1]), Constants.getColorItem(aux[2])};
+        /*String[] array = {Constants.getColorItem(aux[0]), Constants.getColorItem(aux[1]), Constants.getColorItem(aux[2])};
         for (int i = 0; i < array.length; ++i) {
             this.sack.removeJewelFromKnapsack(array[i]);
+        }*/
+        
+        for (int i = 0; i < aux.length; i++) {
+            this.sack.removeJewelFromKnapsack(Constants.getColorItem(aux[i]));
         }
 
         this.sack.incScore(leaflet.getPayment());
         leaflet.setActivity(0);
-        this.deleteFromActiveLeaflets(leaflet.getID());
+        this.deleteFromActiveLeaflets(leaflet);
         leafletNotifier.changed(leaflet.getID());
         handsActionSensor.setAction(Constants.ACTION_NAME_DELIVER);
     }
@@ -953,6 +996,16 @@ public abstract class Creature extends Thing {
             fuelNotifier.notifyObservers();
         }
     }
+    
+    
+    public void decresedEnergy() {
+        
+        System.out.println("***** Energy has decreased!!! *****");
+        setFuel(getFuel() - Constants.CREATURE_FUEL_DEC);
+        fuelNotifier.changed();
+        fuelNotifier.notifyObservers();
+
+    }
 
     public void increaseSerotonin() {
 
@@ -1024,6 +1077,9 @@ public abstract class Creature extends Thing {
         this.myActiveLeaflets = leaflets;
         this.hasLeaflet = 1; //true
     }
+    
+    
+    
 
     /**
      * This method is used when a collision between the creature and a Thing is
@@ -1096,6 +1152,8 @@ public abstract class Creature extends Thing {
 
         }
     }
+    
+    
 
     public class CreatureSerotoninNotifier extends Observable {
 

@@ -1,21 +1,8 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package model;
 
 import java.util.HashMap;
@@ -29,7 +16,8 @@ import util.Constants;
 public class Leaflet {
 
     private Long ID;
-    private int numberOfItems = 0;
+    private int numberOfItems = 0;  
+    private boolean ifCompleted;
     private int[] items;
     private int active = 1; //true: not delivered yet
     private int payment = 0; //number of points is gained by a creature when it is delivered
@@ -41,6 +29,7 @@ public class Leaflet {
 
     public Leaflet() {
         ID = System.currentTimeMillis();
+        ifCompleted = false;
     }
 
     public Leaflet(int[] jewelTypes) {
@@ -48,11 +37,14 @@ public class Leaflet {
         items = jewelTypes;
         buildItemsMapAndPayment(jewelTypes);
         numberOfItems = itemsMap.keySet().size();
+        
+        
     }
 
     public Leaflet(int[] jewelTypes, Long ownerID) {
         this(jewelTypes);
         this.ownerID = ownerID;
+        
     }
     public Long getOwner(){
         return ownerID;
@@ -86,6 +78,68 @@ public class Leaflet {
             return itemsMap.get(type).totalNumber;
         }else return -1;
     }
+    
+     public boolean isIfCompleted() {
+        return ifCompleted;
+    }
+
+    public void setIfCompleted(boolean ifCompleted) {
+        this.ifCompleted = ifCompleted;
+    }
+    
+    
+    public boolean ifInLeaflet(String type) {
+        return this.itemsMap.containsKey(type);
+    }
+    
+    /**
+     * retorna "true" se todos os itens do leaflet tiverem sido coletados.
+     */
+     
+    public boolean ifCompleted() {
+        int result = 0;
+        int[] aux = this.getItems();
+        for (int i = 0; i < aux.length; i++) {
+            if (!this.ifAllCollected(Constants.getColorItem(aux[i]))) {
+		result++;
+	    }
+        }
+        return (result == 0);
+    }
+    
+    /**
+     * retorna "true" se todos os itens de um determinado tipo (type) tiverem
+     * sido coletados; é um método auxiliar usado no método ifCompleted.
+     * @param type
+     * @return 
+     */
+    
+    public boolean ifAllCollected (String type) {
+        boolean result = false;
+        ItemAttributes iA = this.itemsMap.get(type);
+        if (iA.collected == iA.totalNumber) {
+            result = true;
+        }
+        return result;
+    }
+    
+    
+     public void updateCollected(String type, boolean inc) {
+
+        if (itemsMap.containsKey(type)) {  
+                        
+            if (inc) {
+                itemsMap.get(type).incCollected();
+            } else {
+                itemsMap.get(type).decCollected();
+            }
+        }
+        
+        
+    }
+     
+     
+    
 
     public Integer getNumberOfJewels(String type){
 
@@ -120,6 +174,7 @@ public class Leaflet {
                 itemsMap.get(Constants.getColorItem(jewelTypes[i])).setTotalNumber(inc);
             }
             payment = payment + Constants.getColorPayment(jewelTypes[i]);
+            
         }
     }
     /**
@@ -139,6 +194,28 @@ public class Leaflet {
         return ret;
 
     }
+    
+    
+    public void printLeafletSituation() {
+
+        System.out.println("LeafletID: " + this.ID + ". ");
+        int[] aux = this.getItems();
+
+        for (int i = 0; i < aux.length; i++) {
+            ItemAttributes iA = this.itemsMap.get(Constants.getColorItem(aux[i]));
+
+            System.out.print("Itens: " + Constants.getColorItem(aux[i]) + "  " + iA.collected+" ; ");
+
+        }
+        System.out.println();
+        System.out.println ("______________________________________________________");
+
+    }
+
+    
+    
+    
+    
     /**
      * Formatted to send to server following the protocol
      * @return
@@ -150,7 +227,7 @@ public class Leaflet {
             ret = ret + str + " ";
             ret = ret + (itemsMap.get(str)).toString() + " ";
         }
-        ret  = ret+payment+" ";
+        ret  = ret+payment+" "+ifCompleted+" ";
         return ret;
 
     }
@@ -158,10 +235,13 @@ public class Leaflet {
 
         int totalNumber;
         int collected;
+        
 
+        
         public ItemAttributes(int tn) {
             totalNumber = tn;
             collected = 0;
+           ;
         }
         public void setTotalNumber(int n){
             totalNumber = n;
@@ -176,9 +256,10 @@ public class Leaflet {
         public void decCollected(){
             collected--;
         }
-         public String toString(){
+        public String toString(){
              return (" "+totalNumber+" "+collected);
-         }
+        }
+       
 
     }
 }

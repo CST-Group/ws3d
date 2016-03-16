@@ -1,21 +1,7 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package worldserver3d;
 
 import worldserver3d.view.WorldFrame;
@@ -922,7 +908,7 @@ public class Main {
                     Thing th = i.ep.e.getThingFromName(thingName);
                     if (th != null) {
                         //c.graspIt((Jewel)th);
-                        c.putInSack(th, i.ep.e);
+                        c.putInSack(th, i.ep.e);   
                         i.ep.repaint();
                     }
                     getOutBuffer().append("" + thingName + "\r\n");
@@ -1869,8 +1855,31 @@ public class Main {
         }
         Creature c = i.ep.e.getCpool().get(creatID);
         Leaflet l = (Leaflet) i.ep.e.getLeafletPool().get(Long.parseLong(leafletID));
-        c.deliver(l);
-        getOutBuffer().append("\r\n Leaflet delivered!\r\n");
+        
+         // Avoid deliver a leaflet already delivered
+        if (l.getActivity() != 0) {          
+            // Avoid deliver of a incomplete leaflet
+            if (l.isIfCompleted()) {
+                c.deliver(l);
+                getOutBuffer().append("\r\n Leaflet delivered!\r\n");
+            } else {
+                getOutBuffer().append(Constants.ERROR_CODE).append(" Leaflet ").append(leafletID).append(" was not completed yet.\r\n");
+            }
+        } else {
+//            getOutBuffer().append(Constants.ERROR_CODE).append(" Leaflet ").append(leafletID).append(" was already delivered.\r\n");
+            getOutBuffer().append(" Leaflet ").append(leafletID).append(" was already delivered.\r\n");
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        /** Suelen comentou aqui
+         c.deliver(l);
+        getOutBuffer().append("\r\n Leaflet delivered!\r\n");*/
     }
 
     /**

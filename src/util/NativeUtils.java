@@ -1,21 +1,7 @@
-/*****************************************************************************
- * Copyright 2007-2015 DCA-FEEC-UNICAMP
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributors:
- *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package util;
 
 /**
@@ -34,9 +20,9 @@ import java.util.Locale;
 /**
  * Simple library class for working with JNI (Java Native Interface)
  * 
- * see http://frommyplayground.com/how-to-load-native-jni-library-from-jar
+ * @see http://frommyplayground.com/how-to-load-native-jni-library-from-jar
  *
- * @author Adam Heirnich adam@adamh.cz, http://www.adamh.cz
+ * @author Adam Heirnich <adam@adamh.cz>, http://www.adamh.cz
  */
 public class NativeUtils {
  
@@ -177,10 +163,10 @@ public class NativeUtils {
      * The file from JAR is copied into system temporary directory and then loaded. The temporary file is deleted after exiting.
      * Method uses String as filename because the pathname is "abstract", not system-dependent.
      * 
-     * @param path The filename inside JAR as absolute path (beginning with '/'), e.g. /package/File.ext
+     * @param filename The filename inside JAR as absolute path (beginning with '/'), e.g. /package/File.ext
      * @throws IOException If temporary file creation or read/write operation fails
      * @throws IllegalArgumentException If source file (param path) does not exist
-     * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than three characters (restriction of {see File#createTempFile(java.lang.String, java.lang.String)}).
+     * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than three characters (restriction of {@see File#createTempFile(java.lang.String, java.lang.String)}).
      */
     public static void loadLibraryFromJar(String path) throws IOException {
  
