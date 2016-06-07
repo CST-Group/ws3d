@@ -114,8 +114,11 @@ public class Main {
                     }
                 }
                 socket.close();
-            } catch (Throwable t) {
-                log.severe("Listening to the client... Exception caught: " + t);
+            } catch (Exception t) {
+                String reason = t.getMessage();
+                if (reason != null)
+                  if (reason.equalsIgnoreCase("Connection reset") == false)
+                    log.severe("Listening to the client... Exception caught: " + reason);
                 //System.out.println("Listening to the client... Exception caught: " + t);
             }
 
