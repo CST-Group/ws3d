@@ -45,6 +45,8 @@ import java.util.logging.Logger;
 import util.Constants;
 
 public class PerishableFood extends Food {
+    
+    static Logger log = Logger.getLogger(PerishableFood.class.getCanonicalName());
 
     private Timer timer;
 
@@ -68,7 +70,7 @@ public class PerishableFood extends Food {
             stillValid = true;
             myLifeCycle();
         } catch (IOException ex) {
-            System.out.println("!!!!!PerishableFood: Erro ! ");
+            log.severe("!!!!!PerishableFood: Erro ! ");
             ex.printStackTrace();
         }
     }
@@ -124,7 +126,7 @@ public class PerishableFood extends Food {
           this.pathToTexture = pathToTexture;
         }
         public void run() {
-            System.out.println("***** Food expired! *****");
+            log.info("***** Food expired! *****");
             this.pf.setSpoiledTexture(pathToTexture);
             material.setEnergy(0.0);
             material.setColor(ColorRGBA.darkGray); //spoiled

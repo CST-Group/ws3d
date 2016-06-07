@@ -26,6 +26,7 @@ import com.jme.util.GameTaskQueueManager;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.GameStateManager;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,11 +39,12 @@ public class SimulationFrame {
     Main root;
     public SimulationGameState gameState;
     StandardGame game;
+    static Logger log = Logger.getLogger(SimulationFrame.class.getCanonicalName());
     
     SimulationFrame(Main m) {
     root = m;    
 
-    game = new StandardGame("Elisa's EpisodicMemoryGame"); // Create our game
+    game = new StandardGame("WorldServer3D Game"); // Create our game
     //try {
     GameSettings gs = game.getSettings();    
     gs.setWidth(1024);
@@ -50,7 +52,7 @@ public class SimulationFrame {
 
     try {
     game.start();	// Start the game thread
-    } catch (Exception ev) {System.out.println("Game start exception !!!");}
+    } catch (Exception ev) {log.severe("Game start exception !!!");}
 
     MouseInput.get().setCursorVisible(true);
     GameTaskQueueManager.getManager().update(new Callable<Void>(){

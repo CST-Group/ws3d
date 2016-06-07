@@ -22,6 +22,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.system.DisplaySystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 import model.*;
 import util.Constants;
 
@@ -35,9 +36,11 @@ public class ThingCreator {
     Environment e;
     //the motor system of the robot is differential steering by default:
     int motorSys = 2;
+    Logger log;
 
     public ThingCreator(final Environment e) {
         this.e = e;
+        log = Logger.getLogger(ThingCreator.class.getCanonicalName());
     }
 
     private String getTimestampFormatted(Long t) {
@@ -107,9 +110,9 @@ public class ThingCreator {
             //There might be a problem when recreating from xml file
             int idx = e.addThing(th);
             th.setID(t + idx, e);
-            System.out.println(">>>>>>>>Thing created: "+th.getMyName()+" at "+getTimestampFormatted(t));
+            log.info(">>>>>>>>Thing created: "+th.getMyName()+" at "+getTimestampFormatted(t));
         } catch (Exception ex) {
-            System.out.println("!!!!!Error in ThingCreator ! ");
+            log.severe("!!!!!Error in ThingCreator ! ");
 
         }
         return th;
@@ -154,7 +157,7 @@ public class ThingCreator {
         //There might be a problem when recreating from xml file
         int idx = e.addThing(c);
         c.setID(t + idx, e);
-        System.out.println(">>>>>>>>Creature created: "+c.getMyName()+" at "+getTimestampFormatted(t));
+        log.info(">>>>>>>>Creature created: "+c.getMyName()+" at "+getTimestampFormatted(t));
         return c;
 
     }

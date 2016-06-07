@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Locale;
+import java.util.logging.Logger;
  
 /**
  * Simple library class for working with JNI (Java Native Interface)
@@ -39,6 +40,8 @@ import java.util.Locale;
  * @author Adam Heirnich <adam@adamh.cz>, http://www.adamh.cz
  */
 public class NativeUtils {
+    
+    static Logger log = Logger.getLogger(NativeUtils.class.getCanonicalName());
  
     /**
      * Private constructor - this class will never be instanced
@@ -52,18 +55,18 @@ public class NativeUtils {
         try {
         fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
         } catch (Exception e) {
-            System.out.println("Exceção: "+e);
+            log.severe("Exceção: "+e);
         }
         fieldSysPath.setAccessible( true );
         try {
         fieldSysPath.set( null, null );
         } catch (Exception e) {
-            System.out.println("Exceção: "+e);
+            log.severe("Exceção: "+e);
         }
     }
  
     public static void prepareNativeLibs() {
-        System.out.println("OS:"+System.getProperties().getProperty("os.name")+" Architecture:"+System.getProperties().getProperty("os.arch"));
+        log.info("OS:"+System.getProperties().getProperty("os.name")+" Architecture:"+System.getProperties().getProperty("os.arch"));
             
 	    String osName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
             String osArch = System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
@@ -71,34 +74,33 @@ public class NativeUtils {
             try {
  	      if(osName.contains("win")){
                   if(osArch.contains("64")) {
-                    System.out.println("Windows 64 bits");
+                    log.info("Windows 64 bits");
                     NativeUtils.loadFileFromJar("/windows/jinput-dx8_64.dll");
                     NativeUtils.loadFileFromJar("/windows/jinput-raw_64.dll");
                     NativeUtils.loadFileFromJar("/windows/lwjgl64.dll");
                     NativeUtils.loadFileFromJar("/windows/OpenAL64.dll");
                   }
                   else {
-                    System.out.println("Windows 32 bits");
-                    System.out.println("Windows 64 bits");
+                    log.info("Windows 32 bits");
                     NativeUtils.loadFileFromJar("/windows/jinput-dx8.dll");
                     NativeUtils.loadFileFromJar("/windows/jinput-raw.dll");
                     NativeUtils.loadFileFromJar("/windows/lwjgl.dll");
                     NativeUtils.loadFileFromJar("/windows/OpenAL32.dll");
                   }   
               } else if(osName.contains("mac")){
-		    System.out.println("MacOSX");
+		    log.info("MacOSX");
                     NativeUtils.loadFileFromJar("/macosx/libjinput-osx.jnilib");
                     NativeUtils.loadFileFromJar("/macosx/liblwjgl.jnilib");
                     NativeUtils.loadFileFromJar("/macosx/openal.dylib");
               } else if(osName.contains("nix") || osName.contains("nux")){
                   if(osArch.contains("64")) {
-                      System.out.println("Linux 64 bits");
+                      log.info("Linux 64 bits");
                       NativeUtils.loadFileFromJar("/linux/libjinput-linux64.so");
                       NativeUtils.loadFileFromJar("/linux/liblwjgl64.so");
                       NativeUtils.loadFileFromJar("/linux/libopenal64.so");
                   }
                  else {
-                      System.out.println("Linux 32 bits");
+                      log.info("Linux 32 bits");
                       NativeUtils.loadFileFromJar("/linux/libjinput-linux.so");
                       NativeUtils.loadFileFromJar("/linux/liblwjgl.so");
                       NativeUtils.loadFileFromJar("/linux/libopenal.so");
@@ -108,7 +110,7 @@ public class NativeUtils {
 		throw new IllegalStateException("Unable to determine what the operating system is, cannot automatically load native libraries");
 	      }
             } catch (Exception e) {
-		System.out.println("Unable to load native libraries. They must be set manually with '-Djava.library.path'"+e);
+		log.severe("Unable to load native libraries. They must be set manually with '-Djava.library.path'"+e);
 	        //We failed. We shouldn't kill the application however, linking *may* have succeeded because of user manually setting location
             }
     }
@@ -138,7 +140,7 @@ public class NativeUtils {
             throw new IllegalArgumentException("The filename has to be at least 3 characters long.");
         }
  
-        System.out.println("Loading File from JAR: "+prefix+suffix);
+        log.info("Loading File from JAR: "+prefix+suffix);
         // Prepare temporary file
         //File temp = File.createTempFile(prefix, suffix);
         File temp = new File(prefix+suffix);
@@ -206,7 +208,7 @@ public class NativeUtils {
             throw new IllegalArgumentException("The filename has to be at least 3 characters long.");
         }
  
-        System.out.println("Loading Library: "+prefix+suffix);
+        log.info("Loading Library: "+prefix+suffix);
         // Prepare temporary file
         //File temp = File.createTempFile(prefix, suffix);
         File temp = new File(prefix+suffix);

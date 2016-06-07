@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import model.*;
 import model.Container;
 import util.Constants;
-import worldserver3d.ThingCreator;
 
 /**
  *
@@ -82,6 +82,7 @@ public class ContainerViewer extends JFrame implements Observer {
     JTextField yellowTxt;
     JTextField whiteTxt;
     JTextField magentaTxt;
+    static Logger log = Logger.getLogger(ContainerViewer.class.getCanonicalName());
 
     public ContainerViewer(Environment env) {
         this.container = null;
@@ -115,7 +116,7 @@ public class ContainerViewer extends JFrame implements Observer {
         deleteButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Cage deleted! ***");
+                log.info("*** Cage deleted! ***");
                 e.removeThing(container);
                 setVisible(false);
             }
@@ -387,7 +388,7 @@ public class ContainerViewer extends JFrame implements Observer {
         pFoodTF.setText(new Integer(this.container.getNumberOfElementsOfCategory(Constants.categoryPFOOD, Constants.getColorIndex(Constants.colorRED))).toString());
         npFoodTF.setText(new Integer(this.container.getNumberOfElementsOfCategory(Constants.categoryNPFOOD, Constants.getColorIndex(Constants.colorGREEN))).toString());
 
-        System.out.println("Food: "+ip+" "+inp);
+        log.info("Food: "+ip+" "+inp);
     }
 
     public void update(Observable o, Object obj) {

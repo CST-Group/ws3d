@@ -74,7 +74,7 @@ public class MouseInputListener3D implements MouseInputListener {
     private int clickcount = 0;
     private boolean hasChanged = true;
     DisplaySystem display;
-    Logger logger;
+    Logger log;
 
     public enum Cursor {
 
@@ -92,7 +92,7 @@ public class MouseInputListener3D implements MouseInputListener {
     public MouseInputListener3D(Main mm) {
         m = mm;
         display = DisplaySystem.getDisplaySystem();
-        logger = Logger.getLogger(MouseInputListener3D.class.getName());
+        log = Logger.getLogger(MouseInputListener3D.class.getCanonicalName());
 
         try {
             default_cursor = MouseInputListener3D.class.getClassLoader().getResource("images/arrow.png");
@@ -104,7 +104,7 @@ public class MouseInputListener3D implements MouseInputListener {
             hand = MouseInputListener3D.class.getClassLoader().getResource("images/hand.png");
             dot = MouseInputListener3D.class.getClassLoader().getResource("images/dot.png");
         } catch (Exception ev) {
-            System.out.println("Erro no download dos cursores ...");
+            log.severe("Erro no download dos cursores ...");
         }
 
     }
@@ -202,7 +202,7 @@ public class MouseInputListener3D implements MouseInputListener {
     public boolean canCreateHere(Ray ray) {
         Environment e = m.i.ep.e;
         int pos = ClassifyMouseClick(mouseXini, mouseYini, ray);
-        System.out.println(" *** pos= " + pos);
+        log.info(" *** pos= " + pos);
         if (pos == NONE) {
             //free space
             return true;
@@ -220,10 +220,10 @@ public class MouseInputListener3D implements MouseInputListener {
                 return true;
             }
         } else if (pos == EVENCAMERA) {
-            System.out.println("--- This is the Even Camera ---");
+            log.info("--- This is the Even Camera ---");
             return false;
         } else if (pos == ODDCAMERA) {
-            System.out.println("--- This is the Odd Camera ---");
+            log.info("--- This is the Odd Camera ---");
             return false;
         } else {
             return false;
@@ -288,13 +288,13 @@ public class MouseInputListener3D implements MouseInputListener {
             }
         } catch (Exception ev) {
 
-            System.out.println("aha ... coisa feia ...");
+            log.severe("aha ... coisa feia ... em mousePressed()");
             ev.printStackTrace();
         }
     }
 
     public void mouseReleased(int button, int x, int y, Ray ray) {
-        System.out.println(" *** MouseInputListener3D:   Mouse released. ");
+        log.info(" *** MouseInputListener3D:   Mouse released. ");
 
         Environment e = m.i.ep.e;
         if (button == 0 && clickcount == 2) {
@@ -321,7 +321,7 @@ public class MouseInputListener3D implements MouseInputListener {
                         m.i.ep.obstacleTab.setTitle("Edit Obstacle " + obstacleIdx);
                         m.i.ep.obstacleTab.update();
                         m.i.ep.obstacleTab.setVisible(true);
-                        System.out.println("Obstacle--- z= " + o.getZ());
+                        log.info("Obstacle--- z= " + o.getZ());
                     }
                     else if (o.category == Constants.categoryCAGE) {
                         m.i.ep.containerViewer.setContainer(o);
@@ -336,10 +336,10 @@ public class MouseInputListener3D implements MouseInputListener {
                     int c_index = e.getCpool().indexOf(c);
                     if (c_index % 2 == 0) {
                         e.setCamera(0, c_index);
-                        System.out.println("Even Camera attached to robot " + e.getCamera(0));
+                        log.info("Even Camera attached to robot " + e.getCamera(0));
                     } else {
                         e.setCamera(1, c_index);
-                        System.out.println("Odd Camera attached to robot " + e.getCamera(1));
+                        log.info("Odd Camera attached to robot " + e.getCamera(1));
                     }        
                 }
             }
@@ -363,7 +363,7 @@ public class MouseInputListener3D implements MouseInputListener {
                         e.addToOpoolModified(o);
                         if ((Math.abs(o.getX2() - o.getX1()) < 5) || (Math.abs(o.getY2() - o.getY1()) < 5)) {
                             e.removeThing(o);
-                            System.out.println("****** Invalid obstacle size!!! Removed!!!");
+                            log.info("****** Invalid obstacle size!!! Removed!!!");
                         }
                     }
                 }
@@ -376,7 +376,7 @@ public class MouseInputListener3D implements MouseInputListener {
             for (Creature c : e.getCpool()) {
                 //Panel with score of the creature:
                 if (c.contains((double) x, (double) y)) {
-                    System.out.println("****** Middle button on creature " + e.getCpool().indexOf(c));
+                    log.info("****** Middle button on creature " + e.getCpool().indexOf(c));
                     if (!m.i.ep.scoreTabList.containsKey(c.getID())) {
                         try {
                             KnapsackAndScoreFrame ksf = new KnapsackAndScoreFrame();
@@ -549,7 +549,7 @@ public class MouseInputListener3D implements MouseInputListener {
                 mouseXini = mouseXfin;
                 mouseYini = mouseYfin;
             } catch (Exception ev) {
-                System.out.println(ev + "..." + bpressed + " editstate:" + editstate);
+                log.severe(ev + "..." + bpressed + " editstate:" + editstate+" in MouseInputListener3D::mouseDragged()");
             }
         } else if (bpressed == 2) {
             mouseXfin = x;
@@ -666,7 +666,7 @@ public class MouseInputListener3D implements MouseInputListener {
                 break;
             case SE_Resize:
                 MouseInput.get().setHardwareCursor(se_resize, m.i.ep.e.auxx, m.i.ep.e.auxy);
-                System.out.println("xy:" + m.i.ep.e.auxx + " " + m.i.ep.e.auxy);
+                log.info("xy:" + m.i.ep.e.auxx + " " + m.i.ep.e.auxy);
                 break;
             case Hand:
                 MouseInput.get().setHardwareCursor(hand);

@@ -36,6 +36,7 @@ import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
 
 
 
@@ -63,6 +64,7 @@ public class WorldFrame
 	private JCheckBoxMenuItem  editCarItem = new JCheckBoxMenuItem("Edit Car");
 	private JCheckBoxMenuItem driveCarItem = new JCheckBoxMenuItem("Drive Car");
 	//private JCheckBoxMenuItem  controlItem = new JCheckBoxMenuItem("Control");
+        static Logger log = Logger.getLogger(WorldFrame.class.getCanonicalName());
 
 	public WorldFrame()
 	{
@@ -293,7 +295,7 @@ public class WorldFrame
 					if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 					{
 						fileName = chooser.getSelectedFile().getCanonicalPath();
-						System.out.println("You chose to open this file: "+fileName);
+						log.info("You chose to open this file: "+fileName);
 						ep.e.open(fileName);
 					}
 				} catch (Exception e) { e.printStackTrace(); }
@@ -308,7 +310,7 @@ public class WorldFrame
 		        	if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
 		        	{
 		        		fileName = chooser.getSelectedFile().getCanonicalPath();
-		        		System.out.println("You chose to save in this file: "+fileName);
+		        		log.info("You chose to save in this file: "+fileName);
 						ep.e.save(fileName);
 		        	}
 				} catch (Exception e) { e.printStackTrace(); }
@@ -326,7 +328,7 @@ public class WorldFrame
                 
                        else if(arg.equals(" Simulate"))
 			{
-				System.out.print("Consegui !!!");
+				log.info("Consegui !!!");
                                 //SimulationFrame sf = new SimulationFrame(ep.e);
 				
 			}

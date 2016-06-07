@@ -32,16 +32,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import com.jme.scene.Geometry;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import model.Thing;
+import java.util.logging.Logger;
 
 /**
  *
  * @author eccastro
  */
 public class OldShapeFactory {
+    
+    static Logger log = Logger.getLogger(OldShapeFactory.class.getCanonicalName());
 
     public ByteArrayOutputStream BO;
     public TextureState ts;
@@ -52,7 +51,7 @@ public class OldShapeFactory {
         try {
             C1.convert(new BufferedInputStream(maxFile.openStream()),BO);
          } catch (IOException exc) {
-            System.out.println("Erro !");
+            log.severe("Erro em OldShapeFactory constructor !");
          }
     }
 
@@ -70,7 +69,7 @@ public class OldShapeFactory {
         try {ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(BO.toByteArray());
              modelw = (Node)BinaryImporter.getInstance().load(ModelInputStream);
                } catch (IOException exc) {
-                     System.out.println("Erro !");
+                     log.severe("Erro em OldShapeFactory::getNode() !");
                }
         //modelw.setLocalScale(.05f);
         if (scale > 0 ) modelw.setLocalScale(scale);
@@ -92,7 +91,7 @@ public class OldShapeFactory {
         try {ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(BO.toByteArray());
              modelw = (Node)BinaryImporter.getInstance().load(ModelInputStream);
                } catch (IOException exc) {
-                     System.out.println("Erro !");
+                     log.severe("Erro em OldShapeFactory::getNode() !");
                }
         //modelw.setLocalScale(.02f);
         Quaternion quat90 = new Quaternion();

@@ -18,6 +18,7 @@
  *****************************************************************************/
 package model;
 
+import java.util.logging.Logger;
 import util.Constants;
 
 /**
@@ -27,6 +28,7 @@ import util.Constants;
 public class CageFSM {
 
     private Cage cage;
+    static Logger log = Logger.getLogger(CageFSM.class.getCanonicalName());
     
     
     private enum State {
@@ -443,8 +445,8 @@ public class CageFSM {
         };
 
         public void exec(FSMEvent.CageFSMEvent ev, CageFSM cfsm) {
-            System.out.println("State is: "+cfsm.getState());
-            System.out.println("Received event: "+ev+" and changed state.");
+            log.info("State is: "+cfsm.getState());
+            log.info("Received event: "+ev+" and changed state.");
             
             switch (ev) {
 
@@ -482,39 +484,39 @@ public class CageFSM {
          * @param cfsm
          */
         void processADDPFAction(CageFSM cfsm) {
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
 
         void processADDNPFAction(CageFSM cfsm) {
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
 
         void processADDJewelAction(CageFSM cfsm) {
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
 
         void processDELPFAction(CageFSM cfsm) {
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
 
         void processDELNPFAction(CageFSM cfsm) {
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
         void processDELJewelAction(CageFSM cfsm){
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
         void processOpenAction(CageFSM cfsm){
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
         void processCloseAction(CageFSM cfsm){
-            System.out.println("Do nothing");
+            log.info("Do nothing");
             sendMessage(cfsm);
         }
         
@@ -569,7 +571,7 @@ public class CageFSM {
             case FULL_CLOSED_NJ:
                 return Constants.FULL_CLOSED_NJ;
             default:
-                System.out.println("Error in CageFSM::getStateToInt: state does not exist!!!");
+                log.severe("Error in CageFSM::getStateToInt: state does not exist!!!");
                 return -1;
         }
 
@@ -580,13 +582,13 @@ public class CageFSM {
     }
     
     public void processEvent(FSMEvent.CageFSMEvent ev){
-        System.out.println("Event received: " + ev);
+        log.info("Event received: " + ev);
         this.state.exec(ev, this);
         
     }
 
     private static void sendMessage(CageFSM cfsm) {
-        System.out.println("Current state is: " + cfsm.getState());
+        log.info("Current state is: " + cfsm.getState());
     }
 
 

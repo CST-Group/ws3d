@@ -83,7 +83,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     JProgressBar energyBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_FUEL);
     JProgressBar serotoninBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_SEROTONIN);
     JProgressBar endorphineBar = new JProgressBar(0, (int) Constants.CREATURE_MAX_ENDORPHINE);
-    
+    static Logger log = Logger.getLogger(KnapsackAndScoreFrame.class.getCanonicalName());
     
 
     public KnapsackAndScoreFrame() throws InvocationTargetException {
@@ -317,13 +317,13 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         pFoodTF.setText((this.creature.sack.getNumberOfFood(Constants.PFOOD)).toString());
         npFoodTF.setText((this.creature.sack.getNumberOfFood(Constants.NPFOOD)).toString());
 
-        System.out.println("__________refreshKnapsackScoreData___end_____");
+        log.info("__________refreshKnapsackScoreData___end_____");
     }
     
     
     private void refreshLeafletSituation() {
         
-        System.out.println("---------------refreshLeafletSituation---------------");
+        log.info("---------------refreshLeafletSituation---------------");
         
         TreeSet tree = new TreeSet();
         for (Leaflet l : e.getLeafletsOfOwner(creature.getID())) {
@@ -352,13 +352,13 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
      public void refreshScore() {
 
         scoreTF.setText(new Integer(this.creature.sack.score).toString());
-        System.out.println("__________refreshScore_____");
+        log.info("__________refreshScore_____");
     }
     
     
 
     public void refreshEnergyData() {
-        System.out.println("---------------refreshEnergyData---------------");
+        log.info("---------------refreshEnergyData---------------");
 
         if (this.creature.getFuel() >= (0.5 * Constants.CREATURE_MAX_FUEL)) {
             energyBar.setForeground(Color.GREEN);
@@ -371,7 +371,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     }
 
     public void refreshSerotoninData() {
-        System.out.println("---------------refreshSerotoninData---------------");
+        log.info("---------------refreshSerotoninData---------------");
 
         if (this.creature.getSerotonin() >= (0.5 * Constants.CREATURE_MAX_SEROTONIN)) {
             serotoninBar.setForeground(Color.GREEN);
@@ -384,7 +384,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     }
 
         public void refreshEndorphineData() {
-        System.out.println("---------------refreshEndorphineData---------------");
+        log.info("---------------refreshEndorphineData---------------");
 
         if (this.creature.getEndorphine() >= (0.5 * Constants.CREATURE_MAX_ENDORPHINE)) {
             endorphineBar.setForeground(Color.GREEN);
@@ -432,7 +432,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         for (int i = 0; i <= Constants.MAX_NUMBER_OF_LEAFLETS * Constants.LEAFLET_ITEMS_NUMBER; i++) {
             ((JTextField) leafletTypesPanel.getComponent(i)).setText((new Integer(0)).toString());
         }
-        System.out.println("Leaflet was reset.");
+        log.info("Leaflet was reset.");
 
     }
 
@@ -482,7 +482,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         refillButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Refill ***");
+                log.info("*** Refill ***");
                 refill();
                 repaint();
 
@@ -492,7 +492,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         cheerUPButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Cheer Up ***");
+                log.info("*** Cheer Up ***");
                 forceIncreaseSerotonin();
                 forceIncreaseEndorphine(); //here???@@@
                 repaint();

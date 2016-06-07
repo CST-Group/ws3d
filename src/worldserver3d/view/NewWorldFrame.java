@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
+import java.util.logging.Logger;
 import javax.swing.*;
 import model.Creature;
 import model.Thing;
@@ -60,6 +61,7 @@ public class NewWorldFrame
     JButton cancelButton;
     float lastx = 1;
     float lasty = 1;
+    static Logger log = Logger.getLogger(NewWorldFrame.class.getCanonicalName());
 
     Observer environmentObserver = null;
    
@@ -144,7 +146,7 @@ public class NewWorldFrame
 
         float newwidth = ((float) Double.parseDouble(widthText.getText())/10);
         float newheight = ((float) Double.parseDouble(heightText.getText())/10);
-        System.out.println("NWF::Environment dimension: width= "+newwidth+" height= "+newheight);
+        log.info("NWF::Environment dimension: width= "+newwidth+" height= "+newheight);
         q.resize(newwidth, newheight);
         q.scaleTextureCoordinates(0, new Vector2f(1 / lastx, 1 / lasty));
         lastx = newwidth / 80;
@@ -189,7 +191,7 @@ public class NewWorldFrame
                             restoreEnvironmentSettings();
 
                         } catch (Exception ev) {
-                            System.out.println("Error: NewWorldFrame ");
+                            log.severe("Error: NewWorldFrame ");
                             ev.printStackTrace();
                         }
                     }

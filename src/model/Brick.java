@@ -32,6 +32,7 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import util.Constants;
 
 /**
@@ -42,6 +43,7 @@ import util.Constants;
 public class Brick extends Thing {
 
     public Box box;
+    static Logger log = Logger.getLogger(Brick.class.getCanonicalName());
 
     public Brick() {  //Savable matters only
     }
@@ -78,7 +80,7 @@ public class Brick extends Thing {
         this.x2 = x2;
         this.y2 = y2;
 
-        System.out.println("box vertexes: x1= " + x1 + " , y1= " + y1+ " and  x2= " + x2 + " , y2= " + y2);
+        log.info("box vertexes: x1= " + x1 + " , y1= " + y1+ " and  x2= " + x2 + " , y2= " + y2);
 
         float dx = (float) (getX2() - getX1()) / 10;
         float dy = (float) (getY2() - getY1()) / 10;

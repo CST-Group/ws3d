@@ -25,14 +25,11 @@ import javax.swing.*;
 import model.Brick;
 import model.Thing;
 import com.jme.renderer.ColorRGBA;
-import com.jmex.game.state.GameStateManager;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import model.Material3D;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.logging.Logger;
 import model.Environment;
 import util.Constants;
 
@@ -56,6 +53,7 @@ public class EditBrickFrame extends JFrame {
     List<JRadioButton> rdPool;
     String[] colorArray;
     JTextArea ta;
+    static Logger log = Logger.getLogger(EditBrickFrame.class.getCanonicalName());
     
     public EditBrickFrame(final Environment e) {
         this.obstacle = null;
@@ -96,9 +94,9 @@ public class EditBrickFrame extends JFrame {
         }
 public void setObjectColor(int materialColorIdx) {
 
-                  System.out.println(" ******* materialColorIdx = "+materialColorIdx);
+                  log.info(" ******* materialColorIdx = "+materialColorIdx);
                   String txt = colorArray[materialColorIdx];
-                  System.out.println(" ******* materialColorIdx corresponds to = "+ txt);
+                  log.info(" ******* materialColorIdx corresponds to = "+ txt);
                   ColorRGBA materialColor = this.e.colorPool.get(txt);
                   Material3D m3D = this.obstacle.getMaterial();
                   m3D.setColor(materialColor);
@@ -110,14 +108,14 @@ public void setObjectColor(int materialColorIdx) {
         Material3D m3D = this.obstacle.getMaterial();
         m3D.setColor(materialColor);
         this.obstacle.setMaterial(m3D);
-        System.out.println(" ****** Color changed to "+this.obstacle.getMaterial().getColorName());
+        log.info(" ****** Color changed to "+this.obstacle.getMaterial().getColorName());
     }
 public int getColorMaterial3DIdx(){
     int ret = 0; // returns 0 in case of not finding the color
     if (this.obstacle != null) {
          ColorRGBA c = this.obstacle.getMaterial().getColor();
          String s = getIdxFromColor(this.e.colorPool, c);
-         System.out.println(" *********** color is = "+ s + " or "+this.obstacle.getMaterial().getColorName());
+         log.info(" *********** color is = "+ s + " or "+this.obstacle.getMaterial().getColorName());
          for (int i = 0; i <=5;i++){
              if (colorArray[i].equals(s)){
                  return i;
@@ -214,7 +212,7 @@ private void createSwingStuff() {
         deleteButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Obstacle deleted! ***");
+                log.info("*** Obstacle deleted! ***");
                 obstacle.removeRememberMeIcon(e);
                 e.removeThing(obstacle);
                 setVisible(false);

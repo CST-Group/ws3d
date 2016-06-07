@@ -28,6 +28,7 @@ import java.util.HashMap;
 import model.Material3D;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import model.Environment;
 import model.Jewel;
 import util.Constants;
@@ -51,8 +52,10 @@ public class EditJewelFrame extends JFrame {
     JPanel radioPanel;
     List<JRadioButton> rdPool;
     String[] colorArray;
+    Logger log;
 
     public EditJewelFrame(final Environment e) {
+        log = Logger.getLogger(EditJewelFrame.class.getCanonicalName());
         this.jewel = null;
         this.e = e;
 
@@ -94,9 +97,9 @@ public class EditJewelFrame extends JFrame {
 
     public void setObjectColor(int materialColorIdx) {
 
-        System.out.println(" ******* materialColorIdx = " + materialColorIdx);
+        log.info(" ******* materialColorIdx = " + materialColorIdx);
         String txt = colorArray[materialColorIdx];
-        System.out.println(" ******* materialColorIdx corresponds to = " + txt);
+        log.info(" ******* materialColorIdx corresponds to = " + txt);
         ColorRGBA materialColor = this.e.colorPool.get(txt);
         Material3D m3D = this.jewel.getMaterial();
         m3D.setColor(materialColor);
@@ -113,7 +116,7 @@ public class EditJewelFrame extends JFrame {
         if (this.jewel != null) {
             ColorRGBA c = this.jewel.getMaterial().getColor();
             String s = getIdxFromColor(this.e.colorPool, c);
-            System.out.println(" *********** color is = " + s + " or " + this.jewel.getMaterial().getColorName());
+            log.info(" *********** color is = " + s + " or " + this.jewel.getMaterial().getColorName());
             for (int i = 0; i <= 5; i++) {
                 if (colorArray[i].equals(s)) {
                     return i;
@@ -211,7 +214,7 @@ public class EditJewelFrame extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Obstacle deleted! ***");
+                log.info("*** Obstacle deleted! ***");
                 jewel.removeRememberMeIcon(e);
                 e.removeThing(jewel);
                 setVisible(false);

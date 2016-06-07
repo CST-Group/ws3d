@@ -50,6 +50,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Observable;
+import java.util.logging.Logger;
 import util.Constants;
 
 //public abstract class Thing extends Spatial{
@@ -92,8 +93,10 @@ public abstract class Thing extends Observable implements Savable {
     protected String myName; //set through setID
     
     protected List<Integer>affordances;
+    Logger log;
 
     public Thing() {       //default values: SAVABLE MATTERS!!!!!!!!!!!!!!!
+        log = Logger.getLogger(Thing.class.getCanonicalName());
         zZ = 0.0d;
         previousZ = 0.0d;
         comX = 0.0d;
@@ -166,7 +169,7 @@ public abstract class Thing extends Observable implements Savable {
         try {
             C1.convert(new BufferedInputStream(maxFile.openStream()), sf.BO);
         } catch (IOException exc) {
-            System.out.println("Error in ThingShapeFactory !");
+            log.severe("Error in ThingShapeFactory !");
         }
         try {
             ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(sf.BO.toByteArray());
@@ -174,7 +177,7 @@ public abstract class Thing extends Observable implements Savable {
             sf.modelw.setName("Model shape");
 
         } catch (IOException exc) {
-            System.out.println("Error !");
+            log.severe("Error in Thing::updateShape()");
         }
         if (scale > 0) {
             sf.modelw.setLocalScale(scale);
@@ -209,9 +212,9 @@ public abstract class Thing extends Observable implements Savable {
     public void hideMe(Environment e) //synchronized???
     {
         synchronized (e.semaphore) {
-            System.out.println("====  public void hideMe() ===");
+            log.info("====  public void hideMe() ===");
             // myGraphics2D = graphics;
-            System.out.println("====  z= " + zZ);
+            log.info("====  z= " + zZ);
             previousZ = zZ;
             wasHidden = true;
             //refresh myself
@@ -230,7 +233,7 @@ public abstract class Thing extends Observable implements Savable {
     public void undoHideMe(Environment e) //synchronizedS
     {
         synchronized (e.semaphore) {
-            System.out.println("====  public void undoHideMe() ===");
+            log.info("====  public void undoHideMe() ===");
             wasHidden = false;
             //visible again
             setZ(previousZ);
@@ -255,7 +258,7 @@ public abstract class Thing extends Observable implements Savable {
     }
 
     public synchronized void removeRememberMeIcon(Environment e) { //synchronized
-        System.out.println("======= RememberMeIcon removed! ======");
+        log.info("======= RememberMeIcon removed! ======");
         e.rmiPool.remove(this.arrow);
         e.deleteArrowDSlist.add(this.arrow);
     }
@@ -428,7 +431,7 @@ public abstract class Thing extends Observable implements Savable {
                 ret = false;
             }
         } catch (Exception ev) {
-            System.out.println("Error --- contains3D... ");
+            log.severe("Error --- contains3D... ");
             ev.printStackTrace();
         }
 
@@ -598,7 +601,7 @@ public abstract class Thing extends Observable implements Savable {
             try {
                 C1.convert(new BufferedInputStream(maxFile.openStream()), BO);
             } catch (IOException exc) {
-                System.out.println("Error in ThingShapeFactory !");
+                log.severe("Error in ThingShapeFactory !");
             }
         }
 
@@ -609,7 +612,7 @@ public abstract class Thing extends Observable implements Savable {
                 modelw.setName("Model shape");
 
             } catch (IOException exc) {
-                System.out.println("Error !");
+                log.severe("Error in Thing::getNode()");
             }
             if (scale > 0) {
                 modelw.setLocalScale(scale);

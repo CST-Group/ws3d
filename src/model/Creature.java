@@ -50,11 +50,12 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import javax.swing.JTextField;
+import java.util.logging.Logger;
 import util.Constants;
 
 public abstract class Creature extends Thing {
-
+    
+    Logger log = Logger.getLogger(Creature.class.getCanonicalName());
     private int period = 10;  //in seconds
     private int delayPeriod = 60;
 
@@ -748,7 +749,7 @@ public abstract class Creature extends Thing {
 
     public void handleHiddenObstacleDetection(Thing o) {
 
-        System.out.println("--->>>Hidden obstacle detected! What should I do??? <<<---");
+        log.severe("--->>>Hidden obstacle detected! What should I do??? <<<---");
         //unearthIt(o);
     }
 
@@ -784,7 +785,7 @@ public abstract class Creature extends Thing {
 
                     if (l.ifCompleted()) {
                         l.setIfCompleted(true);
-                        System.out.println("_______Consegui completar um Leaflet!_______");
+                        log.info("_______Consegui completar um Leaflet!_______");
                         l.printLeafletSituation();
                     }
 
@@ -1019,7 +1020,7 @@ public abstract class Creature extends Thing {
     
     public void decresedEnergy() {
         
-        System.out.println("***** Energy has decreased!!! *****");
+        log.info("***** Energy has decreased!!! *****");
         setFuel(getFuel() - Constants.CREATURE_FUEL_DEC);
         fuelNotifier.changed();
         fuelNotifier.notifyObservers();
@@ -1124,7 +1125,7 @@ public abstract class Creature extends Thing {
         }
 
         public void run() {
-            System.out.println("***** Energy has decreased!!! *****");
+            log.info("***** Energy has decreased!!! *****");
             setFuel(getFuel() - Constants.CREATURE_FUEL_DEC);
 
         }
@@ -1151,7 +1152,7 @@ public abstract class Creature extends Thing {
         }
 
         public void run() {
-            System.out.println("***** Serotonin has decreased!!! *****");
+            log.info("***** Serotonin has decreased!!! *****");
             setSerotonin(getSerotonin() - Constants.CREATURE_SEROTONIN_DEC);
 
         }
@@ -1166,7 +1167,7 @@ public abstract class Creature extends Thing {
         }
 
         public void run() {
-            System.out.println("***** Endorphine has decreased!!! *****");
+            log.info("***** Endorphine has decreased!!! *****");
             setEndorphine(getEndorphine() - Constants.CREATURE_ENDORPHINE_DEC);
 
         }

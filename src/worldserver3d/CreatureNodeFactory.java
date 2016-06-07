@@ -32,11 +32,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 /**
  *
  * @author gudwin
  */
 public class CreatureNodeFactory {
+    
+    static Logger log = Logger.getLogger(CreatureNodeFactory.class.getCanonicalName());
     
     ByteArrayOutputStream BO;
     TextureState ts;
@@ -47,7 +50,7 @@ public class CreatureNodeFactory {
         try {
             C1.convert(new BufferedInputStream(maxFile.openStream()),BO);
          } catch (IOException exc) {
-            System.out.println("Erro !");
+            log.severe("Erro em CreatureNodeFactory constructor");
          }
     }
 
@@ -66,7 +69,7 @@ public class CreatureNodeFactory {
         try {ByteArrayInputStream CreatureModelInputStream = new ByteArrayInputStream(BO.toByteArray());             
              modelw = (Node)BinaryImporter.getInstance().load(CreatureModelInputStream);
                } catch (IOException exc) {
-                     System.out.println("Erro !");
+                     log.severe("Erro em CreatureNodeFactory::getCreatureNode()");
                }  
         modelw.setLocalScale(.02f);
         Quaternion quat90 = new Quaternion();
@@ -88,7 +91,7 @@ public class CreatureNodeFactory {
         try {ByteArrayInputStream CreatureModelInputStream = new ByteArrayInputStream(BO.toByteArray());
              modelw = (Node)BinaryImporter.getInstance().load(CreatureModelInputStream);
                } catch (IOException exc) {
-                     System.out.println("Erro !");
+                     log.severe("Erro em CreatureNodeFactory::getCreatureNode()!");
                }
         modelw.setLocalScale(.02f);
         Quaternion quat90 = new Quaternion();

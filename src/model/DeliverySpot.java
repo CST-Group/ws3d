@@ -36,6 +36,8 @@ import util.Constants;
  * @author eccastro
  */
 public class DeliverySpot  extends Thing{
+    
+    static Logger log = Logger.getLogger(DeliverySpot.class.getCanonicalName());
 
     public DeliverySpot(){ //Savable matters only
 
@@ -66,7 +68,7 @@ public class DeliverySpot  extends Thing{
             affordances = new ArrayList<Integer>();
             affordances.add(Constants.Affordance__VIEWABLE);
         } catch (IOException ex) {
-            System.out.println("!!!!!DeliverySpot: Erro ! ");
+            log.severe("!!!!!DeliverySpot: Erro ! ");
             ex.printStackTrace();
         }
 

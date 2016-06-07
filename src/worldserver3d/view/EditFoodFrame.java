@@ -26,6 +26,7 @@ import model.Thing;
 import model.Food;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import model.Environment;
 import util.Constants;
 import worldserver3d.ThingCreator;
@@ -56,8 +57,10 @@ public class EditFoodFrame extends JFrame {
     private DefaultButtonModel model;
     private ButtonGroup group;
     JTextArea ta;
+    Logger log;
 
     public EditFoodFrame(final Environment e) {
+        log = Logger.getLogger(EditFoodFrame.class.getCanonicalName());
         this.food = null;
         this.e = e;
         SwingUtilities.invokeLater(new Runnable() {
@@ -233,7 +236,7 @@ public class EditFoodFrame extends JFrame {
         newCreatureButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("*** Create creature! ***");
+                log.info("*** Create creature! ***");
                 placeCreatureHere(x, y);
                 setVisible(false);
             }
@@ -243,7 +246,7 @@ public class EditFoodFrame extends JFrame {
         newJewelButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("*** Create Jewel! ***");
+                log.info("*** Create Jewel! ***");
                 placeJewelHere(x, y);
                 setVisible(false);
             }
@@ -257,7 +260,7 @@ public class EditFoodFrame extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ev) {
-                System.out.println("*** Food deleted! ***");
+                log.info("*** Food deleted! ***");
                 food.removeRememberMeIcon(e);
                 e.removeThing(food);
                 setVisible(false);

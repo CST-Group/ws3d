@@ -18,12 +18,12 @@
  *****************************************************************************/
 package model;
 
-import com.jme.math.Quaternion;
 import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import util.Constants;
 
 /**
@@ -40,6 +40,7 @@ public class Cage extends Container {
      * Finite State Machine of the Cage
      */
     protected CageFSM cageFSM;
+    static Logger log = Logger.getLogger(Cage.class.getCanonicalName());
 
     //Default constructor: initially it contain only Food.
     public Cage(double x, double y, Environment ev, MaterialState ms, TextureState ts) {
@@ -72,7 +73,7 @@ public class Cage extends Container {
             cageFSM = new CageFSM(this);
 
         } catch (IOException ex) {
-            System.out.println("!!!!!Cage: Error ! ");
+            log.info("!!!!!Cage: Error ! ");
             ex.printStackTrace();
         }
 
@@ -103,7 +104,7 @@ public class Cage extends Container {
             cageFSM = new CageFSM(this);
 
         } catch (IOException ex) {
-            System.out.println("!!!!!Cage: Error ! ");
+            log.severe("!!!!!Cage: Error ! ");
             ex.printStackTrace();
         }
     }
@@ -114,7 +115,7 @@ public class Cage extends Container {
 
     public void setStatus(int cageStatus) {
         this.state = cageStatus;
-        System.out.println(" cageStatus:  "+cageStatus);
+        log.info(" cageStatus:  "+cageStatus);
         switch (cageStatus) {
             case Constants.FULL_OPENED_APPLE:
                 updateShape("images/apple_cage_open_p.3DS", 0.03f, this.e);
@@ -173,7 +174,7 @@ public class Cage extends Container {
                 updateShape("images/nj_cage_p.3DS", 0.03f, this.e);
                 break;
             default:
-                System.out.println("Error in Cage::setStatus !!!");
+                log.severe("Error in Cage::setStatus !!!");
         }
     }
 
@@ -307,7 +308,7 @@ public class Cage extends Container {
                 break;
 
             default:
-                System.out.println("Error in Cage::sendAddDelEvent: no recognizable Thing category!!!");
+                log.severe("Error in Cage::sendAddDelEvent: no recognizable Thing category!!!");
         }
     }
 

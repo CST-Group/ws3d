@@ -25,12 +25,6 @@ package model;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.MaterialState;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import java.io.IOException;
 import util.Constants;
 
 public class Material3D {

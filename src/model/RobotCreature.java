@@ -23,12 +23,15 @@ import motorcontrol.CarLikeCreatureKinematics;
 import motorcontrol.CreatureKinematicsInterface;
 import motorcontrol.TwoWheeledRobotKinematics;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  *
  * @author eccastro
  */
 public class RobotCreature extends Creature {
+    
+    static Logger log = Logger.getLogger(RobotCreature.class.getCanonicalName());
 
     public RobotCreature(double initialX, double initialY, double iPitch, Environment env, int motorSys) {
 
@@ -46,7 +49,7 @@ public class RobotCreature extends Creature {
              sf = new ThingShapeFactory("images/robo.3ds", this);
 
         } catch (IOException ex) {
-            System.out.println("!!!!!Creature: Erro ! ");
+            log.severe("!!!!!Creature: Erro ! ");
             ex.printStackTrace();
         }
 

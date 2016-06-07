@@ -25,8 +25,6 @@ import worldserver3d.view.WorldFrame;
 import worldserver3d.view.NewWorldFrame;
 import worldserver3d.*;
 import java.util.Observable;
-//import worldserver3d.action.KeyTurnLeftAction;
-//import worldserver3d.action.KeyTurnRightAction;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.input.InputHandler;
@@ -70,10 +68,6 @@ import javax.swing.event.MenuListener;
 import model.Creature;
 import model.Environment;
 import model.Thing;
-//import worldserver3d.action.KeyAscendAction;
-//import worldserver3d.action.KeyDescendAction;
-//import worldserver3d.action.KeyMoveBackAction;
-//import worldserver3d.action.KeyMoveFrontAction;
 import java.util.HashMap;
 import java.util.Observer;
 import com.jme.intersection.PickResults;
@@ -129,7 +123,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
     private StandardGame game;
     int[]envDim;
 
-    Logger logger;
+    static Logger log = Logger.getLogger(SimulationGameState.class.getCanonicalName());
 
     public SimulationGameState(String name, Main m, StandardGame game) {
         super(name);
@@ -139,12 +133,10 @@ public class SimulationGameState extends CameraGameState implements ActionListen
         nwf = new NewWorldFrame(m, up);
         wEnv = m.i.ep.getEnvironment();
         i = m.i;
-
-        logger = Logger.getLogger(SimulationGameState.class.getName());
         try {
             scoreTab = new KnapsackAndScoreFrame();
         } catch (InvocationTargetException ex) {
-            logger.log(Level.SEVERE, "KnapsackAndScoreFrame instantiation error.", ex);
+            log.severe("KnapsackAndScoreFrame instantiation error." + ex);
         }
         wEnv.cpoolNotifier.addAnObserver(up);
 
@@ -462,7 +454,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
             }
 
         } catch (Exception ev) {
-            logger.log(Level.SEVERE, "StateUpdate error while building the scene.");
+            log.severe("StateUpdate error while building the scene.");
             ev.printStackTrace();
         }
 
@@ -613,7 +605,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO, "camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x - delta, location.y, location.z));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
         }
@@ -622,7 +614,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO,"camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x + delta, location.y, location.z));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
 
@@ -632,7 +624,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO,"camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x, location.y - delta, location.z));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
         }
@@ -641,7 +633,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO,"camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x, location.y + delta, location.z));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
 
@@ -650,7 +642,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
                 isValidCommand("zm", false)) {
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO,"camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x, location.y, location.z - delta));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
         }
@@ -658,7 +650,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
                 isValidCommand("zM", false)) {
             Vector3f location = cam.getLocation();
             Vector3f direction = cam.getDirection();
-            logger.log(Level.INFO,"camera:" + cam.getLocation() + cam.getDirection());
+            log.info("camera:" + cam.getLocation() + cam.getDirection());
             cam.setLocation(new Vector3f(location.x, location.y, location.z + delta));
             cam.setDirection(new Vector3f(direction.x, direction.y, direction.z));
 
@@ -727,7 +719,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
                 JFileChooser chooser = new JFileChooser();
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fileName = chooser.getSelectedFile().getCanonicalPath();
-                    logger.log(Level.INFO,"You chose to open this file: " + fileName);
+                    log.info("You chose to open this file: " + fileName);
                     this.readEnvDimensionsFromFile(fileName);
                     updateEnvironment(envDim[0], envDim[1], null);
                     wEnv.open(fileName);
@@ -742,7 +734,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 
                 if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fileName = chooser.getSelectedFile().getCanonicalPath();
-                    logger.log(Level.INFO,"You chose to save in this file: " + fileName);
+                    log.info("You chose to save in this file: " + fileName);
                     wEnv.save(fileName);
                 }
             } catch (Exception e) {
@@ -886,7 +878,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
             }
         } catch (Exception ev) {
 
-            logger.log(Level.WARNING,"cameraTest error...");
+            log.severe("cameraTest error...");
             ev.printStackTrace();
         }
     }
@@ -995,7 +987,7 @@ public class SimulationGameState extends CameraGameState implements ActionListen
     public void readEnvDimensionsFromFile(String fileName) {
         ReadFromXMLFile reader = new ReadFromXMLFile(fileName);
         envDim = reader.readDimFromFile();
-        System.out.println("SGS::envDim: "+" "+envDim[0]+" "+envDim[1]);
+        log.info("SGS::envDim: "+" "+envDim[0]+" "+envDim[1]);
     }
 
     class ScoreMenuUpdater implements Observer {

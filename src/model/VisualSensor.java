@@ -26,6 +26,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.scene.Node;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +38,8 @@ public class VisualSensor extends Sensor{
     private Node scene;
 
     private TreeMap<Float, Thing> list = new TreeMap<Float, Thing>();
+    
+    static Logger log = Logger.getLogger(VisualSensor.class.getCanonicalName());
 
     public VisualSensor() { 
     }
@@ -111,8 +114,7 @@ public class VisualSensor extends Sensor{
 
             
         } catch (Exception ev) {
-
-            System.out.println("Error when getting things from camera...");
+            log.severe("Error when getting things from camera...");
             ev.printStackTrace();
         }
 

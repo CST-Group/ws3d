@@ -55,10 +55,16 @@ public class Main {
     public SimulationFrame sf;
     StringBuffer outToClient;
     List<ServerThread> clientsConnected;
+    Logger log;
 
     public Main() {
-
+        log = Logger.getLogger(Main.class.getCanonicalName());
         Logger.getLogger("com.jme").setLevel(Level.OFF);
+        Logger.getLogger("com.jmex").setLevel(Level.OFF);
+        Logger.getLogger("worldserver3d").setLevel(Level.WARNING);
+        Logger.getLogger("util").setLevel(Level.WARNING);
+        Logger.getLogger("model").setLevel(Level.WARNING);
+        Logger.getLogger("motorcontrol").setLevel(Level.WARNING);
         NativeUtils.setLibraryPath(".");
         NativeUtils.prepareNativeLibs();
         //Logger.getLogger("com.jme").setLevel(Level.ALL);
@@ -71,7 +77,8 @@ public class Main {
                 clientsConnected.add(new ServerThread(ss.accept()));
             }
         } catch (Exception e) {
-            System.out.println("Error while trying to connect! " + e.toString());
+            log.severe("Error while trying to connect! " + e.toString());
+            //System.out.println("Error while trying to connect! " + e.toString());
         }
     }
 
@@ -108,7 +115,8 @@ public class Main {
                 }
                 socket.close();
             } catch (Throwable t) {
-                System.out.println("Listening to the client... Exception caught: " + t);
+                log.severe("Listening to the client... Exception caught: " + t);
+                //System.out.println("Listening to the client... Exception caught: " + t);
             }
 
         }
@@ -430,7 +438,7 @@ public class Main {
         Creature c = i.ep.e.getCpool().get(creatID);
         Thing o = c.getClosest();
         if (o != null) {
-            System.out.println("The closest thing name is: " + o.getMyName());
+            log.info("The closest thing name is: " + o.getMyName());
 
             StringBuffer vs = new StringBuffer("");
 
@@ -461,8 +469,7 @@ public class Main {
 
             getOutBuffer().append(vs + "\r\n");
         } else {
-
-            System.out.println("No closest Thing detected.");
+            log.info("No closest Thing detected.");
             getOutBuffer().append(Constants.ERROR_CODE + " No closest Thing detected.\r\n");
         }
     }
@@ -637,7 +644,6 @@ public class Main {
                 return;
             }
             synchronized (i.ep.e.semaphore3) {
-                        //System.out.println("----resp----fullstatus 3D---inside semaphore3--- ");
                 Creature c = i.ep.e.getCpool().get(creatID);
                 synchronized (i.ep.e.getCpool().get(creatID).semaphore) {
                     c.updateVisualSensor(i.ep.e);
@@ -691,7 +697,7 @@ public class Main {
                             + //content of visual system
                             vs + "\r\n");
                     
-                    if (!vs.toString().equals(" 0"))System.out.println(">>>>>>>>Server sending: "+vs+"  at "+sdf.format(nowD));
+                    if (!vs.toString().equals(" 0"))log.info(">>>>>>>>Server sending: "+vs+"  at "+sdf.format(nowD));
                     return;
                 }
             }
@@ -960,8 +966,7 @@ public class Main {
                         return;
                     }
 
-
-                    System.out.println("...........eatIt................ food name: "+ thingName);
+                    log.info("...........eatIt................ food name: "+ thingName);
 
                     Thing th = i.ep.e.getThingFromName(thingName);
                     if (th != null) {
@@ -978,7 +983,7 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        System.out.println("--------------end process eat------ ");
+        log.info("--------------end process eat------ ");
     }
 
     void ProcessHideIt(StringTokenizer st) {
@@ -1168,8 +1173,8 @@ public class Main {
 
                     i.ep.repaint();
 
-                    System.out.println("Angle of turn according to Vr and Vl: " + "in radian: " + turn + " in degree: " + Math.toDegrees(turn));
-                    System.out.println("Pitch changed to (in degrees)= "+c.getPitch());
+                    log.info("Angle of turn according to Vr and Vl: " + "in radian: " + turn + " in degree: " + Math.toDegrees(turn));
+                    log.info("Pitch changed to (in degrees)= "+c.getPitch());
                     getOutBuffer().append("" + c.getSpeed() + " " + c.getW() + c.getPitch() + "\r\n");
 
 
@@ -1289,7 +1294,7 @@ public class Main {
     }
 
     void ProcessHelp() {
-        System.out.println("====  ProcessHelp() ===");
+        log.info("====  ProcessHelp() ===");
         getOutBuffer().append("List of available commands :\r\n"
                 + "  \r\n"
                 + "  -----------Game settings---------------------------------------------------------------------------\r\n"

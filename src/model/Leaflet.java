@@ -21,6 +21,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 import util.Constants;
 
 /**
@@ -40,10 +41,12 @@ public class Leaflet {
     //Type, (Total number, Collected number)
     //For each type of jewel, how many must be collected and how many have already been collected.
     private HashMap<String, ItemAttributes> itemsMap = new HashMap<String, ItemAttributes>();
+    Logger log;
 
     public Leaflet() {
         ID = System.currentTimeMillis();
         ifCompleted = false;
+        log = Logger.getLogger(Leaflet.class.getCanonicalName());
     }
 
     public Leaflet(int[] jewelTypes) {
@@ -212,17 +215,17 @@ public class Leaflet {
     
     public void printLeafletSituation() {
 
-        System.out.println("LeafletID: " + this.ID + ". ");
+        log.info("LeafletID: " + this.ID + ". ");
         int[] aux = this.getItems();
 
         for (int i = 0; i < aux.length; i++) {
             ItemAttributes iA = this.itemsMap.get(Constants.getColorItem(aux[i]));
 
-            System.out.print("Itens: " + Constants.getColorItem(aux[i]) + "  " + iA.collected+" ; ");
+            log.info("Itens: " + Constants.getColorItem(aux[i]) + "  " + iA.collected+" ; ");
 
         }
-        System.out.println();
-        System.out.println ("______________________________________________________");
+        log.info("");
+        log.info("______________________________________________________");
 
     }
 

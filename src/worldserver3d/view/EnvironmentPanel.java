@@ -31,9 +31,7 @@ package worldserver3d.view;
 import model.*;
 import model.Creature;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -51,12 +49,9 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
-import com.jmex.game.state.GameStateManager;
+import java.util.logging.Logger;
 
 public class EnvironmentPanel
 	extends JPanel implements MouseListener, MouseMotionListener
@@ -126,6 +121,7 @@ public class EnvironmentPanel
 	
 	private boolean showTree = false;	
 	Map tree = new HashMap();
+        static Logger log = Logger.getLogger(EnvironmentPanel.class.getCanonicalName());
 
     public void mouseClicked(MouseEvent arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -183,7 +179,7 @@ public class EnvironmentPanel
 		
 		isMoving = false;
 		objectID = NONE;
-        System.out.println("Environment dimension: width= "+width+" height= "+height);
+        log.info("Environment dimension: width= "+width+" height= "+height);
 	}
 
 

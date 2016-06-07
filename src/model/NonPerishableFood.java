@@ -34,6 +34,8 @@ import util.Constants;
  * @author eccastro
  */
 public class NonPerishableFood extends Food {
+    
+    static Logger log = Logger.getLogger(NonPerishableFood.class.getCanonicalName());
 
 
     public NonPerishableFood(){ //Savable matters only!
@@ -57,7 +59,7 @@ public class NonPerishableFood extends Food {
             perishable = false;
             stillValid = true;
         } catch (IOException ex) {
-            System.out.println("!!!!!NonPerishableFood: Erro ! ");
+            log.severe("!!!!!NonPerishableFood: Erro ! ");
             ex.printStackTrace();
         }
     }

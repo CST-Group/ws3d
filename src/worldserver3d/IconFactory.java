@@ -24,12 +24,9 @@ import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.converters.MaxToJme;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import com.jme.scene.shape.Arrow;
 import com.jme.scene.Node;
 import com.jme.renderer.ColorRGBA;
@@ -38,7 +35,7 @@ import model.Material3D;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
-import model.Environment;
+import java.util.logging.Logger;
 
 /**
  *
@@ -55,6 +52,7 @@ public class IconFactory {
     public MaterialState ms;
     private TextureState ts;
     private int envWidth, envHeight;
+    static Logger log = Logger.getLogger(IconFactory.class.getCanonicalName());
 
     public IconFactory(MaterialState ms, int width, int height) {
         this.ms = ms;
@@ -137,12 +135,12 @@ public class IconFactory {
 
     // Discontinued.
     public Node getRememberMeIconNode() {
-        System.out.println("======= getRememberMeIconNode   =======");
+        log.info("======= getRememberMeIconNode   =======");
         Node modelw=null;
         try {ByteArrayInputStream RememberMeIconInputStream = new ByteArrayInputStream(BO.toByteArray());             
              modelw = (Node)BinaryImporter.getInstance().load(RememberMeIconInputStream);
                } catch (IOException exc) {
-                     System.out.println("Erro !");
+                     log.severe("Erro !");
                }  
         modelw.setLocalScale(0.02f);
         Quaternion quat90 = new Quaternion();

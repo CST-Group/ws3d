@@ -40,6 +40,7 @@ import com.jme.scene.Node;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 import util.Constants;
 import worldserver3d.IconFactory;
 import worldserver3d.RobotCamera;
@@ -103,6 +104,7 @@ public class Environment {
     final public Environment semaphore3 = this;
     public RobotCamera rcnEven;
     public RobotCamera rcnOdd;
+    static Logger log = Logger.getLogger(Environment.class.getCanonicalName());
 
     public Environment(int nwidth, int nheight) {
         width = nwidth;
@@ -188,7 +190,7 @@ public class Environment {
 
     public synchronized void startTheGame(boolean start) { //0 false; 1 true
         this.gameStarted = start;
-        System.out.println("Game has started: " + this.gameStarted);
+        log.info("Game has started: " + this.gameStarted);
     }
 
     public synchronized boolean gameStarted() {
@@ -412,7 +414,7 @@ public class Environment {
                 //System.out.println("======= Deleted wp named " + toBeDel);
                 ret = "Deleted waypoint at " + x + "_" + y;
             } else {
-                System.out.println("======= Waypoint named " + toBeDel + " does not exist!!!");
+                log.info("======= Waypoint named " + toBeDel + " does not exist!!!");
                 ret = "Waypoint at " + x + "_" + y + " does not exist!!!";
             }
             return ret;
@@ -536,7 +538,7 @@ public class Environment {
 
         for (Thing o : opool) {
             if (o.getMyName().equals(name)) {
-                System.out.println("Gotcha: "+o.getMyName());
+                log.info("Gotcha: "+o.getMyName());
                 ret = o;
                 break;
             }
