@@ -887,7 +887,7 @@ public class Main {
                 if (Double.parseDouble(w) != Constants.WNULL) {
                     c.setW(Double.parseDouble(w)%(2*Constants.M_PI));
                 }
-                c.setPitch(Math.toDegrees(c.getW()));
+                //c.setPitch(Math.toDegrees(c.getW()));
 
                 i.ep.repaint();
 

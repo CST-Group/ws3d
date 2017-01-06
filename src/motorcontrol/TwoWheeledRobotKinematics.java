@@ -93,7 +93,9 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
             //System.out.println("...............................2nd and speed= " + c.getSpeed());
 
             //Reference:  Equations 3.50, 3.51, 3.52 on pag. 84 (chap 3) Sigwart/Nourbakhsh
-            c.setPitch(Math.toDegrees(c.getW()));
+            //c.setPitch(Math.toDegrees(c.getW()));    Alterado por Ricardo Gudwin em 06/01/2017
+            c.setPitch(c.getPitch() + c.getW());
+            //System.out.println("Pitch:"+c.getPitch());
 
         } //3rd case: different velocities => change direction
         else {
