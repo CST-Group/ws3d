@@ -2,3 +2,5 @@
 /.classpath
 /nbproject/jnlp-impl_backup.xml
 /.project
+/build/
+/dist/

@@ -1389,6 +1389,7 @@ public class Main {
         String s, motor;
         double x, y, pitch;
         int motorSys;
+        boolean color = false;
         if (st.hasMoreTokens()) {
             s = st.nextToken();
             x = Double.parseDouble(s);
@@ -1398,9 +1399,13 @@ public class Main {
                 if (st.hasMoreTokens()) {
                     s = st.nextToken();
                     pitch = Double.parseDouble(s);
+                    if (st.hasMoreTokens()) {
+                        s = st.nextToken();
+                        if (s.equalsIgnoreCase("1")) color = true;
+                    }
 
                     ThingCreator tc = new ThingCreator(i.ep.e);
-                    RobotCreature c = tc.createCreature(false, x, y, pitch);
+                    RobotCreature c = tc.createCreature(color, x, y, pitch);
 
                     this.sf.gameState.ThingsRN.updateRenderState();
 
