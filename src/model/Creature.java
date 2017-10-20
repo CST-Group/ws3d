@@ -819,10 +819,13 @@ public abstract class Creature extends Thing {
         }
 
         this.sack.incScore(leaflet.getPayment());
-        leaflet.setActivity(0);
-        this.deleteFromActiveLeaflets(leaflet);
+        //leaflet.setActivity(0);
+        leaflet.setIfCompleted(false);
+        leaflet.resetLeaflet();
+        //this.deleteFromActiveLeaflets(leaflet);
         leafletNotifier.changed(leaflet.getID());
         handsActionSensor.setAction(Constants.ACTION_NAME_DELIVER);
+        
     }
 
     /**

@@ -97,12 +97,11 @@ public class ThingCreator {
                     th = new Cage(x, y, e, e.oMsPool.get(t), e.thingTsPool.get(t));
                     th.setMaterial(new Material3D(ColorRGBA.yellow, 1.0, 0, 0, e.oMsPool.get(t)));
                     break;
-//            case Constants.categoryDeliverySPOT:
-//                e.oMsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createMaterialState());
-//                //reuse texture pool:
-//                e.foodTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
-//                th = new DeliverySpot(x, y, e, e.oMsPool.get(t), e.foodTsPool.get(t));
-//                break;
+                case Constants.categoryDeliverySPOT:
+                    e.thingTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
+                    //reuse texture pool:
+                    th = new DeliverySpot(x, y, e, e.oMsPool.get(t), e.thingTsPool.get(t));
+                    break;
             }
             th.setTxState(e.thingTsPool.get(t));
 

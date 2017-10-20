@@ -21,6 +21,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Logger;
 import util.Constants;
 
@@ -82,6 +83,12 @@ public class Leaflet {
     }
     public synchronized void setActivity(int ac){
         active = ac;
+    }
+    
+    public synchronized void resetLeaflet(){
+        for(Map.Entry<String, ItemAttributes> jewel : itemsMap.entrySet()){
+            jewel.getValue().collected = 0;
+        }
     }
 
     /**
@@ -244,7 +251,8 @@ public class Leaflet {
             ret = ret + str + " ";
             ret = ret + (itemsMap.get(str)).toString() + " ";
         }
-        ret  = ret+payment+" "+ifCompleted+" ";
+              
+        ret  = ret+payment+" "+ifCompleted()+" ";
         return ret;
 
     }

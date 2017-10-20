@@ -1,4 +1,4 @@
-/*****************************************************************************
+/** ***************************************************************************
  * Copyright 2007-2015 DCA-FEEC-UNICAMP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,7 @@
  *
  * Contributors:
  *    Patricia Rocha de Toro, Elisa Calhau de Castro, Ricardo Ribeiro Gudwin
- *****************************************************************************/
-
-
+ **************************************************************************** */
 package model;
 
 /**
@@ -60,7 +58,7 @@ public class Environment {
 
     private List<Thing> opoolShapeModified;
     private List<Thing> cpoolShapeModified;
-    
+
     public HashMap<String, Thing> thingMap;
     public List<Node> rmiPool; //rememberMeIcom pool of arrows
     public List<Node> wpPool;  // waypoint pool of arrows
@@ -143,27 +141,28 @@ public class Environment {
         delRMIlist = new ArrayList<Node>();
     }
 
-    public void updateDimensions(int width, int height){
+    public void updateDimensions(int width, int height) {
         this.width = width;
         this.height = height;
     }
+
     public synchronized List<Thing> getOpool() {
         return opool;
     }
 
     public synchronized List<Creature> getCpool() {
         return cpool;
-        
+
     }
 
     public synchronized List<Thing> getOpoolModified() {
         return this.opoolModified;
     }
-    
+
     public synchronized void addToOpoolModified(Thing th) {
         this.opoolModified.add(th);
     }
-    
+
     public synchronized void delFromOpoolModified(Thing th) {
         this.opoolModified.remove(th);
     }
@@ -201,8 +200,8 @@ public class Environment {
         return camera[index];
     }
 
-    public void resetCameras(){
-        for (int i = 0; i < Constants.NUMBER_CAMERAS;i++){
+    public void resetCameras() {
+        for (int i = 0; i < Constants.NUMBER_CAMERAS; i++) {
             camera[i] = -1;
         }
     }
@@ -211,12 +210,12 @@ public class Environment {
         int oldOwner = camera[index];
         camera[index] = creatureIndex;
 
-            if (oldOwner != -1) {
-                cpool.get(oldOwner).isVisualSensorActivated = false;
-            }
-            if (creatureIndex != -1) {
-                cpool.get(creatureIndex).isVisualSensorActivated = true;
-            }
+        if (oldOwner != -1) {
+            cpool.get(oldOwner).isVisualSensorActivated = false;
+        }
+        if (creatureIndex != -1) {
+            cpool.get(creatureIndex).isVisualSensorActivated = true;
+        }
     }
 
     public void updateCameras(int deadCreatureIndex) {
@@ -259,7 +258,7 @@ public class Environment {
         return i;
     }
 
-    public  int addThing(Thing th) {
+    public int addThing(Thing th) {
         int ret = -1;
 
         if (th.category == Constants.categoryCREATURE) {
@@ -282,8 +281,9 @@ public class Environment {
     }
 
     /**
-     * Remove a Thing (do not apply to Creatures).
-     * For Creatures, use removeCreature.
+     * Remove a Thing (do not apply to Creatures). For Creatures, use
+     * removeCreature.
+     *
      * @param o a Thing except Creature.
      */
     public synchronized void removeThing(Thing o) {
@@ -299,14 +299,16 @@ public class Environment {
         }
     }
 
-    /*********************************************************************************
-     * ATTENTION:::: Currently, the game dos not support deletion of creatures during
-     * the simulation. Many methods use the index of the Creature in the cpool and
-     * therefore it is not supposed to change once the game is started.
-     * The purpose of this method is to help the setup of the environment before the
-     * start of the simulation!
-     ********************************************************************************/
-    public  void removeCreature(Creature c) {
+    /**
+     * *******************************************************************************
+     * ATTENTION:::: Currently, the game dos not support deletion of creatures
+     * during the simulation. Many methods use the index of the Creature in the
+     * cpool and therefore it is not supposed to change once the game is
+     * started. The purpose of this method is to help the setup of the
+     * environment before the start of the simulation!
+     * ******************************************************************************
+     */
+    public void removeCreature(Creature c) {
         synchronized (semaphore3) {
             int dead_index = getCpool().indexOf(c);
             thingTsPool.remove(c.ID);
@@ -344,7 +346,7 @@ public class Environment {
     public void save(String fileName) {
 
         WriteToXMLFile writer = new WriteToXMLFile(fileName);
-        writer.writeToFile(width, height,opool, cpool);
+        writer.writeToFile(width, height, opool, cpool);
     }
 
     public boolean colideWithObstacle(double x, double y, double dist) {
@@ -366,58 +368,58 @@ public class Environment {
     }
 
     public void addWaypointIcon(IconFactory wp) {
-            Node n = wp.getWaypointIcon();
-            n.setIsCollidable(false);
-            n.setRenderState(wp.ms);
-            n.setRenderState(ls);
-            String str = wp.myModelName;
-            wpNdsPoolMap.put(str, n);
-            wpPool.add(n);
+        Node n = wp.getWaypointIcon();
+        n.setIsCollidable(false);
+        n.setRenderState(wp.ms);
+        n.setRenderState(ls);
+        String str = wp.myModelName;
+        wpNdsPoolMap.put(str, n);
+        wpPool.add(n);
     }
 
     public void addDSIcon(IconFactory wp) {
-            Node n = wp.getDeliverySpot();
-            n.setIsCollidable(false);
-            n.setRenderState(wp.ms);
-            n.setRenderState(ls);
-            String str = wp.myModelName;
-            wpNdsPoolMap.put(str, n);
-            dsPool.add(n);
-            dsIsShown = true;
+        Node n = wp.getDeliverySpot();
+        n.setIsCollidable(false);
+        n.setRenderState(wp.ms);
+        n.setRenderState(ls);
+        String str = wp.myModelName;
+        wpNdsPoolMap.put(str, n);
+        dsPool.add(n);
+        dsIsShown = true;
     }
 
     public String removeDSIcon(double x, double y) { //synchronized
-            String ret = "";
-            String toBeDel = "ModelDeliverySpotIcon_" + x + "_" + y;
-            if (wpNdsPoolMap.containsKey(toBeDel)) {
-                Node n = (Node) wpNdsPoolMap.get(toBeDel);
-                deleteArrowDSlist.add(n);
-                wpNdsPoolMap.remove(toBeDel);
-                dsPool.remove(n);
-                dsIsShown = false;
-                ret = "Deleted delivery spot at " + x + "_" + y;
-            } else {
-                ret = "Delivery spot at " + x + "_" + y + " does not exist!!!";
-            }
-            return ret;
+        String ret = "";
+        String toBeDel = "ModelDeliverySpotIcon_" + x + "_" + y;
+        if (wpNdsPoolMap.containsKey(toBeDel)) {
+            Node n = (Node) wpNdsPoolMap.get(toBeDel);
+            deleteArrowDSlist.add(n);
+            wpNdsPoolMap.remove(toBeDel);
+            dsPool.remove(n);
+            dsIsShown = false;
+            ret = "Deleted delivery spot at " + x + "_" + y;
+        } else {
+            ret = "Delivery spot at " + x + "_" + y + " does not exist!!!";
+        }
+        return ret;
 
     }
 
-    public String removeWaypointIcon(double x, double y) { 
-            String ret = "";
-            String toBeDel = "ModelWaypointIcon_" + x + "_" + y;
-            if (wpNdsPoolMap.containsKey(toBeDel)) {
-                Node n = (Node) wpNdsPoolMap.get(toBeDel);
-                deleteArrowDSlist.add(n);
-                wpNdsPoolMap.remove(toBeDel);
-                wpPool.remove(n);
-                //System.out.println("======= Deleted wp named " + toBeDel);
-                ret = "Deleted waypoint at " + x + "_" + y;
-            } else {
-                log.info("======= Waypoint named " + toBeDel + " does not exist!!!");
-                ret = "Waypoint at " + x + "_" + y + " does not exist!!!";
-            }
-            return ret;
+    public String removeWaypointIcon(double x, double y) {
+        String ret = "";
+        String toBeDel = "ModelWaypointIcon_" + x + "_" + y;
+        if (wpNdsPoolMap.containsKey(toBeDel)) {
+            Node n = (Node) wpNdsPoolMap.get(toBeDel);
+            deleteArrowDSlist.add(n);
+            wpNdsPoolMap.remove(toBeDel);
+            wpPool.remove(n);
+            //System.out.println("======= Deleted wp named " + toBeDel);
+            ret = "Deleted waypoint at " + x + "_" + y;
+        } else {
+            log.info("======= Waypoint named " + toBeDel + " does not exist!!!");
+            ret = "Waypoint at " + x + "_" + y + " does not exist!!!";
+        }
+        return ret;
 
     }
 
@@ -498,6 +500,7 @@ public class Environment {
 
     /**
      * Return the list of all THINGs except the creature itself.
+     *
      * @param me the creature put in perspective
      * @return list of anything else in the environment except the creature
      */
@@ -512,11 +515,12 @@ public class Environment {
             }
         }
         synchronized (semaphore2) {
-        for (Thing o : opool) {
-            if (o.getID() != me.ID) {
-                thingPool.add(o);
+            for (Thing o : opool) {
+                if (o.getID() != me.ID) {
+                    thingPool.add(o);
+                }
             }
-        }}
+        }
         return thingPool;
     }
 
@@ -537,18 +541,26 @@ public class Environment {
         Thing ret = null;
 
         for (Thing o : opool) {
-            if (o.getMyName().equals(name)) {
-                log.info("Gotcha: "+o.getMyName());
-                ret = o;
-                break;
+            try {
+                if (o != null) {
+                    if (o.getMyName() != null) {
+                        if (o.getMyName().equals(name)) {
+                            log.info("Gotcha: " + o.getMyName());
+                            ret = o;
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
 
         return ret;
     }
-    
-    public synchronized void deleteAllThing(){
-        
+
+    public synchronized void deleteAllThing() {
+
         List<Thing> thList = new ArrayList<Thing>();
         List<Creature> cList = new ArrayList<Creature>();
 
@@ -568,7 +580,6 @@ public class Environment {
             Creature c = it.next();
             this.removeCreature(c);
         }
-
 
     }
 }

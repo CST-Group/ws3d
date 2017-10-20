@@ -202,7 +202,10 @@ public class Main {
             ProcessSetLeaflet(st);
         } else if (command.equalsIgnoreCase(("deliver"))) {
             ProcessDeliverLeaflet(st);
-        } else if (command.equalsIgnoreCase("help")) {
+        } else if (command.equalsIgnoreCase("newDeliverySpot")){
+            ProcessNewDeliverySpot(st);
+        }
+        else if (command.equalsIgnoreCase("help")) {
             ProcessHelp();
         } else if (command.equalsIgnoreCase("drop")) {
             ProcessDrop(st);
@@ -222,7 +225,6 @@ public class Main {
             ProcessCheckCreature(st);
         } else if (command.equalsIgnoreCase("checkXY")) {
             ProcessCheckXYCreature(st);
-
         } else if (command.equalsIgnoreCase("getall")) {
             ProcessGetAllThings();
         } else if (command.equalsIgnoreCase("newwp")) {
@@ -372,6 +374,45 @@ public class Main {
         }
         Creature c = i.ep.e.getCpool().get(creatID);
         getOutBuffer().append("" + c.getX() + " " + c.getY() + " " + c.getPitch() + "\r\n");
+    }
+    
+    
+    void ProcessNewDeliverySpot(StringTokenizer st){
+        String s;
+        int type;
+        double x, y;
+
+        if (st.hasMoreTokens()) {
+            s = st.nextToken();
+            type = Integer.parseInt(s);
+            if (type != 4) {
+                getOutBuffer().append(Constants.ERROR_CODE + " Invalid type of delivery spot! Try: 4");
+                return;
+            }
+        } else {
+            getOutBuffer().append(Constants.ERROR_CODE + " Specify the type of thing: 4-Delivery Spot");
+            return;
+        }
+        if (st.hasMoreTokens()) {
+            s = st.nextToken();
+            x = Double.parseDouble(s);
+            if (st.hasMoreTokens()) {
+                s = st.nextToken();
+                y = Double.parseDouble(s);
+
+                ThingCreator tc = new ThingCreator(i.ep.e);
+                DeliverySpot delivery = (DeliverySpot) tc.createThing(type, x, y);
+                this.sf.gameState.ThingsRN.updateRenderState();
+                getOutBuffer().append(delivery.getMyName() + " " + delivery.getX()
+                        + " " + delivery.getY() + "\r\n");
+
+            } else {
+                getOutBuffer().append(Constants.ERROR_CODE + " ... No recognized command");
+            }
+        } else {
+            getOutBuffer().append(Constants.ERROR_CODE + " ... No recognized command");
+        }
+        
     }
 
     /**
@@ -668,6 +709,7 @@ public class Main {
                         lp.append(leaflet.getNumberOfItemTypes());
                         lp.append(" ");
                         lp.append(leaflet.toStringFormatted());
+
                     }
                     //Visual System:
                     vs = getVisualContent(c);
@@ -806,7 +848,9 @@ public class Main {
                 }
 
                 c.setVright(Double.parseDouble(vr));
+                
                 c.setVleft(Double.parseDouble(vl));
+                
                 if (c.getVleft() != -c.getVright()) {
                     c.setSpeed((c.getVright() + c.getVleft()) / 2);
                 } else {
@@ -1886,24 +1930,16 @@ public class Main {
          // Avoid deliver a leaflet already delivered
         if (l.getActivity() != 0) {          
             // Avoid deliver of a incomplete leaflet
-            if (l.isIfCompleted()) {
+            //if (l.isIfCompleted()) {
                 c.deliver(l);
                 getOutBuffer().append("\r\n Leaflet delivered!\r\n");
-            } else {
-                getOutBuffer().append(Constants.ERROR_CODE).append(" Leaflet ").append(leafletID).append(" was not completed yet.\r\n");
-            }
+            //} else {
+            //    getOutBuffer().append(Constants.ERROR_CODE).append(" Leaflet ").append(leafletID).append(" was not completed yet.\r\n");
+            //}
         } else {
 //            getOutBuffer().append(Constants.ERROR_CODE).append(" Leaflet ").append(leafletID).append(" was already delivered.\r\n");
             getOutBuffer().append(" Leaflet ").append(leafletID).append(" was already delivered.\r\n");
-        }
-        
-        
-        
-        
-        
-        
-        
-        
+        }       
         /** Suelen comentou aqui
          c.deliver(l);
         getOutBuffer().append("\r\n Leaflet delivered!\r\n");*/

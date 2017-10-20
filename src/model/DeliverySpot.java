@@ -96,8 +96,10 @@ public class DeliverySpot  extends Thing{
       this.ID = id;
       String name = Constants.DELIVERY_SPOT_PREFIX;
       this.shape.setName(name.concat(id.toString()));
+      myName = name.concat(id.toString());
       //System.out.println("====  My name is "+this.shape.getName());
       e.thingMap.put(myName, this);
+      
   }
 
     @Override
