@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
  
@@ -51,17 +52,24 @@ public class NativeUtils {
     
     public static void setLibraryPath(String path) {
         Field fieldSysPath=null;
-        System.setProperty( "java.library.path", path );
+        //System.setProperty( "java.library.path", path );
         try {
-        fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+        fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
         } catch (Exception e) {
-            log.severe("Exceção: "+e);
+            log.severe("Exception: "+e);
         }
         fieldSysPath.setAccessible( true );
         try {
-        fieldSysPath.set( null, null );
+        java.lang.String[] orgpath = (java.lang.String[])fieldSysPath.get(null);
+        java.lang.String[] neworgpath = new String[0];
+        for (int i = 0; i < orgpath.length; i++) {
+            neworgpath = Arrays.copyOf(orgpath, i + 2);// increment orgpath by +1
+        }
+        neworgpath[orgpath.length] = path;
+        //System.out.println("Value:"+Arrays.toString(neworgpath));    
+        fieldSysPath.set( null, neworgpath );
         } catch (Exception e) {
-            log.severe("Exceção: "+e);
+            log.severe("Exception: "+e);
         }
     }
  
@@ -111,6 +119,7 @@ public class NativeUtils {
 	      }
             } catch (Exception e) {
 		log.severe("Unable to load native libraries. They must be set manually with '-Djava.library.path'"+e);
+                System.out.println(e);
 	        //We failed. We shouldn't kill the application however, linking *may* have succeeded because of user manually setting location
             }
     }
