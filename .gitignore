@@ -1,8 +1,8 @@
-/nbproject/private/
 /.classpath
-/nbproject/jnlp-impl_backup.xml
+/nbproject/
 /.project
 /build/
 /dist/
+/.gradle/
 /production/
 /.idea

@@ -91,7 +91,7 @@ public class KeyTurnRightAction extends KeyInputAction {
         
         float x_l,y_l,z_l;
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        // Detecta centro deslocado do foco de aten�ao
+        // Detecta centro deslocado do foco de atenção
         Vector2f mouse_xy = new Vector2f(512,384);
         Vector3f worldCoords = display.getWorldCoordinates(mouse_xy, 0);
         Vector3f worldCoords2 = display.getWorldCoordinates(mouse_xy, 1);

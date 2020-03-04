@@ -1,0 +1,55 @@
+plugins {
+	//id 'java-library-distribution'
+        id 'java'
+  	id 'application'
+}
+
+application {
+    mainClassName = 'worldserver3d.Main'
+}
+
+description = "WS3D - WorldServer3D"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'lib'      
+    }
+}
+
+dependencies {
+   implementation name: 'jme2'
+   implementation name: 'json'
+   implementation name: 'lwjgl2.9.0'
+   implementation fileTree(dir: "lib", includes: ['*.jar'])
+   testImplementation group: 'junit', name: 'junit', version: '4.12' 
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts
+{
+    //archives javadocJar, sourcesJar
+    archives sourcesJar
+}
+
+jar {
+  manifest {
+    attributes(
+      //'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': 'worldserver3d.Main',
+      'Class-Path': 'lib/jme2.jar lib/lwjgl2.9.0.jar lib/json.jar lib/org.apache.sling.scripting.api-2.1.0.jar'
+    )
+  }
+}
+
