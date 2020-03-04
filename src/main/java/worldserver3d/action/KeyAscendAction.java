@@ -19,6 +19,10 @@
 
 package worldserver3d.action;
 
+/**
+ *
+ * @author gudwin
+ */
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.math.Matrix3f;
@@ -36,13 +40,14 @@ import com.jme.system.DisplaySystem;
  * @author Mark Powell
  * @version $Id: KeyRotateLeftAction.java,v 1.16 2006/09/29 22:30:17 nca Exp $
  */
-public class KeyTurnLeftAction extends KeyInputAction {
+public class KeyAscendAction extends KeyInputAction {
     //the camera to manipulate
     private Camera camera;
     //the axis to lock
     private Vector3f lockAxis;
     //temporary matrix for rotation
     private static final Matrix3f incr = new Matrix3f();
+    float xoo=0,zoo=0;
 
     /**
      * Constructor instantiates a new <code>KeyRotateLeftAction</code> object.
@@ -52,7 +57,7 @@ public class KeyTurnLeftAction extends KeyInputAction {
      * @param speed
      *            the speed at which to rotate.
      */
-    public KeyTurnLeftAction(Camera camera, float speed) {
+    public KeyAscendAction(Camera camera, float speed) {
         this.camera = camera;
         this.speed = speed;
     }
@@ -77,19 +82,11 @@ public class KeyTurnLeftAction extends KeyInputAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public void performAction(InputActionEvent evt) {
-//        if (lockAxis == null) {
-//            incr.fromAngleNormalAxis(speed * evt.getTime(), camera.getUp());
-//        } else {
-//            incr.fromAngleNormalAxis(speed * evt.getTime(), lockAxis);
-//        }
-//        incr.mult(camera.getUp(), camera.getUp());
-//        incr.mult(camera.getLeft(), camera.getLeft());
-//        incr.mult(camera.getDirection(), camera.getDirection());
-//        camera.normalize();
         
          float x_l,y_l,z_l;
+         float xo,zo;
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        // Detecta centro deslocado do foco de aten�ao
+        // Detecta centro deslocado do foco de atenção
         Vector2f mouse_xy = new Vector2f(512,384);
         Vector3f worldCoords = display.getWorldCoordinates(mouse_xy, 0);
         Vector3f worldCoords2 = display.getWorldCoordinates(mouse_xy, 1);
@@ -99,18 +96,29 @@ public class KeyTurnLeftAction extends KeyInputAction {
         float startY = mouseRay.origin.y;
         float endY = mouseRay.direction.y;
         float coef = (planeY - startY) / endY;
-        float xo = mouseRay.origin.x + (coef * mouseRay.direction.x);
-        float zo = mouseRay.origin.z + (coef * mouseRay.direction.z); 
+        y_l = camera.getLocation().y;
+        if (y_l != 0) {
+          xo = mouseRay.origin.x + (coef * mouseRay.direction.x);
+          zo = mouseRay.origin.z + (coef * mouseRay.direction.z); 
+        }
+        else {
+          xo = xoo;
+          zo = zoo;
+        }
+        xoo = xo;
+        zoo = zo;
         // Detecta circunferencia sobre o centro deslocado
         x_l = camera.getLocation().x-xo;
-        y_l = camera.getLocation().y;
         z_l = camera.getLocation().z-zo;
         float L = (float) Math.sqrt( x_l * x_l + z_l * z_l);
         float ang = (float)Math.atan2(z_l, x_l);
-        ang += 1f/180f * Math.PI;
+        //ang += 1f/180f * Math.PI;
         //System.out.println("y:"+y_l+" L:"+L);
         x_l = (float)(L*Math.cos(ang))+xo;
         z_l = (float)(L*Math.sin(ang))+zo;
+        if (y_l < -10 || y_l > 10)
+           y_l += 0.5;
+        else y_l  += 0.1;
         //System.out.println("xo:"+xo+" zo:"+zo+" x:"+x_l+" z:"+z_l);
         Vector3f newlocation = new Vector3f(x_l,y_l,z_l);
         camera.setLocation(newlocation);

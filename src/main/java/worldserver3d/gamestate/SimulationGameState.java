@@ -827,9 +827,9 @@ public class SimulationGameState extends CameraGameState implements ActionListen
 //            Vector3f difference =e.rcnEven.getCameraNode().getLocalRotation().getRotationColumn(2).subtract(direction);
             Vector3f difference = wEnv.getRobotCamera(0).getCameraNode().getLocalRotation().getRotationColumn(2).subtract(direction);
             if (difference.length() > 0.5f) {
-                // 2   == 180°
-                // 1   == 90°
-                // 0.5 == 45°
+                // 2   == 180'
+                // 1   == 90'
+                // 0.5 == 45'
                 // not in camera field of view
                 //System.out.println("!!!!! Food " + wEnv.getOpool().indexOf(th) + "is NOT in view");
                 return;

@@ -40,7 +40,7 @@ import com.jme.system.DisplaySystem;
  * @author Mark Powell
  * @version $Id: KeyRotateLeftAction.java,v 1.16 2006/09/29 22:30:17 nca Exp $
  */
-public class KeyMoveFrontAction extends KeyInputAction {
+public class KeyMoveBackAction extends KeyInputAction {
     //the camera to manipulate
     private Camera camera;
     //the axis to lock
@@ -57,7 +57,7 @@ public class KeyMoveFrontAction extends KeyInputAction {
      * @param speed
      *            the speed at which to rotate.
      */
-    public KeyMoveFrontAction(Camera camera, float speed) {
+    public KeyMoveBackAction(Camera camera, float speed) {
         this.camera = camera;
         this.speed = speed;
     }
@@ -86,7 +86,7 @@ public class KeyMoveFrontAction extends KeyInputAction {
         float x_l,y_l,z_l;
         float xo,zo;
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        // Detecta centro deslocado do foco de aten�ao
+        // Detecta centro deslocado do foco de atenção
         Vector2f mouse_xy = new Vector2f(512,384);
         Vector3f worldCoords = display.getWorldCoordinates(mouse_xy, 0);
         Vector3f worldCoords2 = display.getWorldCoordinates(mouse_xy, 1);
@@ -116,8 +116,8 @@ public class KeyMoveFrontAction extends KeyInputAction {
         //System.out.println("y:"+y_l+" L:"+L);
         //x_l = (float)(L*Math.cos(ang))+xo;
         //z_l = (float)(L*Math.sin(ang))+zo;
-        x_l += direction.x * 0.5;
-        z_l += direction.z * 0.5;
+        x_l -= direction.x * 0.5;
+        z_l -= direction.z * 0.5;
         //System.out.println("xo:"+xo+" zo:"+zo+" x:"+x_l+" z:"+z_l);
         Vector3f newlocation = new Vector3f(x_l,y_l,z_l);
         camera.setLocation(newlocation);
@@ -135,7 +135,7 @@ public class KeyMoveFrontAction extends KeyInputAction {
         //Vector3f centerhigh = new Vector3f(xo,y_l,zo);
         //Vector3f newleft = tangent.subtract(centerhigh);
         //System.out.println("newleft(antes de normalizar:"+newleft);
-       // newleft = newleft.normalize();
+        //newleft = newleft.normalize();
         //System.out.println("newleft:"+newleft);
         //camera.setLeft(newleft);
         //Vector3f newup = newdirection.cross(newleft);

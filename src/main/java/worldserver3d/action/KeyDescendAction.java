@@ -19,10 +19,6 @@
 
 package worldserver3d.action;
 
-/**
- *
- * @author gudwin
- */
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.math.Matrix3f;
@@ -33,21 +29,17 @@ import com.jme.renderer.Camera;
 import com.jme.system.DisplaySystem;
 
 /**
- * <code>KeyRotateLeftAction</code> performs the action of rotating a camera a
- * certain angle. This angle is determined by the speed at which the camera can
- * turn and the time between frames.
- * 
- * @author Mark Powell
- * @version $Id: KeyRotateLeftAction.java,v 1.16 2006/09/29 22:30:17 nca Exp $
+ *
+ * @author gudwin
  */
-public class KeyMoveBackAction extends KeyInputAction {
+public class KeyDescendAction extends KeyInputAction {
     //the camera to manipulate
     private Camera camera;
     //the axis to lock
     private Vector3f lockAxis;
+    private float xoo=0,zoo=0;
     //temporary matrix for rotation
     private static final Matrix3f incr = new Matrix3f();
-    float xoo=0,zoo=0;
 
     /**
      * Constructor instantiates a new <code>KeyRotateLeftAction</code> object.
@@ -57,7 +49,7 @@ public class KeyMoveBackAction extends KeyInputAction {
      * @param speed
      *            the speed at which to rotate.
      */
-    public KeyMoveBackAction(Camera camera, float speed) {
+    public KeyDescendAction(Camera camera, float speed) {
         this.camera = camera;
         this.speed = speed;
     }
@@ -83,10 +75,11 @@ public class KeyMoveBackAction extends KeyInputAction {
      */
     public void performAction(InputActionEvent evt) {
         
-        float x_l,y_l,z_l;
-        float xo,zo;
+         float x_l,y_l,z_l;
+         float xo,zo;
+         
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        // Detecta centro deslocado do foco de aten�ao
+        // Detecta centro deslocado do foco de atenção
         Vector2f mouse_xy = new Vector2f(512,384);
         Vector3f worldCoords = display.getWorldCoordinates(mouse_xy, 0);
         Vector3f worldCoords2 = display.getWorldCoordinates(mouse_xy, 1);
@@ -98,51 +91,52 @@ public class KeyMoveBackAction extends KeyInputAction {
         float coef = (planeY - startY) / endY;
         y_l = camera.getLocation().y;
         if (y_l != 0) {
-          xo = mouseRay.origin.x + (coef * mouseRay.direction.x);
-          zo = mouseRay.origin.z + (coef * mouseRay.direction.z); 
+            xo = mouseRay.origin.x + (coef * mouseRay.direction.x);
+            zo = mouseRay.origin.z + (coef * mouseRay.direction.z); 
         }
         else {
-          xo = xoo;
-          zo = zoo;
+            xo = xoo;
+            zo = zoo;
         }
         xoo = xo;
         zoo = zo;
         // Detecta circunferencia sobre o centro deslocado
-        x_l = camera.getLocation().x;
-        z_l = camera.getLocation().z;
+        x_l = camera.getLocation().x-xo;
+        
+        z_l = camera.getLocation().z-zo;
         float L = (float) Math.sqrt( x_l * x_l + z_l * z_l);
         float ang = (float)Math.atan2(z_l, x_l);
         //ang += 1f/180f * Math.PI;
+        if (y_l < -10 || y_l > 10)
+            y_l -= 0.5;
+        else y_l -= 0.1;
         //System.out.println("y:"+y_l+" L:"+L);
-        //x_l = (float)(L*Math.cos(ang))+xo;
-        //z_l = (float)(L*Math.sin(ang))+zo;
-        x_l -= direction.x * 0.5;
-        z_l -= direction.z * 0.5;
+        x_l = (float)(L*Math.cos(ang))+xo;
+        z_l = (float)(L*Math.sin(ang))+zo;
         //System.out.println("xo:"+xo+" zo:"+zo+" x:"+x_l+" z:"+z_l);
         Vector3f newlocation = new Vector3f(x_l,y_l,z_l);
         camera.setLocation(newlocation);
         //System.out.println("newlocation:"+newlocation.toString());
         //camera.lookAt(new Vector3f(planeX,0,planeZ), new Vector3f(0,1f,0));
-        //Vector3f focusofattention = new Vector3f(xo,0,zo);
+        Vector3f focusofattention = new Vector3f(xo,0,zo);
         //System.out.println("focusofattention:"+focusofattention.toString());
-        //Vector3f newdirection = focusofattention.subtract(newlocation);
+        Vector3f newdirection = focusofattention.subtract(newlocation);
         //System.out.println("newdirection(antes de normalizar):"+newdirection);
-        //newdirection = newdirection.normalize();
+        newdirection = newdirection.normalize();
         //System.out.println("newdirection:"+newdirection);
-        //camera.setDirection(newdirection);
-        //Vector3f tangent = new Vector3f((float)(L*Math.cos(ang+Math.PI/2)+xo),y_l,(float)(L*Math.sin(ang+Math.PI/2)+zo));
+        camera.setDirection(newdirection);
+        Vector3f tangent = new Vector3f((float)(L*Math.cos(ang+Math.PI/2)+xo),y_l,(float)(L*Math.sin(ang+Math.PI/2)+zo));
         //System.out.println("tangent:"+tangent);
-        //Vector3f centerhigh = new Vector3f(xo,y_l,zo);
-        //Vector3f newleft = tangent.subtract(centerhigh);
+        Vector3f centerhigh = new Vector3f(xo,y_l,zo);
+        Vector3f newleft = tangent.subtract(centerhigh);
         //System.out.println("newleft(antes de normalizar:"+newleft);
-        //newleft = newleft.normalize();
+        newleft = newleft.normalize();
         //System.out.println("newleft:"+newleft);
-        //camera.setLeft(newleft);
-        //Vector3f newup = newdirection.cross(newleft);
-        //newup = newup.normalize();
+        camera.setLeft(newleft);
+        Vector3f newup = newdirection.cross(newleft);
+        newup = newup.normalize();
         //System.out.println("newup:"+newup);
-        //camera.setUp(newup);
-        
+        camera.setUp(newup);
         //System.out.println("xd:"+camera.getLocation().x+" yd:"+camera.getLocation().y+" zd:"+camera.getLocation().z);
         
         camera.normalize();

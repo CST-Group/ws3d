@@ -133,7 +133,7 @@ public class Leaflet {
     
     /**
      * retorna "true" se todos os itens de um determinado tipo (type) tiverem
-     * sido coletados; é um método auxiliar usado no método ifCompleted.
+     * sido coletados; Ã© um mÃ©todo auxiliar usado no mÃ©todo ifCompleted.
      * @param type
      * @return 
      */

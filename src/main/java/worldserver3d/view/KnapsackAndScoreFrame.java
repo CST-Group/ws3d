@@ -410,7 +410,7 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
         for (Leaflet l : e.getLeafletsOfOwner(creature.getID())) {
             tree.add(l.getID());
         }
-       // resetLeaflet(); n„o esta funcionando. Est· atualizando os campos errados  
+       // resetLeaflet(); n√£o esta funcionando. Est√° atualizando os campos errados  
         for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS - 1; i++) {
        //aqui for (int i = 0; i <= Constants.MAX_NUMBER_OF_COLORS; i++) {
             for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
