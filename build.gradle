@@ -37,10 +37,24 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
+task uberJar(type: Jar) {
+    archiveClassifier = 'full'
+    manifest {
+      attributes(
+        'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+        'Main-Class': mainClassName
+      )
+    }
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
 artifacts
 {
     //archives javadocJar, sourcesJar
-    archives sourcesJar
+    archives sourcesJar,uberJar
 }
 
 jar {
