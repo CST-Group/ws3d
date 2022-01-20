@@ -23,14 +23,6 @@ package model;
  * @author eccastro
  */
 
-import com.jme.scene.Node;
-import com.jme.scene.shape.Box;
-import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.MaterialState;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import util.Constants;
@@ -42,13 +34,13 @@ import util.Constants;
  */
 public class Brick extends Thing {
 
-    public Box box;
+    //public Box box;
     static Logger log = Logger.getLogger(Brick.class.getCanonicalName());
 
     public Brick() {  //Savable matters only
     }
 
-    private Brick(double x, double y, Environment ev) {
+    public Brick(double x, double y, Environment ev) {
         super(x,y,ev);
 
         this.category = Constants.categoryBRICK;
@@ -62,8 +54,10 @@ public class Brick extends Thing {
         float dx = (float) (getX2() - getX1()) / 10;
         float dy = (float) (getY2() - getY1()) / 10;
 
-        box = new Box("Brick_" + System.currentTimeMillis(), new Vector3f(), dx / 2, 2.0f, dy / 2);
-        sf = new ThingShapeFactory(x,y,this);
+        //box = new Box(, new Vector3f(), dx / 2, 2.0f, dy / 2);
+        myName = "Brick_" + System.currentTimeMillis();
+        
+        //sf = new ThingShapeFactory(x,y,this);
         
         affordances = new ArrayList<Integer>();
         affordances.add(Constants.Affordance__VIEWABLE);
@@ -71,7 +65,7 @@ public class Brick extends Thing {
         affordances.add(Constants.Affordance__UNHIDEABLE);
     }
 
-        private Brick(double x1, double y1, double x2, double y2, Environment ev) {
+        public Brick(double x1, double y1, double x2, double y2, Environment ev) {
         super(x1,y1,ev);
 
         this.category = Constants.categoryBRICK;
@@ -85,8 +79,9 @@ public class Brick extends Thing {
         float dx = (float) (getX2() - getX1()) / 10;
         float dy = (float) (getY2() - getY1()) / 10;
 
-        box = new Box("Brick_" + System.currentTimeMillis(), new Vector3f(), dx / 2, 2.0f, dy / 2);
-        sf = new ThingShapeFactory(comX,comY,this);
+        //box = new Box("Brick_" + System.currentTimeMillis(), new Vector3f(), dx / 2, 2.0f, dy / 2);
+        myName = "Brick_" + System.currentTimeMillis();
+        //sf = new ThingShapeFactory(comX,comY,this);
     }
         /**
          * Use this one when creating a Brick from CLI or within another application.
@@ -98,13 +93,13 @@ public class Brick extends Thing {
          * @param ev
          * @param ms 
          */
-public Brick(double x1, double y1, double x2, double y2,Environment ev, MaterialState ms) {
-        this(x1,y1,x2, y2,ev);
-        this.ms = ms;
-        setMaterial(new Material3D(ColorRGBA.magenta, ms));
-        shape = sf.getBrickNode(box, ev);
-
-    }
+//public Brick(double x1, double y1, double x2, double y2,Environment ev, MaterialState ms) {
+//        this(x1,y1,x2, y2,ev);
+//        this.ms = ms;
+//        setMaterial(new Material3D(ColorRGBA.magenta, ms));
+//        shape = sf.getBrickNode(box, ev);
+//
+//    }
 /**
  * Used when creating a Brick using mouse dragging.
  * 
@@ -113,13 +108,13 @@ public Brick(double x1, double y1, double x2, double y2,Environment ev, Material
  * @param ev
  * @param ms 
  */
-public Brick(double x, double y, Environment ev, MaterialState ms) {
-        this(x,y,ev);
-        this.ms = ms;
-        setMaterial(new Material3D(ColorRGBA.magenta, ms));
-        shape = sf.getBrickNode(box, ev);
-        
-    }
+//public Brick(double x, double y, Environment ev, MaterialState ms) {
+//        this(x,y,ev);
+//        this.ms = ms;
+//        setMaterial(new Material3D(ColorRGBA.magenta, ms));
+//        shape = sf.getBrickNode(box, ev);
+//        
+//    }
 
     
     public void moveTo(double dx, double dy) {
@@ -158,51 +153,51 @@ public Brick(double x, double y, Environment ev, MaterialState ms) {
         float dx = (float)(getX2()-getX1())/10;
         float dy = (float)(getY2()-getY1())/10;
         setDepth(2.0f); //wall are fixed in this depth
-        box.setData(box.getCenter(),dx/2,2.0f,dy/2);// old version of JME
+        //box.setData(box.getCenter(),dx/2,2.0f,dy/2);// old version of JME
         //currently using version 2006-2008.
     }
 @Override
  public void setID(Long id, Environment e){
       this.ID = id;
       String name = Constants.BRICK_PREFIX;
-      this.shape.setName(name.concat(id.toString()));
+      //this.shape.setName(name.concat(id.toString()));
       myName  = name.concat(id.toString());
       //System.out.println("====  My name is "+this.shape.getName());
       e.thingMap.put(myName, this);
   }
 
-    @Override
-    public Node myLocalTransformations(Node modelw) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+//    @Override
+//    public Node myLocalTransformations(Node modelw) {
+//        throw new UnsupportedOperationException("Not supported yet.");
+//    }
 
     @Override
     public Knapsack putMeInKnapsack(Knapsack sack) {
         throw new UnsupportedOperationException("Makes no sense for my type os Thing!!!");
     }
 
-    @Override
-    public void write(JMEExporter jmee) throws IOException {
-        super.write(jmee);
-        jmee.getCapsule(this).write(box, "box", null);
-
-    }
-
-    @Override
-    public void read(JMEImporter jmei) throws IOException {
-        super.read(jmei);
-        box = (Box) jmei.getCapsule(this).readSavable("box", null);
-
-    }
+//    @Override
+//    public void write(JMEExporter jmee) throws IOException {
+//        super.write(jmee);
+//        jmee.getCapsule(this).write(box, "box", null);
+//
+//    }
+//
+//    @Override
+//    public void read(JMEImporter jmei) throws IOException {
+//        super.read(jmei);
+//        box = (Box) jmei.getCapsule(this).readSavable("box", null);
+//
+//    }
 
     @Override
      public Class getClassTag() {
         return this.getClass();
     }
 
-    @Override
-    public void updateShape(String model, float scale, Environment e) {
-        throw new UnsupportedOperationException("This type of Thing does not support this operation yet");
-    }
- 
+//    @Override
+//    public void updateShape(String model, float scale, Environment e) {
+//        throw new UnsupportedOperationException("This type of Thing does not support this operation yet");
+//    }
+     
 }

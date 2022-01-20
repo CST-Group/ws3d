@@ -8,11 +8,11 @@ application {
     mainClassName = 'worldserver3d.Main'
 }
 
-description = "WS3D - WorldServer3D"
+description = "WS3D - JME3 Edition"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = '0.0.1'
+version = '0.0.2'
 
 repositories {
     mavenCentral()
@@ -21,11 +21,15 @@ repositories {
     }
 }
 
+def jme3 = [v:'3.4.1-stable', g:'org.jmonkeyengine']
+
 dependencies {
-   implementation name: 'jme2'
-   implementation name: 'json'
-   implementation name: 'lwjgl2.9.0'
-   implementation fileTree(dir: "lib", includes: ['*.jar'])
+   implementation "${jme3.g}:jme3-core:${jme3.v}"
+   runtimeOnly "${jme3.g}:jme3-lwjgl:${jme3.v}" 
+   implementation "${jme3.g}:jme3-desktop:${jme3.v}"
+   implementation "${jme3.g}:jme3-jogg:${jme3.v}"
+   implementation "${jme3.g}:jme3-plugins:${jme3.v}"
+   implementation 'org.json:json:20180813' 
    testImplementation group: 'junit', name: 'junit', version: '4.12' 
 }
 

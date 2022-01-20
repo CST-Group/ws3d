@@ -24,22 +24,10 @@ package model;
  * @author eccastro
  */
 
-import com.jme.scene.Node;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import com.jme.scene.state.MaterialState;
 
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
-import com.jme.image.Texture;
-import com.jme.math.Quaternion;
-import com.jme.renderer.ColorRGBA;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.Constants;
@@ -53,23 +41,23 @@ public class PerishableFood extends Food {
     public PerishableFood() { //Savable matters only!
     }
 
-    public PerishableFood(int periodInSecs, double x, double y, Environment ev, MaterialState ms, TextureState ts){
-        super(x,y,ev,ms);
+    public PerishableFood(int periodInSecs, double x, double y, Environment ev){
+        super(x,y,ev);
         try {
             this.category = Constants.categoryPFOOD;
             this.subCategory = Constants.categoryPFOOD;
-            this.ts = ts;
+            //this.ts = ts;
             this.validPeriod = periodInSecs;
-            sf = new ThingShapeFactory("images/apple.3ds", this);
-            shape = sf.getNode(0.03f);
+            //sf = new ThingShapeFactory("images/apple.3ds", this);
+            //shape = sf.getNode(0.03f);
 
-            shape.setRenderState(ms);
-            shape.setRenderState(ev.ls);
-            shape.updateRenderState();
+            //shape.setRenderState(ms);
+            //shape.setRenderState(ev.ls);
+            //shape.updateRenderState();
             perishable = true;
             stillValid = true;
             myLifeCycle();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.severe("!!!!!PerishableFood: Erro ! ");
             ex.printStackTrace();
         }
@@ -82,29 +70,29 @@ public class PerishableFood extends Food {
         timer.schedule(new RemindTask(this, "images/green_metalic.jpg"), validPeriod*1000);
     }
 
-    public void setSpoiledTexture(String pathToTexture){
+//    public void setSpoiledTexture(String pathToTexture){
+//
+////         ts.setTexture(TextureManager.loadTexture(PerishableFood.class.getClassLoader().getResource(
+////                pathToTexture),
+////                Texture.MinificationFilter.Trilinear,
+////                Texture.MagnificationFilter.Bilinear));
+////         ts.setEnabled(true);
+////         shape.setRenderState(ts);
+//         //maybe has to be called from external class (due to enhiritance):
+//         material.setColor(ColorRGBA.lightGray);//for client display only
+//
+//    }
 
-         ts.setTexture(TextureManager.loadTexture(PerishableFood.class.getClassLoader().getResource(
-                pathToTexture),
-                Texture.MinificationFilter.Trilinear,
-                Texture.MagnificationFilter.Bilinear));
-         ts.setEnabled(true);
-         shape.setRenderState(ts);
-         //maybe has to be called from external class (due to enhiritance):
-         material.setColor(ColorRGBA.lightGray);//for client display only
-
-    }
-
-   public Node myLocalTransformations(Node modelw){
-        modelw.setLocalTranslation(0,0.8f,0);        
-        modelw.getLocalRotation().fromAngles(270 * 3.141592f/180, 3.141592f, 0f);
-        return modelw;
-    }
+//   public Node myLocalTransformations(Node modelw){
+//        modelw.setLocalTranslation(0,0.8f,0);        
+//        modelw.getLocalRotation().fromAngles(270 * 3.141592f/180, 3.141592f, 0f);
+//        return modelw;
+//    }
    @Override
  public void setID(Long id, Environment e){
       this.ID = id;
       String name = Constants.PFOOD_PREFIX;
-      this.shape.setName(name.concat(id.toString()));
+      //this.shape.setName(name.concat(id.toString()));
       myName  = name.concat(id.toString());
       //System.out.println("====  My name is "+this.shape.getName());
       e.thingMap.put(myName, this);
@@ -118,7 +106,7 @@ public class PerishableFood extends Food {
 
 
 
-    class RemindTask extends TimerTask implements Savable{
+    class RemindTask extends TimerTask {
         PerishableFood pf;
         String pathToTexture;
         RemindTask(PerishableFood pf, String pathToTexture){
@@ -127,26 +115,26 @@ public class PerishableFood extends Food {
         }
         public void run() {
             log.info("***** Food expired! *****");
-            this.pf.setSpoiledTexture(pathToTexture);
+            //this.pf.setSpoiledTexture(pathToTexture);
             material.setEnergy(0.0);
-            material.setColor(ColorRGBA.darkGray); //spoiled
+            //material.setColor(ColorRGBA.darkGray); //spoiled
             stillValid = false;
             timer.cancel(); //Terminate the timer thread
         }
 
-        public void write(JMEExporter jmee) throws IOException {
-            OutputCapsule capsule = jmee.getCapsule(this);
-             capsule.write(pf, "pf", null);
-             capsule.write(pathToTexture, "pathToTexture", null);
-
-        }
-
-        public void read(JMEImporter jmei) throws IOException {
-            InputCapsule ic = jmei.getCapsule(this);
-            pf = (PerishableFood) ic.readSavable("pf", null);
-            pathToTexture = ic.readString("pathToTexture", null);
-
-        }
+//        public void write(JMEExporter jmee) throws IOException {
+//            OutputCapsule capsule = jmee.getCapsule(this);
+//             capsule.write(pf, "pf", null);
+//             capsule.write(pathToTexture, "pathToTexture", null);
+//
+//        }
+//
+//        public void read(JMEImporter jmei) throws IOException {
+//            InputCapsule ic = jmei.getCapsule(this);
+//            pf = (PerishableFood) ic.readSavable("pf", null);
+//            pathToTexture = ic.readString("pathToTexture", null);
+//
+//        }
 
         public Class getClassTag() {
             return this.getClass();

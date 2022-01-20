@@ -34,7 +34,18 @@ public class CarLikeCreatureKinematics implements CreatureKinematicsInterface{
         this.c = creature;
     }
 
+    @Override
     public synchronized void updatePosition() {
+        double[] np = calculateNextPosition();
+        c.setX(np[0]);
+        c.setY(np[1]);
+        c.setPitch(np[2]);
+    }
+    
+    
+    @Override
+    public synchronized double[] calculateNextPosition() {
+        double np[] = new double[3];
         //dynamic model described in Gudwin's thesis (chapter 5)
                     double D, sena, dteta,vx,vy,cosp,senp;
                     double pRad = Math.toRadians(c.getPitch());
@@ -58,10 +69,11 @@ public class CarLikeCreatureKinematics implements CreatureKinematicsInterface{
                     //y += vy * senp + vx * cosp;
                     //pitch += Math.toDegrees(dteta);
                     //System.out.println("Before: x= "+c.getX()+ " and y= "+c.getY());
-                    c.setX(c.getX() + (vy * cosp - vx * senp));
-                    c.setY(c.getY() + (vy * senp + vx * cosp));
+                    np[0] = c.getX() + (vy * cosp - vx * senp);
+                    np[1] = c.getY() + (vy * senp + vx * cosp);
                     //System.out.println("After: x= "+c.getX()+ " and y= "+c.getY());
-                    c.setPitch(c.getPitch() + Math.toDegrees(dteta));
+                    np[2] = c.getPitch() + Math.toDegrees(dteta);
+                    return(np);
     }
 
 }

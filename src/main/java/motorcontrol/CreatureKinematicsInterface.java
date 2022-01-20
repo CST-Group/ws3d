@@ -31,5 +31,6 @@ public interface CreatureKinematicsInterface {
 
 
     public void updatePosition(); //synchronized
+    public double[] calculateNextPosition(); //synchronized
     
 }

@@ -18,9 +18,6 @@
  *****************************************************************************/
 package model;
 
-import com.jme.scene.Node;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.TextureState;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -43,8 +40,8 @@ public class Cage extends Container {
     static Logger log = Logger.getLogger(Cage.class.getCanonicalName());
 
     //Default constructor: initially it contain only Food.
-    public Cage(double x, double y, Environment ev, MaterialState ms, TextureState ts) {
-        super(x, y, ev, ms);
+    public Cage(double x, double y, Environment ev) {
+        super(x, y, ev);
         try {
             this.category = Constants.categoryCAGE;
             this.comX = x;
@@ -59,11 +56,11 @@ public class Cage extends Container {
             y1 = y;
             x2 = x;
             y2 = y;
-            this.ts = ts;
-            sf = new Thing.ThingShapeFactory("images/empty_cage_p.3DS", this);
-            shape = sf.getNode(0.03f);
-            shape.setRenderState(ms);
-            setTexture("images/texture9.jpeg");
+            //this.ts = ts;
+            //sf = new Thing.ThingShapeFactory("images/empty_cage_p.3DS", this);
+            //shape = sf.getNode(0.03f);
+            //shape.setRenderState(ms);
+            //setTexture("images/texture9.jpeg");
             affordances = new ArrayList<Integer>();
             affordances.add(Constants.Affordance__INSERTABLE);
             affordances.add(Constants.Affordance__REMOVEFROMABLE);
@@ -72,15 +69,15 @@ public class Cage extends Container {
 
             cageFSM = new CageFSM(this);
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.info("!!!!!Cage: Error ! ");
             ex.printStackTrace();
         }
 
     }
 
-    public Cage(double x, double y, Environment ev, MaterialState ms, TextureState ts, int category) {
-        super(x, y, ev, ms, category);
+    public Cage(double x, double y, Environment ev, int category) {
+        super(x, y, ev, category);
         try {
             this.category = Constants.categoryCAGE;
             this.comX = x;
@@ -89,11 +86,11 @@ public class Cage extends Container {
             y1 = y;
             x2 = x;
             y2 = y;
-            this.ts = ts;
-            sf = new Thing.ThingShapeFactory("images/empty_cage_p.3DS", this);
-            shape = sf.getNode(0.03f);
-            shape.setRenderState(ms);
-            setTexture("images/texture9.jpeg");
+            //this.ts = ts;
+            //sf = new Thing.ThingShapeFactory("images/empty_cage_p.3DS", this);
+            //shape = sf.getNode(0.03f);
+            //shape.setRenderState(ms);
+            //setTexture("images/texture9.jpeg");
 
             affordances = new ArrayList<Integer>();
             affordances.add(Constants.Affordance__INSERTABLE);
@@ -103,7 +100,7 @@ public class Cage extends Container {
 
             cageFSM = new CageFSM(this);
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.severe("!!!!!Cage: Error ! ");
             ex.printStackTrace();
         }
@@ -116,66 +113,66 @@ public class Cage extends Container {
     public void setStatus(int cageStatus) {
         this.state = cageStatus;
         log.info(" cageStatus:  "+cageStatus);
-        switch (cageStatus) {
-            case Constants.FULL_OPENED_APPLE:
-                updateShape("images/apple_cage_open_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_CLOSED_APPLE:
-                updateShape("images/apple_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_NUT:
-                updateShape("images/nut_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_NUT:
-                updateShape("images/nut_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.EMPTY_OPENED:
-                updateShape("images/empty_cage_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.EMPTY_CLOSED:
-                updateShape("images/empty_cage_closed_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_JEWEL:
-                updateShape("images/jewel_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_JEWEL:
-                updateShape("images/jewel_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_MNJ:
-                updateShape("images/mnj_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_MNJ:
-                updateShape("images/mnj_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_MN:
-                updateShape("images/mn_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_MN:
-                updateShape("images/mn_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_MJ:
-                updateShape("images/mj_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_MJ:
-                updateShape("images/mj_cage_p.3DS", 0.03f, this.e);
-                break;
-
-            case Constants.FULL_OPENED_NJ:
-                updateShape("images/nj_cage_open_p.3DS", 0.03f, this.e);
-                break;
-            case Constants.FULL_CLOSED_NJ:
-                updateShape("images/nj_cage_p.3DS", 0.03f, this.e);
-                break;
-            default:
-                log.severe("Error in Cage::setStatus !!!");
-        }
+//        switch (cageStatus) {
+//            case Constants.FULL_OPENED_APPLE:
+//                updateShape("images/apple_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_CLOSED_APPLE:
+//                updateShape("images/apple_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_NUT:
+//                updateShape("images/nut_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_NUT:
+//                updateShape("images/nut_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.EMPTY_OPENED:
+//                updateShape("images/empty_cage_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.EMPTY_CLOSED:
+//                updateShape("images/empty_cage_closed_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_JEWEL:
+//                updateShape("images/jewel_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_JEWEL:
+//                updateShape("images/jewel_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_MNJ:
+//                updateShape("images/mnj_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_MNJ:
+//                updateShape("images/mnj_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_MN:
+//                updateShape("images/mn_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_MN:
+//                updateShape("images/mn_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_MJ:
+//                updateShape("images/mj_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_MJ:
+//                updateShape("images/mj_cage_p.3DS", 0.03f, this.e);
+//                break;
+//
+//            case Constants.FULL_OPENED_NJ:
+//                updateShape("images/nj_cage_open_p.3DS", 0.03f, this.e);
+//                break;
+//            case Constants.FULL_CLOSED_NJ:
+//                updateShape("images/nj_cage_p.3DS", 0.03f, this.e);
+//                break;
+//            default:
+//                log.severe("Error in Cage::setStatus !!!");
+//        }
     }
 
     @Override
@@ -197,70 +194,70 @@ public class Cage extends Container {
     public void initPlace() {
     }
 
-    @Override
-    public Node myLocalTransformations(Node modelw) {
-        modelw.getLocalRotation().fromAngles(270 * 3.141592f / 180, 360 * 3.141592f / 180, 0f);
-        switch (getStatus()) {
-            case Constants.FULL_OPENED_APPLE:
-                modelw.setLocalTranslation(5f, 0, -16f);
-                break;
-
-            case Constants.FULL_CLOSED_APPLE:
-                modelw.setLocalTranslation(9f, 0, 0);
-                break;
-
-            case Constants.FULL_OPENED_NUT:
-                modelw.setLocalTranslation(5f, 0, -16f);
-                break;
-            case Constants.FULL_CLOSED_NUT:
-                modelw.setLocalTranslation(-6f, 0, 0);
-                break;
-
-            case Constants.EMPTY_OPENED:
-                modelw.setLocalTranslation(-24f, 0, 0);
-                break;
-            case Constants.EMPTY_CLOSED:
-                modelw.setLocalTranslation(13f, 0, -16f);
-                break;
-
-            case Constants.FULL_OPENED_JEWEL:
-                modelw.setLocalTranslation(3.5f, 0, 0);
-                break;
-            case Constants.FULL_CLOSED_JEWEL:
-                modelw.setLocalTranslation(10f, 0, 0);
-                break;
-
-            case Constants.FULL_OPENED_MNJ:
-                modelw.setLocalTranslation(-6.5f, 0, 5f);
-                break;
-            case Constants.FULL_CLOSED_MNJ:
-                modelw.setLocalTranslation(0, 0, 5f);
-                break;
-
-            case Constants.FULL_OPENED_MN:
-                modelw.setLocalTranslation(-6.5f, 0, -3f);
-                break;
-            case Constants.FULL_CLOSED_MN:
-                modelw.setLocalTranslation(0, 0, -3f);
-                break;
-
-            case Constants.FULL_OPENED_MJ:
-                modelw.setLocalTranslation(-16.5f, 0, -3f);
-                break;
-            case Constants.FULL_CLOSED_MJ:
-                modelw.setLocalTranslation(-10f, 0, -3f);
-                break;
-
-            case Constants.FULL_OPENED_NJ:
-                modelw.setLocalTranslation(-16.5f, 0, 4.5f);
-                break;
-            case Constants.FULL_CLOSED_NJ:
-                modelw.setLocalTranslation(-10f, 0, 4.5f);
-                break;
-        }
-        return modelw;
-
-    }
+//    @Override
+//    public Node myLocalTransformations(Node modelw) {
+//        modelw.getLocalRotation().fromAngles(270 * 3.141592f / 180, 360 * 3.141592f / 180, 0f);
+//        switch (getStatus()) {
+//            case Constants.FULL_OPENED_APPLE:
+//                modelw.setLocalTranslation(5f, 0, -16f);
+//                break;
+//
+//            case Constants.FULL_CLOSED_APPLE:
+//                modelw.setLocalTranslation(9f, 0, 0);
+//                break;
+//
+//            case Constants.FULL_OPENED_NUT:
+//                modelw.setLocalTranslation(5f, 0, -16f);
+//                break;
+//            case Constants.FULL_CLOSED_NUT:
+//                modelw.setLocalTranslation(-6f, 0, 0);
+//                break;
+//
+//            case Constants.EMPTY_OPENED:
+//                modelw.setLocalTranslation(-24f, 0, 0);
+//                break;
+//            case Constants.EMPTY_CLOSED:
+//                modelw.setLocalTranslation(13f, 0, -16f);
+//                break;
+//
+//            case Constants.FULL_OPENED_JEWEL:
+//                modelw.setLocalTranslation(3.5f, 0, 0);
+//                break;
+//            case Constants.FULL_CLOSED_JEWEL:
+//                modelw.setLocalTranslation(10f, 0, 0);
+//                break;
+//
+//            case Constants.FULL_OPENED_MNJ:
+//                modelw.setLocalTranslation(-6.5f, 0, 5f);
+//                break;
+//            case Constants.FULL_CLOSED_MNJ:
+//                modelw.setLocalTranslation(0, 0, 5f);
+//                break;
+//
+//            case Constants.FULL_OPENED_MN:
+//                modelw.setLocalTranslation(-6.5f, 0, -3f);
+//                break;
+//            case Constants.FULL_CLOSED_MN:
+//                modelw.setLocalTranslation(0, 0, -3f);
+//                break;
+//
+//            case Constants.FULL_OPENED_MJ:
+//                modelw.setLocalTranslation(-16.5f, 0, -3f);
+//                break;
+//            case Constants.FULL_CLOSED_MJ:
+//                modelw.setLocalTranslation(-10f, 0, -3f);
+//                break;
+//
+//            case Constants.FULL_OPENED_NJ:
+//                modelw.setLocalTranslation(-16.5f, 0, 4.5f);
+//                break;
+//            case Constants.FULL_CLOSED_NJ:
+//                modelw.setLocalTranslation(-10f, 0, 4.5f);
+//                break;
+//        }
+//        return modelw;
+//
+//    }
 
     @Override
     public Knapsack putMeInKnapsack(Knapsack sack) {
@@ -271,7 +268,7 @@ public class Cage extends Container {
     public void setID(Long id, Environment e) {
         this.ID = id;
         String name = Constants.CAGE_PREFIX;
-        this.shape.setName(name.concat(id.toString()));
+        //this.shape.setName(name.concat(id.toString()));
         myName = name.concat(id.toString());
         e.thingMap.put(myName, this);
     }

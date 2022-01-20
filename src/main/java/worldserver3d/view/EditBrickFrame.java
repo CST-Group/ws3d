@@ -24,7 +24,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import model.Brick;
 import model.Thing;
-import com.jme.renderer.ColorRGBA;
 import java.util.HashMap;
 import model.Material3D;
 import java.util.List;
@@ -97,13 +96,13 @@ public void setObjectColor(int materialColorIdx) {
                   log.info(" ******* materialColorIdx = "+materialColorIdx);
                   String txt = colorArray[materialColorIdx];
                   log.info(" ******* materialColorIdx corresponds to = "+ txt);
-                  ColorRGBA materialColor = this.e.colorPool.get(txt);
+                  Color materialColor = this.e.colorPool.get(txt);
                   Material3D m3D = this.obstacle.getMaterial();
                   m3D.setColor(materialColor);
                   this.obstacle.setMaterial(m3D);
 
          }
-    public void setObjectColor(ColorRGBA materialColor) {
+    public void setObjectColor(Color materialColor) {
 
         Material3D m3D = this.obstacle.getMaterial();
         m3D.setColor(materialColor);
@@ -113,7 +112,7 @@ public void setObjectColor(int materialColorIdx) {
 public int getColorMaterial3DIdx(){
     int ret = 0; // returns 0 in case of not finding the color
     if (this.obstacle != null) {
-         ColorRGBA c = this.obstacle.getMaterial().getColor();
+         Color c = this.obstacle.getMaterial().getColor();
          String s = getIdxFromColor(this.e.colorPool, c);
          log.info(" *********** color is = "+ s + " or "+this.obstacle.getMaterial().getColorName());
          for (int i = 0; i <=5;i++){
@@ -280,7 +279,7 @@ private void createSwingStuff() {
 class RadioListener implements ActionListener {
         public void actionPerformed(ActionEvent ev) {
 
-            ColorRGBA materialColor = e.colorPool.get(ev.getActionCommand().toString());
+            Color materialColor = e.colorPool.get(ev.getActionCommand().toString());
             setObjectColor(materialColor);
         }
 }

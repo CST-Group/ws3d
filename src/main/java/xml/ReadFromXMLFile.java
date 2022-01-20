@@ -19,18 +19,15 @@
 package xml;
 
 import java.io.File;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import model.Creature;
 import model.Environment;
 import model.Thing;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import util.Constants;
 import worldserver3d.ThingCreator;
@@ -101,6 +98,7 @@ public class ReadFromXMLFile {
                 Element e = (Element) listThings.item(thIdx);
 
                 xmlToThing(e, ev);
+                ev.print();
             }
 
 
@@ -171,7 +169,6 @@ public class ReadFromXMLFile {
         } else {
             th = tc.reCreateThing(category, subcategory, color, x1, y1, x2, y2, wasHidden);
         }
-
         return th;
 
     }

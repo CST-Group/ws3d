@@ -22,9 +22,9 @@ package model;
  *
  * @author eccastro
  */
-import java.util.List;
+import com.jme3.math.ColorRGBA;
+import java.awt.Color;
 import java.util.HashMap;
-import com.jme.renderer.ColorRGBA;
 import java.util.Iterator;
 import java.util.Observable;
 import util.Constants;
@@ -281,25 +281,25 @@ public class Knapsack extends Observable {
 
     private void incKnapsack(Jewel o) {
 
-        if (o.getMaterial().getColor() == ColorRGBA.green) {
+        if (o.getMaterial().getColor() == Color.green) {
             numberOfJewels.put(Constants.colorGREEN, new Integer(numberOfJewels.get(Constants.colorGREEN).intValue() + 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.red) {
+        } else if (o.getMaterial().getColor() == Color.red) {
             numberOfJewels.put(Constants.colorRED, new Integer(numberOfJewels.get(Constants.colorRED).intValue() + 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.blue) {
+        } else if (o.getMaterial().getColor() == Color.blue) {
             numberOfJewels.put(Constants.colorBLUE, new Integer(numberOfJewels.get(Constants.colorBLUE).intValue() + 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.yellow) {
+        } else if (o.getMaterial().getColor() == Color.yellow) {
             numberOfJewels.put(Constants.colorYELLOW, new Integer(numberOfJewels.get(Constants.colorYELLOW).intValue() + 1));
         } //            else if (o.getMaterial().getColor() == ColorRGBA.pink)
         //                numberOfObstacles.put("Pink", new Integer(numberOfObstacles.get("Pink").intValue() +1));
-        else if (o.getMaterial().getColor() == ColorRGBA.magenta) {
+        else if (o.getMaterial().getColor() == Color.magenta) {
             numberOfJewels.put(Constants.colorMAGENTA, new Integer(numberOfJewels.get(Constants.colorMAGENTA).intValue() + 1));
         } //            else if (o.getMaterial().getColor() == ColorRGBA.brown)
         //                numberOfObstacles.put("Brown", new Integer(numberOfObstacles.get("Brown").intValue() +1));
-        else if (o.getMaterial().getColor() == ColorRGBA.white) {
+        else if (o.getMaterial().getColor() == Color.white) {
             numberOfJewels.put(Constants.colorWHITE, new Integer(numberOfJewels.get(Constants.colorWHITE).intValue() + 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.darkGray) {
+        } else if (o.getMaterial().getColor() == Color.darkGray) {
             numberOfJewels.put(Constants.colorDARKGRAY_SPOILED, new Integer(numberOfJewels.get(Constants.colorDARKGRAY_SPOILED).intValue() + 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.orange) {
+        } else if (o.getMaterial().getColor() == Color.orange) {
             numberOfJewels.put(Constants.colorORANGE, new Integer(numberOfJewels.get(Constants.colorORANGE).intValue() + 1));
         }
 
@@ -308,25 +308,25 @@ public class Knapsack extends Observable {
 
     private void decKnapsack(Jewel o) {
 
-        if (o.getMaterial().getColor() == ColorRGBA.green) {
+        if (o.getMaterial().getColor() == Color.green) {
             numberOfJewels.put(Constants.colorGREEN, new Integer(numberOfJewels.get(Constants.colorGREEN).intValue() - 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.red) {
+        } else if (o.getMaterial().getColor() == Color.red) {
             numberOfJewels.put(Constants.colorRED, new Integer(numberOfJewels.get(Constants.colorRED).intValue() - 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.blue) {
+        } else if (o.getMaterial().getColor() == Color.blue) {
             numberOfJewels.put(Constants.colorBLUE, new Integer(numberOfJewels.get(Constants.colorBLUE).intValue() - 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.yellow) {
+        } else if (o.getMaterial().getColor() == Color.yellow) {
             numberOfJewels.put(Constants.colorYELLOW, new Integer(numberOfJewels.get(Constants.colorYELLOW).intValue() - 1));
         } //            else if (o.getMaterial().getColor() == ColorRGBA.pink)
         //                numberOfObstacles.put("Pink", new Integer(numberOfObstacles.get("Pink").intValue() -1));
-        else if (o.getMaterial().getColor() == ColorRGBA.magenta) {
+        else if (o.getMaterial().getColor() == Color.magenta) {
             numberOfJewels.put(Constants.colorMAGENTA, new Integer(numberOfJewels.get(Constants.colorMAGENTA).intValue() - 1));
         } //            else if (o.getMaterial().getColor() == ColorRGBA.brown)
         //                numberOfObstacles.put("Brown", new Integer(numberOfObstacles.get("Brown").intValue() -1));
-        else if (o.getMaterial().getColor() == ColorRGBA.white) {
+        else if (o.getMaterial().getColor() == Color.white) {
             numberOfJewels.put(Constants.colorWHITE, new Integer(numberOfJewels.get(Constants.colorWHITE).intValue() - 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.darkGray) {
+        } else if (o.getMaterial().getColor() == Color.darkGray) {
             numberOfJewels.put(Constants.colorDARKGRAY_SPOILED, new Integer(numberOfJewels.get(Constants.colorDARKGRAY_SPOILED).intValue() - 1));
-        } else if (o.getMaterial().getColor() == ColorRGBA.orange) {
+        } else if (o.getMaterial().getColor() == Color.orange) {
             numberOfJewels.put(Constants.colorORANGE, new Integer(numberOfJewels.get(Constants.colorORANGE).intValue() - 1));
         }
 

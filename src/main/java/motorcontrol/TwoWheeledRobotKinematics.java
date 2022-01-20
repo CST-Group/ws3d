@@ -18,14 +18,7 @@
  *****************************************************************************/
 package motorcontrol;
 
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import java.io.IOException;
 import model.Creature;
-import model.Environment;
 import util.Constants;
 
 /**
@@ -44,7 +37,17 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
     public synchronized void setDeriveSpeed(boolean b){
         this.deriveSpeed = b;
     }
+    
+    @Override
     public synchronized void updatePosition() {
+        double np[] = calculateNextPosition();
+        c.setX(np[0]);
+        c.setY(np[1]);
+        c.setPitch(np[2]);
+    }
+    
+    @Override
+    public synchronized double[] calculateNextPosition() {
         // double D = 1.0 * 50.0;
         //double D = 1.0 * 3.0;
         double D = 20 / Constants.M_PI;
@@ -52,6 +55,7 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
         double aux = (1 - c.getFriction());
         double w = (c.getVleft() - c.getVright()) / D; //clockwise is positive
         double cosp, senp, a, cosWP, senWP;
+        double np[] = new double[3];
 
         cosp = Math.cos(-pRad); //counterclockwise is negative
         senp = Math.sin(-pRad);
@@ -71,9 +75,11 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
             c.setSpeed(Math.abs(c.getVleft()));
             
             a = 1 * c.getSpeed(); // aux = 1
-
-            c.setX(c.getX() + a * cosp);
-            c.setY(c.getY() - a * senp);
+            np[0] = c.getX() + a * cosp;
+            np[1] = c.getY() - a * senp;
+            np[2] = c.getPitch();
+            //c.setX(c.getX() + a * cosp);
+            //c.setY(c.getY() - a * senp);
 
         } else
         
@@ -85,16 +91,21 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
                 //System.out.println("...............................1st and speed= " + c.getSpeed());
                 //a = aux * (c.getVleft() + c.getVright()) / 2;
                 a = aux * c.getSpeed();
-
-                c.setX(c.getX() + a * cosp);
-                c.setY(c.getY() - a * senp);
+                np[0] = c.getX() + a * cosp;
+                np[1] = c.getY() - a * senp;
+                np[2] = c.getPitch();
+                //c.setX(c.getX() + a * cosp);
+                //c.setY(c.getY() - a * senp);
         } //2nd case: same velocities; oposite direction -> robot rotates in place
         else if (c.getVleft() == -c.getVright()) {
             //System.out.println("...............................2nd and speed= " + c.getSpeed());
 
             //Reference:  Equations 3.50, 3.51, 3.52 on pag. 84 (chap 3) Sigwart/Nourbakhsh
             //c.setPitch(Math.toDegrees(c.getW()));    Alterado por Ricardo Gudwin em 06/01/2017
-            c.setPitch(c.getPitch() + c.getW());
+            np[0] = c.getX();
+            np[1] = c.getY();
+            np[2] = c.getPitch() + c.getW();
+            //c.setPitch(c.getPitch() + c.getW());
             //System.out.println("Pitch:"+c.getPitch());
 
         } //3rd case: different velocities => change direction
@@ -109,11 +120,14 @@ public class TwoWheeledRobotKinematics implements CreatureKinematicsInterface {
 
             //a = aux * (c.getVleft() + c.getVright()) / 2;
             a = aux * c.getSpeed();
-            c.setX(c.getX() + a * cosp);
-            c.setY(c.getY() - a * senp);
+            np[0] = c.getX() + a * cosp;
+            np[1] = c.getY() - a * senp;
+            np[2] = c.getPitch();
+            //c.setX(c.getX() + a * cosp);
+            //c.setY(c.getY() - a * senp);
 
         }
 
-        
+     return(np);   
     }
 }

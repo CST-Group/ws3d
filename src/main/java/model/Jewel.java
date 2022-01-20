@@ -22,14 +22,8 @@ package model;
  *
  * @author eccastro
  */
-import com.jme.math.Quaternion;
-import com.jme.scene.Node;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.shape.Octahedron;
-import com.jme.scene.state.MaterialState;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import java.io.IOException;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import util.Constants;
 
@@ -40,12 +34,12 @@ import util.Constants;
  */
 public class Jewel extends Thing {
 
-    public Octahedron jewel;
+    //public Octahedron jewel;
 
     public Jewel() { //Savable matters only!
     }
 
-    private Jewel(double x, double y, Environment ev) {
+    public Jewel(double x, double y, Environment ev) {
 
         super(x,y,ev);
         this.category = Constants.categoryJEWEL;
@@ -57,9 +51,9 @@ public class Jewel extends Thing {
 
 
         float sideLength = 0.8f;
-        jewel = new Octahedron(Constants.CRYSTAL_PREFIX, sideLength);
+        //jewel = new Octahedron(Constants.CRYSTAL_PREFIX, sideLength);
    
-        sf = new ThingShapeFactory(x, y, this);
+        //sf = new ThingShapeFactory(x, y, this);
         
         affordances = new ArrayList<Integer>();
         affordances.add(Constants.Affordance__VIEWABLE);
@@ -69,18 +63,18 @@ public class Jewel extends Thing {
         affordances.add(Constants.Affordance__PUTINBAGABLE);
     }
 
-    public Jewel(double x, double y, Environment ev, MaterialState ms) {
-        this(x, y, ev);
-        this.ms = ms;
-        setMaterial(new Material3D(1.0, ColorRGBA.green, ms));//only jewel shines
-        shape = sf.getJewelNode(jewel, ev);
-        setDepth(1.0f);
-    }
+//    public Jewel(double x, double y, Environment ev) {
+//        this(x, y, ev);
+//        //this.ms = ms;
+//        //setMaterial(new Material3D(1.0, ColorRGBA.green, ms));//only jewel shines
+//        //shape = sf.getJewelNode(jewel, ev);
+//        setDepth(1.0f);
+//    }
 
-    public void setType(ColorRGBA materialColor) {
+    public void setType(Color materialColor) {
         this.getMaterial().setShininess(1.0);
         Material3D m3D = this.getMaterial();
-        m3D.setColor(materialColor);
+        //m3D.setColor(materialColor);
         this.setMaterial(m3D);
     }
 
@@ -108,16 +102,16 @@ public class Jewel extends Thing {
     public void setID(Long id, Environment e) {
         this.ID = id;
         String name = Constants.CRYSTAL_PREFIX;
-        this.shape.setName(name.concat(id.toString()));
+        //this.shape.setName(name.concat(id.toString()));
         myName = name.concat(id.toString());
         e.thingMap.put(myName, this);
     }
 
-    @Override
-    public Node myLocalTransformations(Node modelw) {
-        modelw.getLocalRotation().fromAngles(270 * 3.141592f/180, 270 * 3.141592f/180, 0f);
-        return modelw;
-    }
+//    @Override
+//    public Node myLocalTransformations(Node modelw) {
+//        modelw.getLocalRotation().fromAngles(270 * 3.141592f/180, 270 * 3.141592f/180, 0f);
+//        return modelw;
+//    }
 
     @Override
     public Knapsack putMeInKnapsack(Knapsack sack) {
@@ -125,27 +119,27 @@ public class Jewel extends Thing {
         return sack;
     }
 
-    @Override
-        public void write(JMEExporter jmee) throws IOException {
-        super.write(jmee);
-        jmee.getCapsule(this).write(jewel, "jewel", null);
-
-    }
-
-    @Override
-    public void read(JMEImporter jmei) throws IOException {
-        super.read(jmei);
-        jewel = (Octahedron) jmei.getCapsule(this).readSavable("jewel", null);
-
-    }
+//    @Override
+//        public void write(JMEExporter jmee) throws IOException {
+//        super.write(jmee);
+//        jmee.getCapsule(this).write(jewel, "jewel", null);
+//
+//    }
+//
+//    @Override
+//    public void read(JMEImporter jmei) throws IOException {
+//        super.read(jmei);
+//        jewel = (Octahedron) jmei.getCapsule(this).readSavable("jewel", null);
+//
+//    }
 
     @Override
      public Class getClassTag() {
         return this.getClass();
     }
 
-    @Override
-    public void updateShape(String model, float scale, Environment e) {
-        throw new UnsupportedOperationException("This type of Thing does not support this operation yet");
-    }
+//    @Override
+//    public void updateShape(String model, float scale, Environment e) {
+//        throw new UnsupportedOperationException("This type of Thing does not support this operation yet");
+//    }
 }

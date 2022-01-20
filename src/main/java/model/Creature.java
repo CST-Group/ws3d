@@ -26,8 +26,6 @@ package model;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-import com.jme.scene.CameraNode;
-import com.jme.scene.Node;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -37,11 +35,6 @@ import java.awt.geom.QuadCurve2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
-import com.jme.intersection.CollisionResults;
-import com.jme.intersection.BoundingCollisionResults;
-import com.jme.math.Quaternion;
-import com.jme.renderer.ColorRGBA;
-import com.jme.system.DisplaySystem;
 import motorcontrol.CreatureKinematicsInterface;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +61,7 @@ public abstract class Creature extends Thing {
     //protected int motorSystem = 2; //1- car-like, 2- two-wheeled differential steering
 
     public ContactSensor contactSensors[];
-    public CameraNode cn;
+    //public CameraNode cn;
     protected double wheel;
     protected double speed;
     protected double fuel;
@@ -79,7 +72,7 @@ public abstract class Creature extends Thing {
     public boolean hasStarted = false;
     //protected Environment e;
     public Knapsack sack;
-    protected VisualSensor visualSensor;
+    //protected VisualSensor visualSensor;
     public boolean isVisualSensorActivated = false;
 
     public Thing collidedWithThing = null;
@@ -93,7 +86,7 @@ public abstract class Creature extends Thing {
     private Timer endorphineTimer;
     protected CreatureKinematicsInterface kinematics;
     final public Creature semaphore = this;
-    public CollisionResults collisionResults;
+    //public CollisionResults collisionResults;
     public CreatureEnergyNotifier fuelNotifier;
     public CreatureSerotoninNotifier serotoninNotifier;
     public CreatureEndorphineNotifier endorphineNotifier;
@@ -143,8 +136,8 @@ public abstract class Creature extends Thing {
         }
         updateContactSensorPosition();
 
-        collisionResults = new BoundingCollisionResults();
-        setMaterial(new Material3D(null));
+        //collisionResults = new BoundingCollisionResults();
+        //setMaterial(new Material3D(null));
         startEnergyCycle();
         startSerotoninCycle();
         startEndorphineCycle();
@@ -164,6 +157,7 @@ public abstract class Creature extends Thing {
     }
 
     abstract public void updateMyPosition(); //synchronized
+    abstract public double[] calculateNextPosition(); //synchronized
 //	public double getX() { return x; }
 //	public double getY() { return y; }
 
@@ -321,13 +315,13 @@ public abstract class Creature extends Thing {
         this.friction = friction;
     }
 
-    public void setVisualSensor(VisualSensor vs) {
-        this.visualSensor = vs;
-    }
-
-    public VisualSensor getVisualSensor() {
-        return this.visualSensor;
-    }
+//    public void setVisualSensor(VisualSensor vs) {
+//        this.visualSensor = vs;
+//    }
+//
+//    public VisualSensor getVisualSensor() {
+//        return this.visualSensor;
+//    }
 
     public synchronized void setX(double x) {
         this.comX = x;
@@ -359,9 +353,9 @@ public abstract class Creature extends Thing {
     //TODO consider changing it in WS3D
     public boolean pointContains(double pointX, double pointY) {
         //stuff from old time
-        double SIZE = 50.0;
-        double POINT_DISTANCE = 0.35 * SIZE;
-        double POINT_SIZE = 0.1 * SIZE;
+        double SIZE = Constants.CREATURE_SIZE;
+        double POINT_DISTANCE = 0.65 * SIZE;
+        double POINT_SIZE = 0.4 * SIZE;
         double zoom = 1.0;
 
         return (Math.abs(comX + zoom * POINT_DISTANCE * Math.cos(Math.toRadians(pitch)) - pointX) < zoom * POINT_SIZE / 2
@@ -414,27 +408,19 @@ public abstract class Creature extends Thing {
      */
     public synchronized void move(Environment e) {
         if ((this.hasStarted) && (getFuel() > 0)) {
-
             updateMyPosition();
-
         }
-
-        if (comX > e.width) {
-            comX = e.width;
-
+        if (comX > 50) {
+            comX = 50;
         }
-        if (comX < 0) {
-            comX = 0;
-
+        if (comX < -50) {
+            comX = -50;
         }
-
-        if (comY > e.height) {
-            comY = e.height;
-
+        if (comY > 50) {
+            comY = 50;
         }
-        if (comY < 0) {
-            comY = 0;
-
+        if (comY < -50) {
+            comY = -50;
         }
         updateContactSensor(e);
         updateVisualSensor(e);
@@ -483,7 +469,6 @@ public abstract class Creature extends Thing {
 
     public synchronized void rotate(double pointX, double pointY) {
         pitch = Math.toDegrees(Math.atan2(pointY - comY, pointX - comX));
-
         updateContactSensorPosition();
         updateVisualSensorPosition();
 
@@ -514,9 +499,9 @@ public abstract class Creature extends Thing {
     public void updateContactSensorPosition() {
         //stuff from old times
         double zoom = 1.0;
-        double SIZE = 50.0;
-        double WIDTH = 0.43 * SIZE;
-        double LENGTH = 0.43 * SIZE;
+        double SIZE = Constants.CREATURE_SIZE;
+        double WIDTH = SIZE;
+        double LENGTH = SIZE;
 
         double x0 = -zoom * LENGTH / 2, y0 = -zoom * WIDTH / 2;
         double x1_ = +zoom * LENGTH / 2, y1_ = +zoom * WIDTH / 2;
@@ -836,33 +821,33 @@ public abstract class Creature extends Thing {
      */
     public synchronized void drop(int category, int color) {
         Long t = System.currentTimeMillis();
-        e.oMsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createMaterialState());
+        //e.oMsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createMaterialState());
         Thing th = null;
         this.setThingInHandsName("Dropping");
 
         switch (category) {
 
             case Constants.categoryJEWEL:
-                th = new Jewel(comX, comY, e, e.oMsPool.get(t));
-                ((Jewel) th).setType(Constants.translateIntoColor(Constants.getColorItem(color)));
+                th = new Jewel(comX, comY, e);
+                //((Jewel) th).setType(Constants.translateIntoColor(Constants.getColorItem(color)));
 
                 this.sack.removeJewelFromKnapsack(Constants.getColorItem(color));
                 break;
 
             case Constants.categoryNPFOOD:
 
-                e.thingTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
-                th = new NonPerishableFood(comX, comY, e, e.oMsPool.get(t), e.thingTsPool.get(t));
-                th.setMaterial(new Material3D(ColorRGBA.orange, 1.0, 2.0, 0, e.oMsPool.get(t)));
+                //e.thingTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
+                th = new NonPerishableFood(comX, comY, e);
+                th.setMaterial(new Material3D(Color.orange, 1.0, 2.0, 0));
                 th.subCategory = Constants.categoryNPFOOD;
                 this.sack.decNonPerishableFoodInKnapsack();
                 break;
 
             case Constants.categoryPFOOD:
-                e.thingTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
+                //e.thingTsPool.put(t, DisplaySystem.getDisplaySystem().getRenderer().createTextureState());
                 //10 minutes food
-                th = new PerishableFood(Constants.VALID_PERIOD_SECS, comX, comY, e, e.oMsPool.get(t), e.thingTsPool.get(t));
-                th.setMaterial(new Material3D(ColorRGBA.red, 1.0, 1.0, 0, e.oMsPool.get(t)));
+                th = new PerishableFood(Constants.VALID_PERIOD_SECS, comX, comY, e);
+                th.setMaterial(new Material3D(Color.red, 1.0, 1.0, 0));
                 th.subCategory = Constants.categoryPFOOD;
                 this.sack.decPerishableFoodInKnapsack();
                 break;
@@ -918,30 +903,30 @@ public abstract class Creature extends Thing {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Node getNode() {
-        Node nd = sf.getNode(.02f);
-        String name = new String("Creature_");
-        nd.setName(name.concat(this.ID.toString()));
-        return nd;
-    }
+//    public Node getNode() {
+//        Node nd = sf.getNode(.02f);
+//        String name = new String("Creature_");
+//        nd.setName(name.concat(this.ID.toString()));
+//        return nd;
+//    }
 
     @Override
     //currently not necessairy for creature
     public void setID(Long id, Environment e) {
         this.ID = id;
         String name = Constants.CREATURE_PREFIX;
-        this.shape.setName(name.concat(id.toString()));
+        //this.shape.setName(name.concat(id.toString()));
         myName = name.concat(id.toString());
         e.thingMap.put(myName, this);
     }
 
-    public Node myLocalTransformations(Node modelw) {
-        Quaternion quat90 = new Quaternion();
-        quat90.fromAngles(270 * 3.141592f / 180, 3.141592f, 0f);
-        modelw.setLocalRotation(quat90);
-        modelw.setLocalTranslation(-7f, 2.0f, 0);     
-        return modelw;
-    }
+//    public Node myLocalTransformations(Node modelw) {
+//        Quaternion quat90 = new Quaternion();
+//        quat90.fromAngles(270 * 3.141592f / 180, 3.141592f, 0f);
+//        modelw.setLocalRotation(quat90);
+//        modelw.setLocalTranslation(-7f, 2.0f, 0);     
+//        return modelw;
+//    }
 
     public synchronized void addToThingsInCamera(Thing o) {
 
@@ -975,24 +960,24 @@ public abstract class Creature extends Thing {
 
     public boolean checkContactSensor(Thing eachThing, Environment e) {
 
-        this.collisionResults.clear();
-        shape.findCollisions(eachThing.shape, collisionResults);
-        if (collisionResults.getNumber() > 0) {
-            handleCollision(eachThing);
-            if ((eachThing.getMyName().equals(this.thingInHandsName)) || (this.thingInHandsName.equals("Dropping"))) {
-                hasCollided = 0;
-            } else {
-                hasCollided = 1;
-
-            }
-
-        } else {
-
-            //not collided!!
-            this.setFriction(0.0);//make creature move again (same old behaviour)
-            collidedWithThing = null;
-            hasCollided = 0;
-        }
+//        this.collisionResults.clear();
+//        //shape.findCollisions(eachThing.shape, collisionResults);
+//        if (collisionResults.getNumber() > 0) {
+//            handleCollision(eachThing);
+//            if ((eachThing.getMyName().equals(this.thingInHandsName)) || (this.thingInHandsName.equals("Dropping"))) {
+//                hasCollided = 0;
+//            } else {
+//                hasCollided = 1;
+//
+//            }
+//
+//        } else {
+//
+//            //not collided!!
+//            this.setFriction(0.0);//make creature move again (same old behaviour)
+//            collidedWithThing = null;
+//            hasCollided = 0;
+//        }
         updateContactSensor(e);
         if(hasCollided == 0) return false;
         else return true;

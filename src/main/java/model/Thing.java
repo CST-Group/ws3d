@@ -23,42 +23,21 @@ package model;
  * @author eccastro
  */
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
-import com.jme.scene.state.MaterialState;
-import java.io.IOException;
-import worldserver3d.IconFactory;
-import com.jme.math.Vector3f;
-import com.jme.scene.Node;
-import com.jme.math.Ray;
-import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Octahedron;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
-import com.jme.util.export.InputCapsule;
-import com.jme.util.export.JMEExporter;
-import com.jme.util.export.JMEImporter;
-import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.converters.MaxToJme;
+import com.jme3.math.Ray;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Observable;
 import java.util.logging.Logger;
 import util.Constants;
 
 //public abstract class Thing extends Spatial{
-public abstract class Thing extends Observable implements Savable {
+public abstract class Thing extends Observable {
 
-    public Node shape;
-    protected double x1, y1;
-    protected double x2, y2;
+    //public Node shape;
+    public int state=0;
+    public double x1, y1;
+    public double x2, y2;
     protected double zZ = 0.0d; //hidden obstacles have Z < 0
     protected double previousZ = 0.0d;
     protected double comX = 0.0d; //center of mass
@@ -72,12 +51,12 @@ public abstract class Thing extends Observable implements Savable {
     protected final double CORNER_SIZE = 4.0;
     //public boolean imADeliverySot = false;
     //protected BoundingBox boundingBox;
-    protected BoundingBox boundingBox;
+    //protected BoundingBox boundingBox;
     //abstraction of characteristics of its composition
     protected Material3D material;
-    public MaterialState ms;
-    public TextureState ts;
-    protected ThingShapeFactory sf;
+    //public MaterialState ms;
+    //public TextureState ts;
+    //protected ThingShapeFactory sf;
     /**
      * This is used for Brick creation, when user is concerned with the x,y
      * location. The bricks "height" (user perspective) will be "depth" as
@@ -88,7 +67,7 @@ public abstract class Thing extends Observable implements Savable {
     protected Environment e;
     public boolean wasHidden = false;
     public int isOccluded = 0; //false
-    public Node arrow; //rememberMeIcon indicates the center position of a hidden obstacle
+    //public Node arrow; //rememberMeIcon indicates the center position of a hidden obstacle
     protected Long ID;
     protected String myName; //set through setID
     
@@ -105,15 +84,15 @@ public abstract class Thing extends Observable implements Savable {
         pitch = Constants.PITCH_INEXISTENT; //creature only; other Thing objects will be -11111
         category = -1;
         //imADeliverySot = false;
-        boundingBox = null;
+        //boundingBox = null;
         this.material = new Material3D();
-        ms = null;
+        //ms = null;
         //ts = null;
         depth = 0f;
         wasHidden = false;
         isOccluded = 0;
         ID = 0L;
-        arrow = null;
+        //arrow = null;
         myName = null;
     }
 
@@ -130,12 +109,12 @@ public abstract class Thing extends Observable implements Savable {
         //this.material = new Material3D();
     }
 
-    public Thing(double x, double y, MaterialState ms, Environment ev) {
-
-        this(x, y, ev);
-
-        this.ms = ms;
-    }
+//    public Thing(double x, double y, Environment ev) {
+//
+//        this(x, y, ev);
+//
+//        //this.ms = ms;
+//    }
     
     public String getAffordances(){
         String aff = "";
@@ -149,7 +128,7 @@ public abstract class Thing extends Observable implements Savable {
 
     public abstract void initPlace();
 
-    public abstract Node myLocalTransformations(Node modelw);
+    //public abstract Node myLocalTransformations(Node modelw);
 
     public abstract Knapsack putMeInKnapsack(Knapsack sack);
 
@@ -161,53 +140,53 @@ public abstract class Thing extends Observable implements Savable {
      * @param scale depends on the dimension of the 3D model image
      * @param e Environment where the Thing lists are stored
      */
-    public void updateShape(String pathToModel, float scale, Environment e) {
-        MaxToJme C1 = new MaxToJme();
-
-        sf.BO = new ByteArrayOutputStream();
-        URL maxFile = ThingShapeFactory.class.getClassLoader().getResource(pathToModel);
-        try {
-            C1.convert(new BufferedInputStream(maxFile.openStream()), sf.BO);
-        } catch (IOException exc) {
-            log.severe("Error in ThingShapeFactory !");
-        }
-        try {
-            ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(sf.BO.toByteArray());
-            sf.modelw = (Node) BinaryImporter.getInstance().load(ModelInputStream);
-            sf.modelw.setName("Model shape");
-
-        } catch (IOException exc) {
-            log.severe("Error in Thing::updateShape()");
-        }
-        if (scale > 0) {
-            sf.modelw.setLocalScale(scale);
-        }
-        sf.modelw = myLocalTransformations(sf.modelw);
-
-        sf.modelw.setRenderState(ts);
-
-        Node shapeNode = new Node("Shape Node");
-        shapeNode.attachChild(sf.modelw);
-        boundingBox = new BoundingBox();
-        shapeNode.setModelBound(boundingBox);
-        shapeNode.updateModelBound();
-        shapeNode.updateWorldBound();
-        shape.detachAllChildren();
-        shape = shapeNode;
-        shape.updateModelBound();
-        shape.updateWorldBound();
-        switch (category) {
-
-            case Constants.categoryCREATURE:
-                e.setCpoolShapeModified(this);
-                break;
-
-            default:
-                e.setOpoolShapeModified(this);
-                break;
-        }
-
-    }
+//    public void updateShape(String pathToModel, float scale, Environment e) {
+//        MaxToJme C1 = new MaxToJme();
+//
+//        sf.BO = new ByteArrayOutputStream();
+//        URL maxFile = ThingShapeFactory.class.getClassLoader().getResource(pathToModel);
+//        try {
+//            C1.convert(new BufferedInputStream(maxFile.openStream()), sf.BO);
+//        } catch (IOException exc) {
+//            log.severe("Error in ThingShapeFactory !");
+//        }
+//        try {
+//            ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(sf.BO.toByteArray());
+//            sf.modelw = (Node) BinaryImporter.getInstance().load(ModelInputStream);
+//            sf.modelw.setName("Model shape");
+//
+//        } catch (IOException exc) {
+//            log.severe("Error in Thing::updateShape()");
+//        }
+//        if (scale > 0) {
+//            sf.modelw.setLocalScale(scale);
+//        }
+//        sf.modelw = myLocalTransformations(sf.modelw);
+//
+//        sf.modelw.setRenderState(ts);
+//
+//        Node shapeNode = new Node("Shape Node");
+//        shapeNode.attachChild(sf.modelw);
+//        boundingBox = new BoundingBox();
+//        shapeNode.setModelBound(boundingBox);
+//        shapeNode.updateModelBound();
+//        shapeNode.updateWorldBound();
+//        shape.detachAllChildren();
+//        shape = shapeNode;
+//        shape.updateModelBound();
+//        shape.updateWorldBound();
+//        switch (category) {
+//
+//            case Constants.categoryCREATURE:
+//                e.setCpoolShapeModified(this);
+//                break;
+//
+//            default:
+//                e.setOpoolShapeModified(this);
+//                break;
+//        }
+//
+//    }
 
     public void hideMe(Environment e) //synchronized???
     {
@@ -223,10 +202,11 @@ public abstract class Thing extends Observable implements Savable {
             //System.out.println("====  Obstacle:  x1= "+getX1()+" y1= "+getY1()+"x2= "+getX2()+" y2= "+getY2()+" center: "+vector.getX()+"  "+vector.getZ());
             //rememberMeIcon = new RememberMeIconFactory(ms);
             //drawRectangle(graphics);
-            addRememberMeIcon(e);
+            //addRememberMeIcon(e);
             if (!e.getOpoolModified().contains(this)) {
                 e.addToOpoolModified(this);
             }
+            state = 1;
         }
     }
 
@@ -239,28 +219,29 @@ public abstract class Thing extends Observable implements Savable {
             setZ(previousZ);
 
             // drawRectangle(graphics);
-            removeRememberMeIcon(e);
+            //removeRememberMeIcon(e);
             if (!e.getOpoolModified().contains(this)) {
                 e.addToOpoolModified(this);
             }
+            state = 1;
         }
     }
 
     public synchronized void addRememberMeIcon(Environment e) { //synchronized???
-
-        IconFactory icf = new IconFactory(e.flagMS, e.width, e.height);
-
-        arrow = icf.getRememberMeIcon(e.flagMS, (this.getX2() + this.getX1()), (this.getY2() + this.getY1()));
-        arrow.setIsCollidable(false);
-        arrow.setRenderState(e.flagMS);
-        arrow.setRenderState(e.ls);
-        e.rmiPool.add(this.arrow);
+//
+//        IconFactory icf = new IconFactory(e.flagMS, e.width, e.height);
+//
+//        arrow = icf.getRememberMeIcon(e.flagMS, (this.getX2() + this.getX1()), (this.getY2() + this.getY1()));
+//        arrow.setIsCollidable(false);
+//        arrow.setRenderState(e.flagMS);
+//        arrow.setRenderState(e.ls);
+//        e.rmiPool.add(this.arrow);
     }
-
+//
     public synchronized void removeRememberMeIcon(Environment e) { //synchronized
-        log.info("======= RememberMeIcon removed! ======");
-        e.rmiPool.remove(this.arrow);
-        e.deleteArrowDSlist.add(this.arrow);
+//        log.info("======= RememberMeIcon removed! ======");
+//        e.rmiPool.remove(this.arrow);
+//        e.deleteArrowDSlist.add(this.arrow);
     }
 
     public double getZ() {
@@ -389,21 +370,29 @@ public abstract class Thing extends Observable implements Savable {
                 }
 
             case Constants.categoryPFOOD:
-                radius = 6;
-                Ellipse2D.Double mePF = new Ellipse2D.Double((int) x1 - radius, (int) y1 - radius, (radius * 2) + 1, (radius * 2) + 1);
+                radius = (int)Constants.FOOD_SIZE/2;
+                Ellipse2D.Double mePF = new Ellipse2D.Double(comX - radius,comY - radius, (radius * 2), (radius * 2));
                 if (mePF.contains(x, y)) {
                     return true;
                 } else {
                     return false;
                 }
             case Constants.categoryNPFOOD:
-                radius = 6;
-                Ellipse2D.Double meNPF = new Ellipse2D.Double((int) x1 - radius, (int) y1 - radius, (radius * 2) + 1, (radius * 2) + 1);
+                radius = (int)Constants.FOOD_SIZE/2;
+                Ellipse2D.Double meNPF = new Ellipse2D.Double(comX - radius,comY - radius, (radius * 2), (radius * 2));
                 if (meNPF.contains(x, y)) {
                     return true;
                 } else {
                     return false;
                 }
+            case Constants.categoryJEWEL:
+                radius = (int)Constants.CRYSTAL_SIZE/2;
+                Ellipse2D.Double meJ = new Ellipse2D.Double(comX - radius,comY - radius, (radius * 2), (radius * 2));
+                if (meJ.contains(x, y)) {
+                    return true;
+                } else {
+                    return false;
+                }    
             default:
                 radius = 4;
                 Rectangle2D.Double meD = new Rectangle2D.Double((int) x1 - radius, (int) y1 - radius, (radius * 2) + 1, (radius * 2) + 1);
@@ -419,21 +408,21 @@ public abstract class Thing extends Observable implements Savable {
     public boolean contains3D(Ray mouseRay) {
 
         boolean ret = false;
-        try {
-            if (this.shape.getWorldBound() == null) {
-                //System.out.println("=====contains3D:  null ==== ");
-                return false;
-            } else if (this.shape.getWorldBound().intersects(mouseRay)) {
-                //System.out.println("=====contains3D:  YES ==== ");
-                ret = true;
-            } else {
-                //System.out.println("=====contains3D:  NO ==== ");
-                ret = false;
-            }
-        } catch (Exception ev) {
-            log.severe("Error --- contains3D... ");
-            ev.printStackTrace();
-        }
+//        try {
+//            if (this.shape.getWorldBound() == null) {
+//                //System.out.println("=====contains3D:  null ==== ");
+//                return false;
+//            } else if (this.shape.getWorldBound().intersects(mouseRay)) {
+//                //System.out.println("=====contains3D:  YES ==== ");
+//                ret = true;
+//            } else {
+//                //System.out.println("=====contains3D:  NO ==== ");
+//                ret = false;
+//            }
+//        } catch (Exception ev) {
+//            log.severe("Error --- contains3D... ");
+//            ev.printStackTrace();
+//        }
 
         return ret;
     }
@@ -478,11 +467,11 @@ public abstract class Thing extends Observable implements Savable {
         return material;
     }
 
-    public void renderMyMaterial() {
-
-        this.shape.setRenderState(ms);
-        this.shape.updateRenderState();
-    }
+//    public void renderMyMaterial() {
+//
+//        this.shape.setRenderState(ms);
+//        this.shape.updateRenderState();
+//    }
 
     public double getHardness() {
         //System.out.println("====  getHardness ======");
@@ -500,167 +489,167 @@ public abstract class Thing extends Observable implements Savable {
         return this.ID;
     }
 
-    public void setTxState(TextureState txState) {
-        this.ts = txState;
-    }
+//    public void setTxState(TextureState txState) {
+//        this.ts = txState;
+//    }
+//
+//    public void setTexture(String pathToImageTexture) {
+//
+//        this.ts.setTexture(TextureManager.loadTexture(Thing.class.getClassLoader().getResource(
+//                pathToImageTexture),
+//                Texture.MinificationFilter.Trilinear,
+//                Texture.MagnificationFilter.Bilinear));
+//        this.ts.setEnabled(true);
+//
+//        shape.setRenderState(ts);
+//
+//    }
 
-    public void setTexture(String pathToImageTexture) {
+//    public void write(JMEExporter jmee) throws IOException {
+//        OutputCapsule capsule = jmee.getCapsule(this);
+//        capsule.write(shape, "shape", null);
+//        capsule.write(x1, "x1", 0.0d);
+//        capsule.write(y1, "y1", 0.0d);
+//        capsule.write(x2, "x2", 0.0d);
+//        capsule.write(y2, "y2", 0.0d);
+//        capsule.write(zZ, "zZ", 0.0d);
+//        capsule.write(previousZ, "previousZ", 0.0d);
+//        capsule.write(comX, "x", 0.0d);
+//        capsule.write(comY, "y", 0.0d);
+//        capsule.write(size, "size", 0);
+//        capsule.write(pitch, "pitch", -1);
+//        capsule.write(category, "category", -1);
+//        //capsule.write(imADeliverySot, "imADeliverySot", false);
+//        capsule.write(boundingBox, "boundingBox", null);
+//        //capsule.write(material, "material", null);
+//        capsule.write(ms, "ms", null);
+//        capsule.write(depth, "depth", 0f);
+//        capsule.write(wasHidden, "wasHidden", false);
+//        capsule.write(isOccluded, "isOccluded", 0);
+//        capsule.write(arrow, "arrow", null);
+//        capsule.write(ID, "ID", 0L);
+//        capsule.write(myName, "myName", null);
+//    }
 
-        this.ts.setTexture(TextureManager.loadTexture(Thing.class.getClassLoader().getResource(
-                pathToImageTexture),
-                Texture.MinificationFilter.Trilinear,
-                Texture.MagnificationFilter.Bilinear));
-        this.ts.setEnabled(true);
-
-        shape.setRenderState(ts);
-
-    }
-
-    public void write(JMEExporter jmee) throws IOException {
-        OutputCapsule capsule = jmee.getCapsule(this);
-        capsule.write(shape, "shape", null);
-        capsule.write(x1, "x1", 0.0d);
-        capsule.write(y1, "y1", 0.0d);
-        capsule.write(x2, "x2", 0.0d);
-        capsule.write(y2, "y2", 0.0d);
-        capsule.write(zZ, "zZ", 0.0d);
-        capsule.write(previousZ, "previousZ", 0.0d);
-        capsule.write(comX, "x", 0.0d);
-        capsule.write(comY, "y", 0.0d);
-        capsule.write(size, "size", 0);
-        capsule.write(pitch, "pitch", -1);
-        capsule.write(category, "category", -1);
-        //capsule.write(imADeliverySot, "imADeliverySot", false);
-        capsule.write(boundingBox, "boundingBox", null);
-        //capsule.write(material, "material", null);
-        capsule.write(ms, "ms", null);
-        capsule.write(depth, "depth", 0f);
-        capsule.write(wasHidden, "wasHidden", false);
-        capsule.write(isOccluded, "isOccluded", 0);
-        capsule.write(arrow, "arrow", null);
-        capsule.write(ID, "ID", 0L);
-        capsule.write(myName, "myName", null);
-    }
-
-    public void read(JMEImporter jmei) throws IOException {
-        InputCapsule ic = jmei.getCapsule(this);
-//        hardness = ic.readDouble("hardness", 1.0);
-//        previousColor = (ColorRGBA) ic.readSavable("previousColor", ColorRGBA.blue);
-        shape = (Node) ic.readSavable("shape", null);
-        x1 = ic.readDouble("x1", 0.0d);
-        y1 = ic.readDouble("y1", 0.0d);
-        x2 = ic.readDouble("x2", 0.0d);
-        y2 = ic.readDouble("y2", 0.0d);
-        zZ = ic.readDouble("zZ", 0.0d);
-        previousZ = ic.readDouble("previousZ", 0.0d);
-        comX = ic.readDouble("x", 0.0d);
-        comY = ic.readDouble("y", 0.0d);
-        size = ic.readDouble("size", 0);
-        pitch = ic.readDouble("pitch", -1);
-        category = ic.readInt("category", -1);
-        //imADeliverySot = ic.readBoolean("imADeliverySot", false);
-        boundingBox = (BoundingBox) ic.readSavable("boundingBox", null);
-        material = (Material3D) ic.readSavable("material", null);
-        ms = (MaterialState) ic.readSavable("ms", null);
-        depth = ic.readFloat("depth", 0f);
-        wasHidden = ic.readBoolean("wasHidden", false);
-        isOccluded = ic.readInt("isOccluded", 0);
-        arrow = (Node) ic.readSavable("arrow", null);
-        ID = ic.readLong("ID", 0);
-        myName = ic.readString("myName", null);
-    }
+//    public void read(JMEImporter jmei) throws IOException {
+//        InputCapsule ic = jmei.getCapsule(this);
+////        hardness = ic.readDouble("hardness", 1.0);
+////        previousColor = (ColorRGBA) ic.readSavable("previousColor", ColorRGBA.blue);
+//        shape = (Node) ic.readSavable("shape", null);
+//        x1 = ic.readDouble("x1", 0.0d);
+//        y1 = ic.readDouble("y1", 0.0d);
+//        x2 = ic.readDouble("x2", 0.0d);
+//        y2 = ic.readDouble("y2", 0.0d);
+//        zZ = ic.readDouble("zZ", 0.0d);
+//        previousZ = ic.readDouble("previousZ", 0.0d);
+//        comX = ic.readDouble("x", 0.0d);
+//        comY = ic.readDouble("y", 0.0d);
+//        size = ic.readDouble("size", 0);
+//        pitch = ic.readDouble("pitch", -1);
+//        category = ic.readInt("category", -1);
+//        //imADeliverySot = ic.readBoolean("imADeliverySot", false);
+//        boundingBox = (BoundingBox) ic.readSavable("boundingBox", null);
+//        material = (Material3D) ic.readSavable("material", null);
+//        ms = (MaterialState) ic.readSavable("ms", null);
+//        depth = ic.readFloat("depth", 0f);
+//        wasHidden = ic.readBoolean("wasHidden", false);
+//        isOccluded = ic.readInt("isOccluded", 0);
+//        arrow = (Node) ic.readSavable("arrow", null);
+//        ID = ic.readLong("ID", 0);
+//        myName = ic.readString("myName", null);
+//    }
 
     public Class getClassTag() {
         return this.getClass();
     }
 
-    protected class ThingShapeFactory {
-
-        ByteArrayOutputStream BO;
-        String pathToImageTexture;
-        Double x;
-        Double y;
-        Thing th;
-        Node modelw = new Node("Model shape");
-
-        public ThingShapeFactory() {
-        }
-
-        public ThingShapeFactory(double x, double y, Thing t) {
-            this.x = x;
-            this.y = y;
-            this.th = t;
-        }
-
-        public ThingShapeFactory(String pathToModel, Thing t) throws IOException {
-            MaxToJme C1 = new MaxToJme();
-            this.th = t;
-
-            BO = new ByteArrayOutputStream();
-            URL maxFile = ThingShapeFactory.class.getClassLoader().getResource(pathToModel);
-            try {
-                C1.convert(new BufferedInputStream(maxFile.openStream()), BO);
-            } catch (IOException exc) {
-                log.severe("Error in ThingShapeFactory !");
-            }
-        }
-
-        protected Node getNode(float scale) {
-            try {
-                ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(BO.toByteArray());
-                modelw = (Node) BinaryImporter.getInstance().load(ModelInputStream);
-                modelw.setName("Model shape");
-
-            } catch (IOException exc) {
-                log.severe("Error in Thing::getNode()");
-            }
-            if (scale > 0) {
-                modelw.setLocalScale(scale);
-            }
-            modelw = myLocalTransformations(modelw);
-
-            modelw.setRenderState(ts);
-            Node shapeNode = new Node("Shape Node");
-            shapeNode.attachChild(modelw);
-            boundingBox = new BoundingBox();
-            shapeNode.setModelBound(boundingBox);
-            shapeNode.updateModelBound();
-            shapeNode.updateWorldBound();
-            return (shapeNode);
-        }
-
-        protected Node getBrickNode(Box box, Environment e) {
-            float dx = (float) (getX2() - getX1()) / 10;
-            float dy = (float) (getY2() - getY1()) / 10;
-
-            box.setRenderState(th.ms);
-            box.setRenderState(e.ls);
-            Node shapeNode = new Node("Shape Node");
-            shapeNode.setLocalTranslation(new Vector3f((float) ((getX2() + getX1()) / 20 - e.width / 20), depth, (float) (((getY2() + getY1()) / 20) - e.height / 20)));
-            shapeNode.attachChild(box);
-            boundingBox = new BoundingBox();
-            shapeNode.setModelBound(boundingBox);
-            shapeNode.updateModelBound();
-            shapeNode.updateGeometricState(0, true);
-            return (shapeNode);
-        }
-
-        protected Node getJewelNode(Octahedron jewel, Environment e) {
-
-            jewel.setRenderState(th.ms);
-            jewel.setRenderState(e.ls);
-
-            Node shapeNode = new Node("Shape Node");
-
-            shapeNode = myLocalTransformations(shapeNode);
-            shapeNode.attachChild(jewel);
-            boundingBox = new BoundingBox();
-            shapeNode.setModelBound(boundingBox);
-            shapeNode.updateModelBound();
-            shapeNode.updateGeometricState(0, true);
-            return (shapeNode);
-        }
-    }
+//    protected class ThingShapeFactory {
+//
+//        ByteArrayOutputStream BO;
+//        String pathToImageTexture;
+//        Double x;
+//        Double y;
+//        Thing th;
+//        Node modelw = new Node("Model shape");
+//
+//        public ThingShapeFactory() {
+//        }
+//
+//        public ThingShapeFactory(double x, double y, Thing t) {
+//            this.x = x;
+//            this.y = y;
+//            this.th = t;
+//        }
+//
+//        public ThingShapeFactory(String pathToModel, Thing t) throws IOException {
+//            MaxToJme C1 = new MaxToJme();
+//            this.th = t;
+//
+//            BO = new ByteArrayOutputStream();
+//            URL maxFile = ThingShapeFactory.class.getClassLoader().getResource(pathToModel);
+//            try {
+//                C1.convert(new BufferedInputStream(maxFile.openStream()), BO);
+//            } catch (IOException exc) {
+//                log.severe("Error in ThingShapeFactory !");
+//            }
+//        }
+//
+//        protected Node getNode(float scale) {
+//            try {
+//                ByteArrayInputStream ModelInputStream = new ByteArrayInputStream(BO.toByteArray());
+//                modelw = (Node) BinaryImporter.getInstance().load(ModelInputStream);
+//                modelw.setName("Model shape");
+//
+//            } catch (IOException exc) {
+//                log.severe("Error in Thing::getNode()");
+//            }
+//            if (scale > 0) {
+//                modelw.setLocalScale(scale);
+//            }
+//            modelw = myLocalTransformations(modelw);
+//
+//            modelw.setRenderState(ts);
+//            Node shapeNode = new Node("Shape Node");
+//            shapeNode.attachChild(modelw);
+//            boundingBox = new BoundingBox();
+//            shapeNode.setModelBound(boundingBox);
+//            shapeNode.updateModelBound();
+//            shapeNode.updateWorldBound();
+//            return (shapeNode);
+//        }
+//
+//        protected Node getBrickNode(Box box, Environment e) {
+//            float dx = (float) (getX2() - getX1()) / 10;
+//            float dy = (float) (getY2() - getY1()) / 10;
+//
+//            box.setRenderState(th.ms);
+//            box.setRenderState(e.ls);
+//            Node shapeNode = new Node("Shape Node");
+//            shapeNode.setLocalTranslation(new Vector3f((float) ((getX2() + getX1()) / 20 - e.width / 20), depth, (float) (((getY2() + getY1()) / 20) - e.height / 20)));
+//            shapeNode.attachChild(box);
+//            boundingBox = new BoundingBox();
+//            shapeNode.setModelBound(boundingBox);
+//            shapeNode.updateModelBound();
+//            shapeNode.updateGeometricState(0, true);
+//            return (shapeNode);
+//        }
+//
+//        protected Node getJewelNode(Octahedron jewel, Environment e) {
+//
+//            jewel.setRenderState(th.ms);
+//            jewel.setRenderState(e.ls);
+//
+//            Node shapeNode = new Node("Shape Node");
+//
+//            shapeNode = myLocalTransformations(shapeNode);
+//            shapeNode.attachChild(jewel);
+//            boundingBox = new BoundingBox();
+//            shapeNode.setModelBound(boundingBox);
+//            shapeNode.updateModelBound();
+//            shapeNode.updateGeometricState(0, true);
+//            return (shapeNode);
+//        }
+//    }
 
     /**
      * Retrieves the CENTER OF MASS (COM)

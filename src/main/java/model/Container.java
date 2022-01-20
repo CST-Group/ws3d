@@ -18,7 +18,6 @@
  *****************************************************************************/
 package model;
 
-import com.jme.scene.state.MaterialState;
 import java.util.*;
 import util.Constants;
 
@@ -62,15 +61,15 @@ public abstract class Container extends Thing {
     /**
      * Constructors for graphical ones:
      */
-    public Container(double x, double y, Environment ev, MaterialState ms, int drawerLabel) {
-        super(x, y, ms, ev);
+    public Container(double x, double y, Environment ev, int drawerLabel) {
+        super(x, y, ev);
         affordances = new ArrayList<Integer>();
         affordances.add(Constants.Affordance__INSERTABLE);
         affordances.add(Constants.Affordance__REMOVEFROMABLE);
     }
 
-    public Container(double x, double y, Environment ev, MaterialState ms) {
-        this(x, y, ev, ms, Constants.categoryPFOOD);
+    public Container(double x, double y, Environment ev) {
+        this(x, y, ev, Constants.categoryPFOOD);
     }
 
     public synchronized void createDrawer(int drawerLabel) {

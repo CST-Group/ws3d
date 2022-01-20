@@ -18,7 +18,6 @@
  *****************************************************************************/
 package util;
 
-import com.jme.renderer.ColorRGBA;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Random;
@@ -30,14 +29,14 @@ import java.util.Random;
 public class Constants {
 
     public static final int PORT = 4011;
-    public static final String colorRED = "Red";
-    public static final String colorGREEN = "Green";
-    public static final String colorBLUE = "Blue";
-    public static final String colorYELLOW = "Yellow";
-    public static final String colorMAGENTA = "Magenta";
-    public static final String colorWHITE = "White";
-    public static final String colorDARKGRAY_SPOILED = "DarkGray_Spoiled";
-    public static final String colorORANGE = "Orange";    
+    public static final String colorRED = "red";
+    public static final String colorGREEN = "green";
+    public static final String colorBLUE = "blue";
+    public static final String colorYELLOW = "yellow";
+    public static final String colorMAGENTA = "magenta";
+    public static final String colorWHITE = "white";
+    public static final String colorDARKGRAY_SPOILED = "darkgray_spoiled";
+    public static final String colorORANGE = "orange";    
     public static final String PFOOD = "PerishableFood";
     public static final String NPFOOD = "NonPerishableFood";
     public static final int categoryCREATURE = 0;
@@ -102,9 +101,9 @@ public class Constants {
 
     //Spurious value for angular velocity:
     public static final double WNULL = 1001;
-    public static final double CREATURE_SIZE = 40.0;
-    public static final double FOOD_SIZE = 12.0;
-    public static final double CRYSTAL_SIZE = 12.0;
+    public static final double CREATURE_SIZE = 4.0; // era 40
+    public static final double FOOD_SIZE = 4.0;
+    public static final double CRYSTAL_SIZE = 4.0;
     public static final double CREATURE_MAX_FUEL = 1000.0;
     public static final double CREATURE_MAX_SEROTONIN = 100.0;
     public static final double CREATURE_MAX_ENDORPHINE = 100.0;
@@ -125,7 +124,7 @@ public class Constants {
     public static final String[] arrayOfColors = {Constants.colorRED, Constants.colorGREEN, Constants.colorBLUE, Constants.colorYELLOW, Constants.colorMAGENTA, Constants.colorWHITE, Constants.colorDARKGRAY_SPOILED, Constants.colorORANGE};
     public static final double M_PI_2 = Math.PI / 2.0;
     public static final int NUMBER_CAMERAS = 2;
-    private static final HashMap<String, ColorRGBA> colorMap = new HashMap();
+    private static final HashMap<String, Color> colorMap = new HashMap();
 
     public static final int HARDNESS_DEFAULT = 1; //solid
     public static final int ENERGY_DEFAULT = 0; //not a food
@@ -196,9 +195,11 @@ public class Constants {
     public static final double AFTER_PUT_IN_BAG_COORDS = -26;
     public static final double AFTER_DELIVERY_COORDS = -27;
     public static final double AFTER_HIDE_COORDS = -28;
+    
+    public static final int CamResolutionX = 754, CamResolutionY = 492;
 
     private static void initColorHashMap() {
-        HashMap<String, ColorRGBA> map = new HashMap();
+        HashMap<String, Color> map = new HashMap();
         for (String c : arrayOfColors) {
             colorMap.put(c, translateIntoColor(c));
         }
@@ -214,6 +215,7 @@ public class Constants {
 
     public static final double pFoodLAMBDA = 2.2;
     public static final double npFoodLAMBDA = 1.1;
+    public static final float mvel = 40;
 
     /**
      * Knuth's algorithm to generate random Poisson distributed numbers
@@ -259,30 +261,30 @@ public class Constants {
         return ret;
     }
 
-    public static ColorRGBA translateIntoColor(String colorName) {
+    public static Color translateIntoColor(String colorName) {
 
         if (colorName.equals(Constants.colorRED)) {
-            return ColorRGBA.red;
+            return Color.red;
         } else if (colorName.equals(Constants.colorGREEN)) {
-            return ColorRGBA.green;
+            return Color.green;
         } else if (colorName.equals(Constants.colorBLUE)) {
-            return ColorRGBA.blue;
+            return Color.blue;
         } else if (colorName.equals(Constants.colorYELLOW)) {
-            return ColorRGBA.yellow;
+            return Color.yellow;
         } else if (colorName.equals(Constants.colorMAGENTA)) {
-            return ColorRGBA.magenta;
+            return Color.magenta;
         } else if (colorName.equals(Constants.colorWHITE)) {
-            return ColorRGBA.white;
+            return Color.white;
         } else if (colorName.equals(Constants.colorDARKGRAY_SPOILED)) {
-            return ColorRGBA.darkGray;
+            return Color.darkGray;
         } else if (colorName.equals(Constants.colorORANGE)) {
-            return ColorRGBA.orange;
+            return Color.orange;
         } else {
-            return ColorRGBA.magenta; //default
+            return Color.magenta; //default
         }
     }
 
-    public static String getNameFromColor(ColorRGBA color) {
+    public static String getNameFromColor(Color color) {
         initColorHashMap();
         String ret = "";
         for (String s : colorMap.keySet()) {

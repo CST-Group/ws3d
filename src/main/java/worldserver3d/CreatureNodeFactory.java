@@ -19,14 +19,11 @@
 
 package worldserver3d;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
-import com.jme.math.Quaternion;
-import com.jme.scene.Node;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.converters.MaxToJme;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.export.binary.BinaryImporter;
+import com.jme3.math.Quaternion;
+import com.jme3.scene.Node;
+import static com.jme3.scene.plugins.fbx.mesh.FbxLayerElement.Type.Texture;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -42,28 +39,28 @@ public class CreatureNodeFactory {
     static Logger log = Logger.getLogger(CreatureNodeFactory.class.getCanonicalName());
     
     ByteArrayOutputStream BO;
-    TextureState ts;
+    //TextureState ts;
     public CreatureNodeFactory() {
-         MaxToJme C1 = new MaxToJme();
-        BO = new ByteArrayOutputStream();
-         URL maxFile = CreatureNodeFactory.class.getClassLoader().getResource("images/robo.3ds");
-        try {
-            C1.convert(new BufferedInputStream(maxFile.openStream()),BO);
-         } catch (IOException exc) {
-            log.severe("Erro em CreatureNodeFactory constructor");
-         }
+//         MaxToJme C1 = new MaxToJme();
+//        BO = new ByteArrayOutputStream();
+//         URL maxFile = CreatureNodeFactory.class.getClassLoader().getResource("images/robo.3ds");
+//        try {
+//            C1.convert(new BufferedInputStream(maxFile.openStream()),BO);
+//         } catch (IOException exc) {
+//            log.severe("Erro em CreatureNodeFactory constructor");
+//         }
     }
 
-    public void setTexture(TextureState txState){
-         this.ts = txState;
-         this.ts.setTexture(TextureManager.loadTexture(CreatureNodeFactory.class.getClassLoader().getResource(
-                "images/red.jpg"),
-                 //"images/reddish_copper.jpg"),
-                Texture.MinificationFilter.Trilinear,
-                Texture.MagnificationFilter.Bilinear));
-         this.ts.setEnabled(true);
-
-    }
+//    public void setTexture(TextureState txState){
+//         this.ts = txState;
+//         this.ts.setTexture(TextureManager.loadTexture(CreatureNodeFactory.class.getClassLoader().getResource(
+//                "images/red.jpg"),
+//                 //"images/reddish_copper.jpg"),
+//                Texture.MinificationFilter.Trilinear,
+//                Texture.MagnificationFilter.Bilinear));
+//         this.ts.setEnabled(true);
+//
+//    }
     private Node getCreatureNode() {
         Node modelw=null;
         try {ByteArrayInputStream CreatureModelInputStream = new ByteArrayInputStream(BO.toByteArray());             
@@ -76,7 +73,7 @@ public class CreatureNodeFactory {
         quat90.fromAngles(270 * 3.141592f/180, 3.141592f, 0f);
         modelw.setLocalRotation(quat90);
         modelw.setLocalTranslation(-7f,2.0f,0);
-        modelw.setRenderState(ts);
+        //modelw.setRenderState(ts);
         Node model = null;
         model = new Node("Model0");
         model.attachChild(modelw);
@@ -86,7 +83,7 @@ public class CreatureNodeFactory {
     }
 
     //Change the default texture:
-    private Node getCreatureNode(String pathToImageTexture, TextureState txState) {
+    private Node getCreatureNode(String pathToImageTexture) {
         Node modelw=null;
         try {ByteArrayInputStream CreatureModelInputStream = new ByteArrayInputStream(BO.toByteArray());
              modelw = (Node)BinaryImporter.getInstance().load(CreatureModelInputStream);
@@ -98,19 +95,18 @@ public class CreatureNodeFactory {
         quat90.fromAngles(270 * 3.141592f/180, 3.141592f, 0f);
         modelw.setLocalRotation(quat90);
         modelw.setLocalTranslation(-7f,2.0f,0);
-        setTexture(txState);
-        ts.setTexture(TextureManager.loadTexture(CreatureNodeFactory.class.getClassLoader().getResource(
-                pathToImageTexture),
-                Texture.MinificationFilter.Trilinear,
-                Texture.MagnificationFilter.Bilinear));
-         ts.setEnabled(true);
-        modelw.setRenderState(ts);
+        //setTexture(txState);
+        //ts.setTexture(TextureManager.loadTexture(CreatureNodeFactory.class.getClassLoader().getResource(
+        //        pathToImageTexture),
+        //        Texture.MinificationFilter.Trilinear,
+        //        Texture.MagnificationFilter.Bilinear));
+        // ts.setEnabled(true);
+        //modelw.setRenderState(ts);
         Node model = null;
         model = new Node("Model0");
         model.attachChild(modelw);
         model.setModelBound(new BoundingBox());
         model.updateModelBound();
         return(model);
-
     }
 }

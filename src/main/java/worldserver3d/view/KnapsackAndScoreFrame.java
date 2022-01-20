@@ -194,10 +194,12 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
            for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
                 Object[] array = tree.toArray();
                 Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
-
-                String str = l.getNumberOfJewels(Constants.getColorItem(i)).toString();
-                ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setText(str);
-                ((JTextField) leafletTypesPanel.getComponent(7 * 3 + j )).setText(""+l.getPayment());//last line: payment
+                if (l != null) {
+                    String str = l.getNumberOfJewels(Constants.getColorItem(i)).toString();
+                    ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setText(str);
+                    ((JTextField) leafletTypesPanel.getComponent(7 * 3 + j )).setText(""+l.getPayment());//last line: payment
+                }
+                else System.out.println("Leaflet "+array[j]+" not found !");
             }
         }
         repaint();
@@ -322,30 +324,28 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
     
     
     private void refreshLeafletSituation() {
-        
         log.info("---------------refreshLeafletSituation---------------");
-        
         TreeSet tree = new TreeSet();
         for (Leaflet l : e.getLeafletsOfOwner(creature.getID())) {
             tree.add(l.getID());
         }
-       
             String str = "";
             for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
                 Object[] array = tree.toArray();
-                Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
+                if (array != null && j < array.length) {
+                    Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
                 
-                if (l.isIfCompleted()) {
-                    str = " YES ";
-
-                } else {
-                     str = "  NO ";
+                    if (l != null) {
+                        if (l.isIfCompleted()) {
+                            str = " YES ";
+                        } else {
+                            str = "  NO ";
+                        }
+                    ((JTextField) leafletTypesPanel.getComponent(6 * 3 + j)).setText(str);
                 }
-                                            
-               ((JTextField) leafletTypesPanel.getComponent(6 * 3 + j)).setText(str);
-
+                else System.out.format("Array is defective: %s,%d,%d\n",array,array.length,j);
+                }
             }
-       
         repaint();
     }
     
@@ -416,11 +416,14 @@ public class KnapsackAndScoreFrame extends JFrame implements Observer {
             for (int j = 0; j <= Constants.MAX_NUMBER_OF_LEAFLETS - 1; j++) {
                 Object[] array = tree.toArray();
                 Leaflet l = (Leaflet) e.getLeafletPool().get((Long) array[j]);
-                if (l.getActivity() == 1) {
-                    ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setEnabled(true);
-                } else {
-                    ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setEnabled(false);
+                if (l != null) {
+                    if (l.getActivity() == 1) {
+                        ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setEnabled(true);
+                    } else {
+                        ((JTextField) leafletTypesPanel.getComponent(i * 3 + j)).setEnabled(false);
+                    }
                 }
+                else System.out.println("Leaflet "+array[j]+" not found !");
             }
         }
         repaint();

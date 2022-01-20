@@ -23,7 +23,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import model.Thing;
-import com.jme.renderer.ColorRGBA;
 import java.util.HashMap;
 import model.Material3D;
 import java.util.List;
@@ -100,21 +99,21 @@ public class EditJewelFrame extends JFrame {
         log.info(" ******* materialColorIdx = " + materialColorIdx);
         String txt = colorArray[materialColorIdx];
         log.info(" ******* materialColorIdx corresponds to = " + txt);
-        ColorRGBA materialColor = this.e.colorPool.get(txt);
+        Color materialColor = this.e.colorPool.get(txt);
         Material3D m3D = this.jewel.getMaterial();
         m3D.setColor(materialColor);
         this.jewel.setMaterial(m3D);
 
     }
 
-    public void setObjectColor(ColorRGBA materialColor) {
+    public void setObjectColor(Color materialColor) {
         this.jewel.setType(materialColor);
     }
 
     public int getColorMaterial3DIdx() {
         int ret = 0; // returns 0 in case of not finding the color
         if (this.jewel != null) {
-            ColorRGBA c = this.jewel.getMaterial().getColor();
+            Color c = this.jewel.getMaterial().getColor();
             String s = getIdxFromColor(this.e.colorPool, c);
             log.info(" *********** color is = " + s + " or " + this.jewel.getMaterial().getColorName());
             for (int i = 0; i <= 5; i++) {
@@ -285,7 +284,7 @@ public class EditJewelFrame extends JFrame {
 
         public void actionPerformed(ActionEvent ev) {
 
-            ColorRGBA materialColor = e.colorPool.get(ev.getActionCommand().toString());
+            Color materialColor = e.colorPool.get(ev.getActionCommand().toString());
             setObjectColor(materialColor);
         }
     }

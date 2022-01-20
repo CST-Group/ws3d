@@ -23,25 +23,19 @@ package model;
  * @author eccastro
  *
  */
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.TextureState;
-import com.jme.renderer.ColorRGBA;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import worldserver3d.CreatureNodeFactory;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
-import com.jme.scene.Node;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 import util.Constants;
 import worldserver3d.IconFactory;
-import worldserver3d.RobotCamera;
 import xml.ReadFromXMLFile;
 import xml.WriteToXMLFile;
 
@@ -60,35 +54,35 @@ public class Environment {
     private List<Thing> cpoolShapeModified;
 
     public HashMap<String, Thing> thingMap;
-    public List<Node> rmiPool; //rememberMeIcom pool of arrows
-    public List<Node> wpPool;  // waypoint pool of arrows
-    public List<Node> dsPool;  //delivery spot pool.
+    //public List<Node> rmiPool; //rememberMeIcom pool of arrows
+    //public List<Node> wpPool;  // waypoint pool of arrows
+    //public List<Node> dsPool;  //delivery spot pool.
     // There is only one DS in current version.
-    public HashMap<String, Node> wpNdsPoolMap;
+    //public HashMap<String, Node> wpNdsPoolMap;   // Deleted in jme3 version
     public List<Thing> deletelist;
-    public List<Node> deleteArrowDSlist;
+    // public List<Node> deleteArrowDSlist;  // Deleted in jme3 version
     //Materials
     public List<Material3D> colorpool;
     public int width;
     public int height;
-    public LightState ls;
-    public MaterialState defaultms;
-    public MaterialState creatureMS;
+    //public LightState ls;  // Deleted in jme3 version
+    //public MaterialState defaultms;   // Deleted in jme3 version
+    //public MaterialState creatureMS; // Deleted in jme3 version
     //for rememberMeIcon: "arrow" to indicate a hiden thing:
-    public MaterialState flagMS;
-    public MaterialState wpMS; //used for waypoints (along a path)
-    public TextureState wpTS;
-    public TextureState dsTS;
+    //public MaterialState flagMS;   // Deleted in jme3 version
+    //public MaterialState wpMS; //used for waypoints (along a path)
+    //public TextureState wpTS;   // Deleted in jme3 version
+    //public TextureState dsTS;   // Deleted in jme3 version
     public double[] deliverySpotLocation = {Constants.deliverySpotCoords[0], Constants.deliverySpotCoords[1]};
     public boolean dsIsShown = false;
     public CreatureNodeFactory cnf;
-    private int[] camera = new int[Constants.NUMBER_CAMERAS]; //even and odd camera
+    //private int[] camera = new int[Constants.NUMBER_CAMERAS]; //even and odd camera
     public int deleteallnodes = 0;
     public int auxx = 0;
     public int auxy = 0;
-    public HashMap<Long, MaterialState> oMsPool;
-    public HashMap<Long, TextureState> thingTsPool;
-    public HashMap<String, ColorRGBA> colorPool;
+    //public HashMap<Long, MaterialState> oMsPool;   // Deleted in jme3 version
+    //public HashMap<Long, TextureState> thingTsPool; // Deleted in jme3 version
+    public HashMap<String, Color> colorPool;  // Deleted in jme3 version
     private TreeMap<Long, Leaflet> leafletPool;
     public CreaturePoolNotifier cpoolNotifier;
     public LeafletNotifier leafletNotifier;
@@ -96,12 +90,12 @@ public class Environment {
     public static final String perishableFood = "Perishable";
     public List<Creature> delClist;
     public List<Thing> delTlist;
-    public List<Node> delRMIlist;
+    //public List<Node> delRMIlist;  // Deleted in jme3 version
     final public Environment semaphore = this;
     final public Environment semaphore2 = this;
     final public Environment semaphore3 = this;
-    public RobotCamera rcnEven;
-    public RobotCamera rcnOdd;
+    //public RobotCamera rcnEven;
+    //public RobotCamera rcnOdd;
     static Logger log = Logger.getLogger(Environment.class.getCanonicalName());
 
     public Environment(int nwidth, int nheight) {
@@ -115,30 +109,30 @@ public class Environment {
         cpoolModified = new ArrayList<Creature>();
         opoolShapeModified = new ArrayList<Thing>();
         cpoolShapeModified = new ArrayList<Thing>();
-        rmiPool = new ArrayList<Node>();
-        wpPool = new ArrayList<Node>();
-        dsPool = new ArrayList<Node>();
-        wpNdsPoolMap = new HashMap();
+        //rmiPool = new ArrayList<Node>();   // Deleted in jme3 version
+        //wpPool = new ArrayList<Node>();    // // Deleted in jme3 version
+        //dsPool = new ArrayList<Node>();    // Deleted in jme3 version
+        //wpNdsPoolMap = new HashMap();      // Deleted in jme3 version
         deletelist = new ArrayList<Thing>();
-        deleteArrowDSlist = new ArrayList<Node>();
+        // deleteArrowDSlist = new ArrayList<Node>();  // Deleted in jme3 version
         thingMap = new HashMap();
-        oMsPool = new HashMap();
-        thingTsPool = new HashMap();
+        //oMsPool = new HashMap();
+        //thingTsPool = new HashMap();
         colorPool = new HashMap();
         leafletPool = new TreeMap();
-        colorPool.put(Constants.colorGREEN, ColorRGBA.green);
-        colorPool.put(Constants.colorRED, ColorRGBA.red);
-        colorPool.put(Constants.colorBLUE, ColorRGBA.blue);
-        colorPool.put(Constants.colorYELLOW, ColorRGBA.yellow);
-        colorPool.put(Constants.colorMAGENTA, ColorRGBA.magenta);
-        colorPool.put(Constants.colorWHITE, ColorRGBA.white);
-        colorPool.put(Constants.colorDARKGRAY_SPOILED, ColorRGBA.darkGray);
-        colorPool.put(Constants.colorORANGE, ColorRGBA.orange);
-        camera[0] = -1; //camera for even robots
-        camera[1] = -1;//camera for odd robots
+        colorPool.put(Constants.colorGREEN, Color.green);
+        colorPool.put(Constants.colorRED, Color.red);
+        colorPool.put(Constants.colorBLUE, Color.blue);
+        colorPool.put(Constants.colorYELLOW, Color.yellow);
+        colorPool.put(Constants.colorMAGENTA, Color.magenta);
+        colorPool.put(Constants.colorWHITE, Color.white);
+        colorPool.put(Constants.colorDARKGRAY_SPOILED, Color.darkGray);
+        colorPool.put(Constants.colorORANGE, Color.orange);
+        //camera[0] = -1; //camera for even robots
+        //camera[1] = -1;//camera for odd robots
         delClist = new ArrayList<Creature>();
         delTlist = new ArrayList<Thing>();
-        delRMIlist = new ArrayList<Node>();
+        //delRMIlist = new ArrayList<Node>();
     }
 
     public void updateDimensions(int width, int height) {
@@ -196,52 +190,52 @@ public class Environment {
         return this.gameStarted;
     }
 
-    public int getCamera(int index) {
-        return camera[index];
-    }
+//    public int getCamera(int index) {
+//        return camera[index];
+//    }
+//
+//    public void resetCameras() {
+//        for (int i = 0; i < Constants.NUMBER_CAMERAS; i++) {
+//            camera[i] = -1;
+//        }
+//    }
+//
+//    public synchronized void setCamera(int index, int creatureIndex) {
+//        int oldOwner = camera[index];
+//        camera[index] = creatureIndex;
+//
+//        if (oldOwner != -1) {
+//            cpool.get(oldOwner).isVisualSensorActivated = false;
+//        }
+//        if (creatureIndex != -1) {
+//            cpool.get(creatureIndex).isVisualSensorActivated = true;
+//        }
+//    }
 
-    public void resetCameras() {
-        for (int i = 0; i < Constants.NUMBER_CAMERAS; i++) {
-            camera[i] = -1;
-        }
-    }
+//    public void updateCameras(int deadCreatureIndex) {
+//        if (deadCreatureIndex != -1) {
+//            if (deadCreatureIndex % 2 == 0) { //even must change
+//                if (camera[1] != -1) {
+//                    camera[0] = camera[1] - 1;
+//                } else {
+//                    camera[0] = -1;
+//                }
+//
+//            }
+//            camera[1] = -1;
+//
+//        }
+//
+//    }
 
-    public synchronized void setCamera(int index, int creatureIndex) {
-        int oldOwner = camera[index];
-        camera[index] = creatureIndex;
-
-        if (oldOwner != -1) {
-            cpool.get(oldOwner).isVisualSensorActivated = false;
-        }
-        if (creatureIndex != -1) {
-            cpool.get(creatureIndex).isVisualSensorActivated = true;
-        }
-    }
-
-    public void updateCameras(int deadCreatureIndex) {
-        if (deadCreatureIndex != -1) {
-            if (deadCreatureIndex % 2 == 0) { //even must change
-                if (camera[1] != -1) {
-                    camera[0] = camera[1] - 1;
-                } else {
-                    camera[0] = -1;
-                }
-
-            }
-            camera[1] = -1;
-
-        }
-
-    }
-
-    public RobotCamera getRobotCamera(int index) {
-
-        if (index % 2 == 0) {
-            return rcnEven;
-        } else {
-            return rcnOdd;
-        }
-    }
+//    public RobotCamera getRobotCamera(int index) {
+//
+//        if (index % 2 == 0) {
+//            return rcnEven;
+//        } else {
+//            return rcnOdd;
+//        }
+//    }
 
     public Creature getCreature(int i) {
         return cpool.get(i);
@@ -288,11 +282,11 @@ public class Environment {
      */
     public synchronized void removeThing(Thing o) {
         synchronized (semaphore2) {
-            oMsPool.remove(o.ID);
-            thingTsPool.remove(o.ID);
-            if (thingTsPool.containsKey(o.ID)) {
-                thingTsPool.remove(o.ID);
-            }
+            //oMsPool.remove(o.ID);
+            //thingTsPool.remove(o.ID);
+            //if (thingTsPool.containsKey(o.ID)) {
+            //    thingTsPool.remove(o.ID);
+            //}
             opool.remove(o);
             thingMap.remove(o.getMyName());
             deletelist.add(o);
@@ -311,11 +305,11 @@ public class Environment {
     public void removeCreature(Creature c) {
         synchronized (semaphore3) {
             int dead_index = getCpool().indexOf(c);
-            thingTsPool.remove(c.ID);
+            //thingTsPool.remove(c.ID);
             cpool.remove(c);
             thingMap.remove(c.getMyName());
             deletelist.add(c);
-            updateCameras(dead_index);
+            //updateCameras(dead_index);
             this.notifyNumberOfCreatureObservers();
         }
     }
@@ -361,46 +355,46 @@ public class Environment {
         return false;
     }
 
-    public String[] returnArrayOfColors() {
-        Set colorSet = colorPool.keySet();
-        String[] arrayOfColors = (String[]) colorSet.toArray();
-        return arrayOfColors;
-    }
+//    public String[] returnArrayOfColors() {
+//        Set colorSet = colorPool.keySet();
+//        String[] arrayOfColors = (String[]) colorSet.toArray();
+//        return arrayOfColors;
+//    }
 
     public void addWaypointIcon(IconFactory wp) {
-        Node n = wp.getWaypointIcon();
-        n.setIsCollidable(false);
-        n.setRenderState(wp.ms);
-        n.setRenderState(ls);
+        //Node n = wp.getWaypointIcon();
+        //n.setIsCollidable(false);
+        //n.setRenderState(wp.ms);
+        //n.setRenderState(ls);
         String str = wp.myModelName;
-        wpNdsPoolMap.put(str, n);
-        wpPool.add(n);
+        //wpNdsPoolMap.put(str, n);
+        //wpPool.add(n);
     }
 
     public void addDSIcon(IconFactory wp) {
-        Node n = wp.getDeliverySpot();
-        n.setIsCollidable(false);
-        n.setRenderState(wp.ms);
-        n.setRenderState(ls);
+        //Node n = wp.getDeliverySpot();
+        //n.setIsCollidable(false);
+        //n.setRenderState(wp.ms);
+        //n.setRenderState(ls);
         String str = wp.myModelName;
-        wpNdsPoolMap.put(str, n);
-        dsPool.add(n);
+        //wpNdsPoolMap.put(str, n);
+        //dsPool.add(n);
         dsIsShown = true;
     }
 
     public String removeDSIcon(double x, double y) { //synchronized
         String ret = "";
         String toBeDel = "ModelDeliverySpotIcon_" + x + "_" + y;
-        if (wpNdsPoolMap.containsKey(toBeDel)) {
-            Node n = (Node) wpNdsPoolMap.get(toBeDel);
-            deleteArrowDSlist.add(n);
-            wpNdsPoolMap.remove(toBeDel);
-            dsPool.remove(n);
-            dsIsShown = false;
-            ret = "Deleted delivery spot at " + x + "_" + y;
-        } else {
-            ret = "Delivery spot at " + x + "_" + y + " does not exist!!!";
-        }
+//        if (wpNdsPoolMap.containsKey(toBeDel)) {
+//            Node n = (Node) wpNdsPoolMap.get(toBeDel);
+//            deleteArrowDSlist.add(n);
+//            wpNdsPoolMap.remove(toBeDel);
+//            dsPool.remove(n);
+//            dsIsShown = false;
+//            ret = "Deleted delivery spot at " + x + "_" + y;
+//        } else {
+//            ret = "Delivery spot at " + x + "_" + y + " does not exist!!!";
+//        }
         return ret;
 
     }
@@ -408,17 +402,17 @@ public class Environment {
     public String removeWaypointIcon(double x, double y) {
         String ret = "";
         String toBeDel = "ModelWaypointIcon_" + x + "_" + y;
-        if (wpNdsPoolMap.containsKey(toBeDel)) {
-            Node n = (Node) wpNdsPoolMap.get(toBeDel);
-            deleteArrowDSlist.add(n);
-            wpNdsPoolMap.remove(toBeDel);
-            wpPool.remove(n);
-            //System.out.println("======= Deleted wp named " + toBeDel);
-            ret = "Deleted waypoint at " + x + "_" + y;
-        } else {
-            log.info("======= Waypoint named " + toBeDel + " does not exist!!!");
-            ret = "Waypoint at " + x + "_" + y + " does not exist!!!";
-        }
+//        if (wpNdsPoolMap.containsKey(toBeDel)) {
+//            Node n = (Node) wpNdsPoolMap.get(toBeDel);
+//            deleteArrowDSlist.add(n);
+//            wpNdsPoolMap.remove(toBeDel);
+//            wpPool.remove(n);
+//            //System.out.println("======= Deleted wp named " + toBeDel);
+//            ret = "Deleted waypoint at " + x + "_" + y;
+//        } else {
+//            log.info("======= Waypoint named " + toBeDel + " does not exist!!!");
+//            ret = "Waypoint at " + x + "_" + y + " does not exist!!!";
+//        }
         return ret;
 
     }
@@ -581,5 +575,18 @@ public class Environment {
             this.removeCreature(c);
         }
 
+    }
+    
+    public void print() {
+        System.out.println("Environment Situation:");
+        for (Creature c : cpool) {
+            System.out.format("Creature %s / %d at %.1f,%.1f,%.1f %d\r\n",c.getMyName(),c.getID(),c.getX(),c.getY(),c.getPitch(),c.state);
+        }
+        for (Thing t : opool) {
+            if (t.category != Constants.categoryBRICK)
+                System.out.format("Thing %s / %d at %.1f,%.1f %d\r\n", t.getMyName(),t.getID(),t.getX(),t.getY(),t.state);
+            else 
+                System.out.format("Thing %s / %d from %.1f,%.1f -> %.1f,%.1f %d\r\n", t.getMyName(),t.getID(),t.getX1(),t.getY1(),t.getX2(),t.getY2(),t.state);
+        }
     }
 }

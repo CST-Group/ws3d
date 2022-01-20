@@ -51,25 +51,32 @@ import util.NativeUtils;
 public class Main {
 
     String version = "1.0";
-    public WorldFrame i;
-    public SimulationFrame sf;
+    public WorldApplication i;
+    public WorldFrame wf;
     StringBuffer outToClient;
     List<ServerThread> clientsConnected;
     Logger log;
-
-    public Main() {
+    
+    private void processLoggers() {
         log = Logger.getLogger(Main.class.getCanonicalName());
-        Logger.getLogger("com.jme").setLevel(Level.OFF);
-        Logger.getLogger("com.jmex").setLevel(Level.OFF);
+        Logger.getLogger("com.jme3").setLevel(Level.OFF);
+        //Logger.getLogger("com.jmex").setLevel(Level.OFF);
+        //Logger.getLogger("com.jme3").setLevel(Level.ALL);
         Logger.getLogger("worldserver3d").setLevel(Level.WARNING);
         Logger.getLogger("util").setLevel(Level.WARNING);
         Logger.getLogger("model").setLevel(Level.WARNING);
         Logger.getLogger("motorcontrol").setLevel(Level.WARNING);
-        NativeUtils.setLibraryPath(".");
-        NativeUtils.prepareNativeLibs();
+    }
+
+    public Main() {
+        processLoggers();
+        //NativeUtils.setLibraryPath(".");
+        //NativeUtils.prepareNativeLibs();
         //Logger.getLogger("com.jme").setLevel(Level.ALL);
-        i = new WorldFrame();
-        sf = new SimulationFrame(this);
+        i = new WorldApplication();
+        wf = new WorldFrame(i);
+        wf.setVisible(true);
+        i.setWorldFrame(wf);
         clientsConnected = new ArrayList<ServerThread>();
         try {
             ServerSocket ss = new ServerSocket(Constants.PORT);
@@ -258,7 +265,7 @@ public class Main {
      * @return "yes" or "not"
      */
     void ProcessRequestIfGameRunning() {
-        if (i.ep.e.gameStarted()) {
+        if (i.e.gameStarted()) {
             getOutBuffer().append("yes");
         } else {
             getOutBuffer().append("no");
@@ -277,7 +284,7 @@ public class Main {
      */
 
     void ProcessStartGame() {
-        i.ep.e.startTheGame(true);
+        i.e.startTheGame(true);
         getOutBuffer().append("Game started!!!\r\n");
     }
 
@@ -323,14 +330,15 @@ public class Main {
      * "height"
      */
     void ProcessGetEnvironment() {
-        getOutBuffer().append("" + i.ep.getPreferredSize().width + " " + i.ep.getPreferredSize().height + "\r\n");
+        //getOutBuffer().append("Environment:" + i.e.width + " " + i.e.height);
+        getOutBuffer().append("" + i.e.width + " " + i.e.height + "\r\n");
     }
 
     /**
      * Old "start" command. Not in use in this version.
      */
     void ProcessStartSimulation() {
-        i.ep.startMoving();
+        //i.ep.startMoving();
         getOutBuffer().append("Starting the simulation ...\r\n");
     }
 
@@ -338,7 +346,7 @@ public class Main {
      * Old "stop" command. Not in use in this version.
      */
     void ProcessStopSimulation() {
-        i.ep.stopMoving();
+        //i.ep.stopMoving();
         getOutBuffer().append("Stopping the simulation ...\r\n");
 
     }
@@ -368,11 +376,11 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.\r\n");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         getOutBuffer().append("" + c.getX() + " " + c.getY() + " " + c.getPitch() + "\r\n");
     }
     
@@ -400,9 +408,9 @@ public class Main {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
 
-                ThingCreator tc = new ThingCreator(i.ep.e);
+                ThingCreator tc = new ThingCreator(i.e);
                 DeliverySpot delivery = (DeliverySpot) tc.createThing(type, x, y);
-                this.sf.gameState.ThingsRN.updateRenderState();
+                //this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append(delivery.getMyName() + " " + delivery.getX()
                         + " " + delivery.getY() + "\r\n");
 
@@ -428,11 +436,11 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
 
         getOutBuffer().append("" + c.getSpeed() + " " + c.getFuel() + "\r\n");
 
@@ -452,11 +460,11 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
 
         getOutBuffer().append(c.getSackContent());
 
@@ -475,11 +483,11 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         Thing o = c.getClosest();
         if (o != null) {
             log.info("The closest thing name is: " + o.getMyName());
@@ -537,13 +545,13 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
-        synchronized (i.ep.e.getCpool().get(creatID).semaphore) {
-            c.updateVisualSensor(i.ep.e);
+        Creature c = i.e.getCpool().get(creatID);
+        synchronized (i.e.getCpool().get(creatID).semaphore) {
+            c.updateVisualSensor(i.e);
             StringBuffer vs = new StringBuffer("");
             vs = getVisualContent(c);
             getOutBuffer().append(vs);
@@ -608,19 +616,20 @@ public class Main {
                 cID = st.nextToken();
                 creatID = Integer.parseInt(cID);
             }
-            if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+            if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
                 getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
                 return;
             }
-            Creature c = i.ep.e.getCpool().get(creatID);
-            int c_index = i.ep.e.getCpool().indexOf(c);
-            if (c_index % 2 == 0) {
-                i.ep.e.setCamera(0, c_index);
-                getOutBuffer().append(i.ep.e.getCamera(0) + "\r\n");
-            } else {
-                i.ep.e.setCamera(1, c_index);
-                getOutBuffer().append(i.ep.e.getCamera(1) + "\r\n");
-            }
+//            Creature c = i.e.getCpool().get(creatID);
+//            int c_index = i.e.getCpool().indexOf(c);
+//            if (c_index % 2 == 0) {
+//                i.e.setCamera(0, c_index);
+//                getOutBuffer().append(i.e.getCamera(0) + "\r\n");
+//            } else {
+//                i.e.setCamera(1, c_index);
+//                getOutBuffer().append(i.e.getCamera(1) + "\r\n");
+//            }
+            getOutBuffer().append("This function was made obsolete in current WorldServer3D version !!!\r\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -652,11 +661,11 @@ public class Main {
                 eID = st.nextToken();
             }
 
-            if (!i.ep.e.thingMap.containsKey(eID)) {
+            if (!i.e.thingMap.containsKey(eID)) {
                 getOutBuffer().append(Constants.ERROR_CODE + " The Thing ID does not exist.");
                 return;
             }
-            th = i.ep.e.thingMap.get(eID);
+            th = i.e.thingMap.get(eID);
             getOutBuffer().append(th.getAffordances() + "\r\n");
         } catch (Exception e) {
             e.printStackTrace();
@@ -680,18 +689,18 @@ public class Main {
 
             if (st.hasMoreTokens()) {
                 cID = st.nextToken();
-                creatID = i.ep.e.getCreatureIndex(cID);//returns -1 if none exists
+                creatID = i.e.getCreatureIndex(cID);//returns -1 if none exists
                 //creatID = Integer.parseInt(cID);
             }
             if (creatID == -1) {
                 getOutBuffer().append(Constants.ERROR_CODE + " Creature does not exist.");
                 return;
             }
-            synchronized (i.ep.e.semaphore3) {
-                Creature c = i.ep.e.getCpool().get(creatID);
-                synchronized (i.ep.e.getCpool().get(creatID).semaphore) {
-                    c.updateVisualSensor(i.ep.e);
-                    c.updateContactSensor(i.ep.e);
+            synchronized (i.e.semaphore3) {
+                Creature c = i.e.getCpool().get(creatID);
+                synchronized (i.e.getCpool().get(creatID).semaphore) {
+                    c.updateVisualSensor(i.e);
+                    c.updateContactSensor(i.e);
 
                     //Leaflet pool:
                     StringBuffer lp = new StringBuffer("");
@@ -717,7 +726,7 @@ public class Main {
                     //Creature info:
                     getOutBuffer().append(" "+
                             c.getMyName() + " "
-                            + i.ep.e.getCpool().indexOf(c) + " "
+                            + i.e.getCpool().indexOf(c) + " "
                             + c.getX() + " "
                             + c.getY() + " "
                             + c.getSize() + " "
@@ -753,16 +762,17 @@ public class Main {
 
     void ProcessGetSimulPars() {
 
-        getOutBuffer().append(i.ep.getPreferredSize().width + " "
-                + i.ep.getPreferredSize().height + " "
+        getOutBuffer().append(i.e.width + " "
+                + i.e.height + " "
                 + //delivery spot:
-                i.ep.e.deliverySpotLocation[0] + " " + //x
-                i.ep.e.deliverySpotLocation[1] //y
+                i.e.deliverySpotLocation[0] + " " + //x
+                i.e.deliverySpotLocation[1] //y
                 + "\r\n");
     }
 
     void ProcessWorldReset() {
-        sf.gameState.resetWorld();
+        //wf.gameState.resetWorld();
+        System.out.println("This needs to be implemented");
     }
 
     void ProcessInitialEnvironmentParameters(StringTokenizer st) {
@@ -791,7 +801,7 @@ public class Main {
             return;
         }
 
-        sf.gameState.updateEnvironment(width, height, pathToFloorTexture);
+        //wf.gameState.updateEnvironment(width, height, pathToFloorTexture);
         getOutBuffer().append("" + width + " " + height + " " + pathToFloorTexture + "\r\n");
     }
 
@@ -810,12 +820,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         getOutBuffer().append("Creature ID:" + creatID + "\r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         try {
             synchronized (c) {
                 String vr = "", vl = "", xf = "", yf = "";
@@ -862,7 +872,7 @@ public class Main {
 
                 c.setW(Math.toRadians(c.getPitch()));
 
-                i.ep.repaint();
+                //i.ep.repaint();
 
                 getOutBuffer().append("" + c.getSpeed() + " " + c.getPitch() + "\r\n");
             } //end syncronized
@@ -888,12 +898,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         try {
             synchronized (c) {
                 String vr = "", vl = "", w = "", xf = "", yf = "";
@@ -933,7 +943,7 @@ public class Main {
                 }
                 //c.setPitch(Math.toDegrees(c.getW()));
 
-                i.ep.repaint();
+                //i.ep.repaint();
 
                 getOutBuffer().append("" + c.getSpeed() + " " + c.getW() + "\r\n");
 
@@ -953,12 +963,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        synchronized (i.ep.e.semaphore3) {
-            Creature c = i.ep.e.getCpool().get(creatID);
+        synchronized (i.e.semaphore3) {
+            Creature c = i.e.getCpool().get(creatID);
             try {
                 synchronized (c) {
                     String thingName = "";
@@ -972,11 +982,11 @@ public class Main {
 
                     // System.out.println("...............................thing to grasp: "+ thingName);
 
-                    Thing th = i.ep.e.getThingFromName(thingName);
+                    Thing th = i.e.getThingFromName(thingName);
                     if (th != null) {
                         //c.graspIt((Jewel)th);
-                        c.putInSack(th, i.ep.e);   
-                        i.ep.repaint();
+                        c.putInSack(th, i.e);   
+                        //i.ep.repaint();
                     }
                     getOutBuffer().append("" + thingName + "\r\n");
 
@@ -996,12 +1006,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
-        synchronized (i.ep.e.semaphore3) {
-            Creature c = i.ep.e.getCpool().get(creatID);
+        synchronized (i.e.semaphore3) {
+            Creature c = i.e.getCpool().get(creatID);
             try {
                 synchronized (c) {
                     String thingName = "";
@@ -1015,10 +1025,10 @@ public class Main {
 
                     log.info("...........eatIt................ food name: "+ thingName);
 
-                    Thing th = i.ep.e.getThingFromName(thingName);
+                    Thing th = i.e.getThingFromName(thingName);
                     if (th != null) {
-                        c.eatIt((Food) th, i.ep.e);
-                        i.ep.repaint();
+                        c.eatIt((Food) th, i.e);
+                        //i.ep.repaint();
                     }
                     getOutBuffer().append("" + thingName + "\r\n");
 
@@ -1040,12 +1050,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         try {
             synchronized (c) {
                 String thingName = "";
@@ -1060,10 +1070,10 @@ public class Main {
 
                 //System.out.println("........................... thing name: "+ thingName);
 
-                Thing th = i.ep.e.getThingFromName(thingName);
+                Thing th = i.e.getThingFromName(thingName);
                 if (th != null) {
-                    c.digAndHideIt(th, i.ep.e);
-                    i.ep.repaint();
+                    c.digAndHideIt(th, i.e);
+                    //i.ep.repaint();
                 }
                 getOutBuffer().append("" + thingName + "\r\n");
 
@@ -1083,12 +1093,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         try {
             synchronized (c) {
                 String thingName = "";
@@ -1100,10 +1110,10 @@ public class Main {
                     return;
                 }
 
-                Thing th = i.ep.e.getThingFromName(thingName);
+                Thing th = i.e.getThingFromName(thingName);
                 if (th != null) {
-                    th.undoHideMe(i.ep.e);
-                    i.ep.repaint();
+                    th.undoHideMe(i.e);
+                    //i.ep.repaint();
                 }
                 getOutBuffer().append("" + thingName + "\r\n");
 
@@ -1123,12 +1133,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         try {
             synchronized (c) {
                 String s;
@@ -1174,12 +1184,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-            Creature c = i.ep.e.getCpool().get(creatID);
+            Creature c = i.e.getCpool().get(creatID);
             try {
                 synchronized (c) {
                     String vr = "", vl = "", speed = "";
@@ -1218,7 +1228,7 @@ public class Main {
 //                    System.out.println("$$$$$$$$$$$$$$ turn::getW= "+c.getW());
                     c.setPitch(Math.toDegrees(c.getW()));
 
-                    i.ep.repaint();
+                    //i.ep.repaint();
 
                     log.info("Angle of turn according to Vr and Vl: " + "in radian: " + turn + " in degree: " + Math.toDegrees(turn));
                     log.info("Pitch changed to (in degrees)= "+c.getPitch());
@@ -1250,17 +1260,17 @@ public class Main {
                 waitAMilli();
             }
             getOutBuffer().append("\r\n");
-            i.ep.e.resetLeafletPool();
+            i.e.resetLeafletPool();
             for (Leaflet l : leafletList) {
-                i.ep.e.addLeaflet(l);
+                i.e.addLeaflet(l);
                 getOutBuffer().append(l.toStringFormatted());
             }
-            i.ep.e.notifyLeafletObservers();
-            //   synchronized (i.ep.e.semaphore) {
+            i.e.notifyLeafletObservers();
+            //   synchronized (i.e.semaphore) {
 
-            for (Creature cr : i.ep.e.getCpool()) {
+            for (Creature cr : i.e.getCpool()) {
                 synchronized (cr) {
-                    cr.setActiveLeaflets(i.ep.e.getLeafletsOfOwner(cr.getID()));
+                    cr.setActiveLeaflets(i.e.getLeafletsOfOwner(cr.getID()));
                 }
             }
             //  }
@@ -1271,12 +1281,12 @@ public class Main {
                 cID = st.nextToken();
                 creatID = Integer.parseInt(cID);
             }
-            if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+            if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
                 getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
                 return;
             }
             //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-            Creature c = i.ep.e.getCpool().get(creatID);
+            Creature c = i.e.getCpool().get(creatID);
             if (!st.hasMoreTokens()) {
                 getOutBuffer().append(Constants.ERROR_CODE + " Leaflet is missing!!!");
                 return;
@@ -1315,11 +1325,11 @@ public class Main {
             synchronized (c) {
                 getOutBuffer().append(" \r\n");
                 for (Leaflet l : leafletList) {
-                    i.ep.e.addLeaflet(l);
+                    i.e.addLeaflet(l);
                     getOutBuffer().append(l.toStringFormatted());
                 }
-                i.ep.e.notifyLeafletObservers();
-                c.setActiveLeaflets(i.ep.e.getLeafletsOfOwner(c.getID()));
+                i.e.notifyLeafletObservers();
+                c.setActiveLeaflets(i.e.getLeafletsOfOwner(c.getID()));
 
             }
         }
@@ -1448,12 +1458,12 @@ public class Main {
                         if (s.equalsIgnoreCase("1")) color = true;
                     }
 
-                    ThingCreator tc = new ThingCreator(i.ep.e);
+                    ThingCreator tc = new ThingCreator(i.e);
                     RobotCreature c = tc.createCreature(color, x, y, pitch);
 
-                    this.sf.gameState.ThingsRN.updateRenderState();
+                    ///this.sf.gameState.ThingsRN.updateRenderState();
 
-                    getOutBuffer().append("" + i.ep.e.getCpool().indexOf(c) + " " + c.getMyName() + " " + c.getX() + " " + c.getY() + " " + c.getPitch() + "\r\n");
+                    getOutBuffer().append("" + i.e.getCpool().indexOf(c) + " " + c.getMyName() + " " + c.getX() + " " + c.getY() + " " + c.getPitch() + "\r\n");
 
                 } else {
                     getOutBuffer().append(Constants.ERROR_CODE + " ... No recognized command");
@@ -1479,11 +1489,11 @@ public class Main {
                 if (st.hasMoreTokens()) {
                     s = st.nextToken();
                     pitch = Double.parseDouble(s);
-                    for (Creature c : i.ep.e.getCpool()) {
+                    for (Creature c : i.e.getCpool()) {
                         if ((c.getX() == x) && (c.getY() == y)) {
-                            index = i.ep.e.getCpool().indexOf(c);
+                            index = i.e.getCpool().indexOf(c);
                             ID = "" + index;
-                            i.ep.e.getCpool().get(index).setPitch(pitch);
+                            i.e.getCpool().get(index).setPitch(pitch);
                             nameID = c.getMyName();
                             msg = ID + " " + nameID;
                             break;
@@ -1503,6 +1513,7 @@ public class Main {
         }
     }
 
+    // This might require some refactoring ....
     void ProcessNewWaypoint(StringTokenizer st) {
         String s;
         double x, y;
@@ -1512,12 +1523,12 @@ public class Main {
             if (st.hasMoreTokens()) {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
-                //Creature c = new Creature(x, y, pitch, i.ep.e);
-                i.ep.e.wpTS = i.ep.display.getRenderer().createTextureState();
-                //IconFactory wp = new IconFactory(i.ep.e.wpTS);
-                IconFactory wp = new IconFactory(i.ep.e.wpTS, x, y, i.ep.e.width, i.ep.e.height);
-                i.ep.e.addWaypointIcon(wp);
-                this.sf.gameState.ThingsRN.updateRenderState();
+                //Creature c = new Creature(x, y, pitch, i.e);
+                //i.e.wpTS = i.ep.display.getRenderer().createTextureState();
+                //IconFactory wp = new IconFactory(i.e.wpTS);
+                IconFactory wp = new IconFactory(x, y, i.e.width, i.e.height);
+                i.e.addWaypointIcon(wp);
+                //this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append("" + wp.x + " y: " + wp.y);
 
             } else {
@@ -1528,6 +1539,7 @@ public class Main {
         }
     }
 
+    // This might require some refactoring ...
     void ProcessDeleteWaypoint(StringTokenizer st) {
         String s;
         double x, y;
@@ -1537,11 +1549,11 @@ public class Main {
             if (st.hasMoreTokens()) {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
-                //Creature c = new Creature(x, y, pitch, i.ep.e);
-                i.ep.e.wpTS = i.ep.display.getRenderer().createTextureState();
-                //IconFactory wp = new IconFactory(i.ep.e.wpTS);
-                String str = i.ep.e.removeWaypointIcon(x, y);
-                this.sf.gameState.ThingsRN.updateRenderState();
+                //Creature c = new Creature(x, y, pitch, i.e);
+                //////i.e.wpTS = i.ep.display.getRenderer().createTextureState();
+                //IconFactory wp = new IconFactory(i.e.wpTS);
+                String str = i.e.removeWaypointIcon(x, y);
+                ///////this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append("" + x + " " + y);
                 getOutBuffer().append(str + "\r\n");
 
@@ -1564,15 +1576,15 @@ public class Main {
             if (type == 0) { //object
                 if (st.hasMoreTokens()) {
                     thingID = Integer.parseInt(st.nextToken());
-                    if (i.ep.e.getOpool().size() > 0) {
-                        if (thingID < 0 || thingID > i.ep.e.getOpool().size() - 1) {
+                    if (i.e.getOpool().size() > 0) {
+                        if (thingID < 0 || thingID > i.e.getOpool().size() - 1) {
                             getOutBuffer().append(Constants.ERROR_CODE + " Object does not exist. Try again!");
                             return;
                         }
-                        Thing th = i.ep.e.getOpool().get(thingID);
+                        Thing th = i.e.getOpool().get(thingID);
                         if ((th != null) && (th.category != Constants.categoryCREATURE)) {
-                            th.removeRememberMeIcon(i.ep.e);
-                            i.ep.e.removeThing(th);
+                            th.removeRememberMeIcon(i.e);
+                            i.e.removeThing(th);
                             getOutBuffer().append("" + th.getMyName() + "\r\n");
                         }
                     } else {
@@ -1586,19 +1598,19 @@ public class Main {
             } else if (type == 1) { //Creature
                 if (st.hasMoreTokens()) {
                     thingID = Integer.parseInt(st.nextToken());
-                    if (i.ep.e.getCpool().size() > 0) {
-                        if (thingID < 0 || thingID > i.ep.e.getCpool().size() - 1) {
+                    if (i.e.getCpool().size() > 0) {
+                        if (thingID < 0 || thingID > i.e.getCpool().size() - 1) {
                             getOutBuffer().append(Constants.ERROR_CODE + " Creature does not exist. Try again!");
                             return;
                         }
 
-                        Thing th = i.ep.e.getCpool().get(thingID);
+                        Thing th = i.e.getCpool().get(thingID);
                         if (th.category == Constants.categoryCREATURE) {
-                            int dead = i.ep.e.getCpool().indexOf(th);
+                            int dead = i.e.getCpool().indexOf(th);
 
-                            i.ep.scoreTabList.clear();
-                            i.ep.e.removeCreature((Creature) th);
-                            i.ep.e.updateCameras(dead);
+                            //i.ep.scoreTabList.clear();
+                            i.e.removeCreature((Creature) th);
+                            //i.e.updateCameras(dead);
                             getOutBuffer().append("" + th.getMyName() + "\r\n");
                         }
                     } else {
@@ -1630,10 +1642,11 @@ public class Main {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
 
-                ThingCreator tc = new ThingCreator(i.ep.e);
+                ThingCreator tc = new ThingCreator(i.e);
                 Cage cage;
                 cage = (Cage) tc.createThing(Constants.categoryCAGE, x, y);
-                this.sf.gameState.ThingsRN.updateRenderState();
+                // What is this for ? 
+                //this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append(cage.getMyName() + " " + cage.getX() + " " + cage.getY() + "\r\n");
 
             } else {
@@ -1663,7 +1676,7 @@ public class Main {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
 
-                ThingCreator tc = new ThingCreator(i.ep.e);
+                ThingCreator tc = new ThingCreator(i.e);
                 Food food;
                 if (type == 0) {
                     food = (Food) tc.createThing(Constants.categoryPFOOD, x, y);
@@ -1673,8 +1686,8 @@ public class Main {
                     getOutBuffer().append(Constants.ERROR_CODE + " Invalid type of food: 0-perishable or 1-non-perishable.");
                     return;
                 }
-
-                this.sf.gameState.ThingsRN.updateRenderState();
+                // What is this for ...
+                //this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append(food.getMyName() + " " + food.getX() + " " + food.getY() + "\r\n");
 
             } else {
@@ -1723,7 +1736,7 @@ public class Main {
                 return;
             }
 
-            ThingCreator tc = new ThingCreator(i.ep.e);
+            ThingCreator tc = new ThingCreator(i.e);
 
             if (type == 0) {
                 food = (Food) tc.createThing(Constants.categoryPFOOD, x, y);
@@ -1736,7 +1749,7 @@ public class Main {
             getOutBuffer().append(food.getMyName() + " " + food.getX() + " " + food.getY() + "\r\n");
         }
         getOutBuffer().append("\r\n ");
-        this.sf.gameState.ThingsRN.updateRenderState();
+        //this.sf.gameState.ThingsRN.updateRenderState();
     }
 
     void ProcessNewBrick(StringTokenizer st) {
@@ -1767,9 +1780,9 @@ public class Main {
                     if (st.hasMoreTokens()) {
                         s = st.nextToken();
                         y2 = Double.parseDouble(s);
-                        ThingCreator tc = new ThingCreator(i.ep.e);
+                        ThingCreator tc = new ThingCreator(i.e);
                         Brick brick = (Brick) tc.createBrick(type, x1, y1, x2, y2);
-                        this.sf.gameState.ThingsRN.updateRenderState();
+                        //this.sf.gameState.ThingsRN.updateRenderState();
                         getOutBuffer().append(brick.getMyName() + " " + brick.getX()
                                 + " " + brick.getY() + "\r\n");
                     } else {
@@ -1812,9 +1825,9 @@ public class Main {
                 s = st.nextToken();
                 y = Double.parseDouble(s);
 
-                ThingCreator tc = new ThingCreator(i.ep.e);
+                ThingCreator tc = new ThingCreator(i.e);
                 Jewel jewel = (Jewel) tc.createCrystalOfType(type, x, y);
-                this.sf.gameState.ThingsRN.updateRenderState();
+                //this.sf.gameState.ThingsRN.updateRenderState();
                 getOutBuffer().append(jewel.getMyName() + " " + jewel.getX()
                         + " " + jewel.getY() + "\r\n");
 
@@ -1868,13 +1881,13 @@ public class Main {
                 return;
             }
 
-            ThingCreator tc = new ThingCreator(i.ep.e);
+            ThingCreator tc = new ThingCreator(i.e);
 
             Jewel jewel = (Jewel) tc.createCrystalOfType(type, x, y);
             getOutBuffer().append(jewel.getMyName() + " " + jewel.getX() + " y: " + jewel.getY());
         }
         getOutBuffer().append("\r\n ");
-        this.sf.gameState.ThingsRN.updateRenderState();
+        //this.sf.gameState.ThingsRN.updateRenderState();
     }
 
     /**
@@ -1890,12 +1903,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         c.hasStarted = true;
         getOutBuffer().append("\r\n Run creature run...\r\n");
     }
@@ -1913,7 +1926,7 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
@@ -1924,8 +1937,8 @@ public class Main {
             getOutBuffer().append(Constants.ERROR_CODE + " Leaflet ID is missing");
             return;
         }
-        Creature c = i.ep.e.getCpool().get(creatID);
-        Leaflet l = (Leaflet) i.ep.e.getLeafletPool().get(Long.parseLong(leafletID));
+        Creature c = i.e.getCpool().get(creatID);
+        Leaflet l = (Leaflet) i.e.getLeafletPool().get(Long.parseLong(leafletID));
         
          // Avoid deliver a leaflet already delivered
         if (l.getActivity() != 0) {          
@@ -1957,12 +1970,12 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID);
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         c.hasStarted = false;
         getOutBuffer().append("Creature has stopped!!!");
     }
@@ -1974,7 +1987,7 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist. Must specify a creature.");
             return;
         }
@@ -1990,29 +2003,29 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             getOutBuffer().append(Constants.ERROR_CODE + " Creature ID does not exist. Must specify a creature.");
             return;
         }
         //getOutBuffer().append("Creature ID:" + creatID + " \r\n");
-        Creature c = i.ep.e.getCpool().get(creatID);
+        Creature c = i.e.getCpool().get(creatID);
         c.refill();
         getOutBuffer().append(c.getFuel() + "\r\n");
     }
 
     void ProcessGetWorldNumEntities() {
-        getOutBuffer().append(i.ep.e.getCpool().size() + " " + i.ep.e.getOpool().size() + "\r\n");
+        getOutBuffer().append(i.e.getCpool().size() + " " + i.e.getOpool().size() + "\r\n");
 
     }
 
 //    void ProcessShowWorldThings() {
 //        int ii = 0;
-//        //getOutBuffer().append("World Situation ... " + i.ep.e.getCpool().size() + " creatures and " + i.ep.e.getOpool().size() + " Things" + "\n");
-//        for (Creature c : i.ep.e.getCpool()) {
+//        //getOutBuffer().append("World Situation ... " + i.e.getCpool().size() + " creatures and " + i.e.getOpool().size() + " Things" + "\n");
+//        for (Creature c : i.e.getCpool()) {
 //            getOutBuffer().append("Creature " + ii++ + ": " + c.getX() + "," + c.getY() + " " + c.getPitch() + " | ");
 //        }
 //        ii = 0;
-//        for (Thing o : i.ep.e.getOpool()) {
+//        for (Thing o : i.e.getOpool()) {
 //            getOutBuffer().append(" | Thing " + ii++ + " " + o.getX1() + " " + o.getY1() + " " + o.getX2() + " re" + o.getY2() );
 //        }
 //        getOutBuffer().append("\r\n");
@@ -2021,17 +2034,17 @@ public class Main {
         try {
 
             StringBuffer all = new StringBuffer("");
-            //   synchronized (i.ep.e.semaphore) {
+            //   synchronized (i.e.semaphore) {
 
             all.append(" ");
-            int number = i.ep.e.getCpool().size() + i.ep.e.getOpool().size();
+            int number = i.e.getCpool().size() + i.e.getOpool().size();
             all.append(number); //number of things in camera
 
             List<Thing> allThings = new ArrayList<Thing>();
-            for (Thing c : i.ep.e.getCpool()) {
+            for (Thing c : i.e.getCpool()) {
                 allThings.add(c);
             }
-            for (Thing th : i.ep.e.getOpool()) {
+            for (Thing th : i.e.getOpool()) {
                 allThings.add(th);
             }
             ListIterator<Thing> iter = allThings.listIterator();
@@ -2084,10 +2097,10 @@ public class Main {
             cID = st.nextToken();
             creatID = Integer.parseInt(cID);
         }
-        if (creatID < 0 || creatID > i.ep.e.getCpool().size() - 1) {
+        if (creatID < 0 || creatID > i.e.getCpool().size() - 1) {
             msg = "no";
         } else {
-            msg = "yes " + i.ep.e.getCpool().get(creatID).getMyName();
+            msg = "yes " + i.e.getCpool().get(creatID).getMyName();
         }
         getOutBuffer().append(msg);
         return;

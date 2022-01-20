@@ -45,13 +45,13 @@ public class RobotCreature extends Creature {
             default: kinematics = new TwoWheeledRobotKinematics(this);
         }
         
-        try {
-             sf = new ThingShapeFactory("images/robo.3ds", this);
-
-        } catch (IOException ex) {
-            log.severe("!!!!!Creature: Erro ! ");
-            ex.printStackTrace();
-        }
+//        try {
+//             sf = new ThingShapeFactory("images/robo.3ds", this);
+//
+//        } catch (IOException ex) {
+//            log.severe("!!!!!Creature: Erro ! ");
+//            ex.printStackTrace();
+//        }
 
     }
 
@@ -63,10 +63,17 @@ public class RobotCreature extends Creature {
     public void updateMyPosition() {
         this.kinematics.updatePosition();
     }
+    
 
     @Override
     public Knapsack putMeInKnapsack(Knapsack sack) {
         throw new UnsupportedOperationException("Makes no sense for my type of Thing!!!");
+    }
+
+    @Override
+    public double[] calculateNextPosition() {
+        double np[] = this.kinematics.calculateNextPosition();
+        return(np);
     }
 
 }
