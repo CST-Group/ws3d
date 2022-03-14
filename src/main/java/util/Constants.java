@@ -101,9 +101,20 @@ public class Constants {
 
     //Spurious value for angular velocity:
     public static final double WNULL = 1001;
-    public static final double CREATURE_SIZE = 4.0; // era 40
-    public static final double FOOD_SIZE = 4.0;
-    public static final double CRYSTAL_SIZE = 4.0;
+    public static final double CREATURE_SIZE = 40; 
+    public static final float CREATURE_Z_MOVE = 25f; 
+    public static final float CREATURE_SCALE = 0.3f;
+    public static final float NUT_Z_MOVE = 17f; 
+    public static final float NUT_SCALE = 9.5f;
+    public static final float APPLE_Z_MOVE = 10f; 
+    public static final float APPLE_SCALE = 0.3f;
+    public static final float JEWEL_Z_MOVE = 17f; 
+    public static final float JEWEL_SCALE = 6f;
+    public static final float ARROW_Z_MOVE = 17f; 
+    public static final float ARROW_SCALE = 8f;
+    public static final float ARROW_HIDE = 800f;
+    public static final double FOOD_SIZE = 40;
+    public static final double CRYSTAL_SIZE = 40;
     public static final double CREATURE_MAX_FUEL = 1000.0;
     public static final double CREATURE_MAX_SEROTONIN = 100.0;
     public static final double CREATURE_MAX_ENDORPHINE = 100.0;

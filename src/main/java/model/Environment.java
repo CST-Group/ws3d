@@ -252,7 +252,7 @@ public class Environment {
         return i;
     }
 
-    public int addThing(Thing th) {
+    public synchronized int addThing(Thing th) {
         int ret = -1;
 
         if (th.category == Constants.categoryCREATURE) {

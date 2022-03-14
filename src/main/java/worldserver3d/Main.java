@@ -771,8 +771,8 @@ public class Main {
     }
 
     void ProcessWorldReset() {
-        //wf.gameState.resetWorld();
-        System.out.println("This needs to be implemented");
+        i.e.deleteAllThing();
+        //System.out.println("This needs to be implemented");
     }
 
     void ProcessInitialEnvironmentParameters(StringTokenizer st) {

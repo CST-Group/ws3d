@@ -96,7 +96,7 @@ public abstract class Creature extends Thing {
 
     private Thing closestInVision = null;
 
-    protected int hasCollided = 0;
+    public int hasCollided = 0;
     protected boolean reverseMode = false;
     
     protected ContactSensor handsActionSensor;
@@ -410,17 +410,17 @@ public abstract class Creature extends Thing {
         if ((this.hasStarted) && (getFuel() > 0)) {
             updateMyPosition();
         }
-        if (comX > 50) {
-            comX = 50;
+        if (comX > e.width) {
+            comX = e.width;
         }
-        if (comX < -50) {
-            comX = -50;
+        if (comX < -e.width) {
+            comX = -e.width;
         }
-        if (comY > 50) {
-            comY = 50;
+        if (comY > e.height) {
+            comY = e.height;
         }
-        if (comY < -50) {
-            comY = -50;
+        if (comY < -e.height) {
+            comY = -e.height;
         }
         updateContactSensor(e);
         updateVisualSensor(e);

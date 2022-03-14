@@ -24,7 +24,7 @@ public class KeyboardHandler {
     
     float fps=0;
     
-    private SimpleApplication app;
+    private WorldApplication app;
     float ang_row = 0;
     float ang_pitch = 0;
     float ang_yaw = 0;
@@ -35,7 +35,7 @@ public class KeyboardHandler {
     Camera cam;
     float xoo=0,yoo=0;
     
-    public KeyboardHandler(SimpleApplication appo) {
+    public KeyboardHandler(WorldApplication appo) {
         super();
         app = appo;
        im = app.getInputManager();    
@@ -139,8 +139,9 @@ public class KeyboardHandler {
             printrpy();
       }  
       if (name.equals("resetcamera")) {
-            cam.setLocation(new Vector3f(0, -80, 60));
-            cam.lookAt(new Vector3f(0, 0, 0), new Vector3f(0, 0, 1));
+            //cam.setLocation(new Vector3f(0, -80, 60));
+            cam.setLocation(new Vector3f(app.e.width/2, -app.e.height/2, 300));
+            cam.lookAt(new Vector3f(app.e.width/2, app.e.height/2, 0), new Vector3f(0, 0, 1));
             cam.update();
             //ang_row = -60; ang_pitch = -180; ang_yaw = 0;
             //cam.setLocation(new Vector3f(0, 0, 3));
@@ -162,8 +163,8 @@ public class KeyboardHandler {
             //cam.update();
       }
       if (name.equals("orthocamera")) {
-            cam.setLocation(new Vector3f(0, 0, 93));
-            cam.lookAt(new Vector3f(0, 0, 0), new Vector3f(0, 0, 1));
+          cam.setLocation(new Vector3f(app.e.width/2, app.e.height/2, 980));
+            cam.lookAt(new Vector3f(app.e.width/2, app.e.height/2, 0), new Vector3f(0, 0, 1));
         }
         //float delta = 0.5f;
         float delta = fps * Constants.mvel;
